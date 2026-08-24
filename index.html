@@ -29,12 +29,35 @@ section h2 { position: absolute; z-index: 5; left: 4vw; bottom: 6vh; margin: 0; 
   height: 100%;
 }
 
+/* Project-page blocks use the media's own ratio. Squarespace emits a 16:9
+   inline ratio on the inner player even for portrait and ultrawide uploads;
+   the loader replaces that value with --jdc-video-aspect before first paint. */
+.jdc-video-shell.jdc-video-block {
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  aspect-ratio: var(--jdc-video-aspect, 16 / 9) !important;
+  background-size: contain;
+}
+
 .jdc-video-shell > .native-video-player,
 .jdc-video-shell > .jdc-video-stage {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+}
+
+.jdc-video-shell.jdc-video-block > .native-video-player,
+.jdc-video-shell.jdc-video-block > .jdc-video-stage {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  padding-bottom: 0 !important;
+  aspect-ratio: var(--jdc-video-aspect, 16 / 9) !important;
 }
 
 .jdc-video-shell video {
@@ -44,6 +67,14 @@ section h2 { position: absolute; z-index: 5; left: 4vw; bottom: 6vh; margin: 0; 
   object-fit: cover;
   opacity: 0;
   transition: opacity 260ms ease;
+}
+
+.jdc-video-shell.jdc-video-block video {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
 }
 
 .jdc-video-shell.jdc-video-playing video,
@@ -114,15 +145,14 @@ section h2 { position: absolute; z-index: 5; left: 4vw; bottom: 6vh; margin: 0; 
 </style>
 </head>
 <body>
-<section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;f3502f3d-b76f-4b9c-96a1-d78ccf642691&quot;, &quot;filename&quot;: &quot;Bon Iver : Day One&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/f3502f3d-b76f-4b9c-96a1-d78ccf642691/{variant}&quot;}"></div><h2>Bon Iver : Day One</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;c07a7957-7369-4a2e-9e9d-a67314fcea3a&quot;, &quot;filename&quot;: &quot;LOVB x Adidas&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/c07a7957-7369-4a2e-9e9d-a67314fcea3a/{variant}&quot;}"></div><h2>LOVB x Adidas</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;1afd7cf7-f7eb-4345-9614-e989d5ea7aac&quot;, &quot;filename&quot;: &quot;Bombas : Spring Campaign&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/1afd7cf7-f7eb-4345-9614-e989d5ea7aac/{variant}&quot;}"></div><h2>Bombas : Spring Campaign</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;df93c27e-5dd5-4b58-997d-6664af8af62d&quot;, &quot;filename&quot;: &quot;Alignment : Documentary&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/df93c27e-5dd5-4b58-997d-6664af8af62d/{variant}&quot;}"></div><h2>Alignment : Documentary</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;9340c0e0-12c9-4ca7-a305-149c68f10acf&quot;, &quot;filename&quot;: &quot;Nike : Aja &amp; Sabrina&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/9340c0e0-12c9-4ca7-a305-149c68f10acf/{variant}&quot;}"></div><h2>Nike : Aja &amp; Sabrina</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;edc2639e-d736-4107-8580-f3e1a864c81e&quot;, &quot;filename&quot;: &quot;Gabriel Garzon Montano : Aguita&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/edc2639e-d736-4107-8580-f3e1a864c81e/{variant}&quot;}"></div><h2>Gabriel Garzon Montano : Aguita</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;0e764c18-3c49-4820-8dd1-e05116de7c4d&quot;, &quot;filename&quot;: &quot;Bright Eyes : Mariana Trench&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/0e764c18-3c49-4820-8dd1-e05116de7c4d/{variant}&quot;}"></div><h2>Bright Eyes : Mariana Trench</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;04a6e835-4333-44c8-9371-fe856603b3c0&quot;, &quot;filename&quot;: &quot;Amber Mark : Out of This World&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/04a6e835-4333-44c8-9371-fe856603b3c0/{variant}&quot;}"></div><h2>Amber Mark : Out of This World</h2></section>
+<section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;df93c27e-5dd5-4b58-997d-6664af8af62d&quot;, &quot;filename&quot;: &quot;Alignment : Documentary&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/df93c27e-5dd5-4b58-997d-6664af8af62d/{variant}&quot;}"></div><h2>Alignment : Documentary</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;04a6e835-4333-44c8-9371-fe856603b3c0&quot;, &quot;filename&quot;: &quot;Amber Mark : Out of This World&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/04a6e835-4333-44c8-9371-fe856603b3c0/{variant}&quot;}"></div><h2>Amber Mark : Out of This World</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;fdc694d9-7d0d-4e80-b49a-f27233bf9679&quot;, &quot;filename&quot;: &quot;Armando Young : Belladonna&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/fdc694d9-7d0d-4e80-b49a-f27233bf9679/{variant}&quot;}"></div><h2>Armando Young : Belladonna</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;01cf1f30-f776-4c12-b875-317556ea587c&quot;, &quot;filename&quot;: &quot;Armando Young : Prizefighter&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/01cf1f30-f776-4c12-b875-317556ea587c/{variant}&quot;}"></div><h2>Armando Young : Prizefighter</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;f47d15d5-b1a3-4029-9d92-a3a46fd75748&quot;, &quot;filename&quot;: &quot;Bombas : Dream of Comfort&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/f47d15d5-b1a3-4029-9d92-a3a46fd75748/{variant}&quot;}"></div><h2>Bombas : Dream of Comfort</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;1afd7cf7-f7eb-4345-9614-e989d5ea7aac&quot;, &quot;filename&quot;: &quot;Bombas : Spring Campaign&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/1afd7cf7-f7eb-4345-9614-e989d5ea7aac/{variant}&quot;}"></div><h2>Bombas : Spring Campaign</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;f3502f3d-b76f-4b9c-96a1-d78ccf642691&quot;, &quot;filename&quot;: &quot;Bon Iver : Day One&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/f3502f3d-b76f-4b9c-96a1-d78ccf642691/{variant}&quot;}"></div><h2>Bon Iver : Day One</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;0e764c18-3c49-4820-8dd1-e05116de7c4d&quot;, &quot;filename&quot;: &quot;Bright Eyes : Mariana Trench&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/0e764c18-3c49-4820-8dd1-e05116de7c4d/{variant}&quot;}"></div><h2>Bright Eyes : Mariana Trench</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;4c67c71c-5a65-4b8b-9051-4d309b41a59b&quot;, &quot;filename&quot;: &quot;Celeste : Everyday&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/4c67c71c-5a65-4b8b-9051-4d309b41a59b/{variant}&quot;}"></div><h2>Celeste : Everyday</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;f2b6e655-df82-43f3-a5b2-37b03b255062&quot;, &quot;filename&quot;: &quot;Diamond Terrifier : Action Fortress&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/f2b6e655-df82-43f3-a5b2-37b03b255062/{variant}&quot;}"></div><h2>Diamond Terrifier : Action Fortress</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;8673613f-639d-4112-9ee9-118843e73487&quot;, &quot;filename&quot;: &quot;Gabriel Garzon Montano : Acoustic&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/8673613f-639d-4112-9ee9-118843e73487/{variant}&quot;}"></div><h2>Gabriel Garzon Montano : Acoustic</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;edc2639e-d736-4107-8580-f3e1a864c81e&quot;, &quot;filename&quot;: &quot;Gabriel Garzon Montano : Ag\u00fcita&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/edc2639e-d736-4107-8580-f3e1a864c81e/{variant}&quot;}"></div><h2>Gabriel Garzon Montano : Agüita</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;49d7cacc-7149-46db-bc4d-010e1499e15d&quot;, &quot;filename&quot;: &quot;HBO : Shaq&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/49d7cacc-7149-46db-bc4d-010e1499e15d/{variant}&quot;}"></div><h2>HBO : Shaq</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;ca8b291b-73b5-4c4d-ac1a-1462bbe956c5&quot;, &quot;filename&quot;: &quot;Hulu : Black Twitter&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/ca8b291b-73b5-4c4d-ac1a-1462bbe956c5/{variant}&quot;}"></div><h2>Hulu : Black Twitter</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;3b58e12f-1a34-43bc-81db-7c64cedb68cd&quot;, &quot;filename&quot;: &quot;Kelsey Lu &amp; Boys Noize : Ride or Die&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/3b58e12f-1a34-43bc-81db-7c64cedb68cd/{variant}&quot;}"></div><h2>Kelsey Lu &amp; Boys Noize : Ride or Die</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;6307f97a-8c88-461d-8606-3f0ca6ed3cca&quot;, &quot;filename&quot;: &quot;Kombilesa Mi : Los Peinados&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/6307f97a-8c88-461d-8606-3f0ca6ed3cca/{variant}&quot;}"></div><h2>Kombilesa Mi : Los Peinados</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;98fca04a-7159-4eac-a353-f64c3a108353&quot;, &quot;filename&quot;: &quot;Laufey : Tour Visuals&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/98fca04a-7159-4eac-a353-f64c3a108353/{variant}&quot;}"></div><h2>Laufey : Tour Visuals</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;c32c609a-125d-4a4d-979d-4f828b4ce28b&quot;, &quot;filename&quot;: &quot;LOVB : Launch&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/c32c609a-125d-4a4d-979d-4f828b4ce28b/{variant}&quot;}"></div><h2>LOVB : Launch</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;c07a7957-7369-4a2e-9e9d-a67314fcea3a&quot;, &quot;filename&quot;: &quot;LOVB x Adidas&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/c07a7957-7369-4a2e-9e9d-a67314fcea3a/{variant}&quot;}"></div><h2>LOVB x Adidas</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;56d1726f-dc13-4596-951d-a630bb754b1f&quot;, &quot;filename&quot;: &quot;Mitski : A Pearl&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/56d1726f-dc13-4596-951d-a630bb754b1f/{variant}&quot;}"></div><h2>Mitski : A Pearl</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;cc69fc05-d021-44b6-9c23-84a73f79f2ea&quot;, &quot;filename&quot;: &quot;Netflix : Kings of Tupelo&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/cc69fc05-d021-44b6-9c23-84a73f79f2ea/{variant}&quot;}"></div><h2>Netflix : Kings of Tupelo</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;9340c0e0-12c9-4ca7-a305-149c68f10acf&quot;, &quot;filename&quot;: &quot;Nike : Aja &amp; Sabrina&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/9340c0e0-12c9-4ca7-a305-149c68f10acf/{variant}&quot;}"></div><h2>Nike : Aja &amp; Sabrina</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;d1da6b8b-1e04-4762-b8cf-2c7c3f628bb4&quot;, &quot;filename&quot;: &quot;Nike : Jordan 39&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/d1da6b8b-1e04-4762-b8cf-2c7c3f628bb4/{variant}&quot;}"></div><h2>Nike : Jordan 39</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;14c221d2-d4b1-4bfd-baf5-784fd3d45d82&quot;, &quot;filename&quot;: &quot;Polymarket : Make Your Own Market&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/14c221d2-d4b1-4bfd-baf5-784fd3d45d82/{variant}&quot;}"></div><h2>Polymarket : Make Your Own Market</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;fc8b335a-bbab-426f-be91-bdbdd4798970&quot;, &quot;filename&quot;: &quot;Polymarket :\u00a0Documentary&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/fc8b335a-bbab-426f-be91-bdbdd4798970/{variant}&quot;}"></div><h2>Polymarket : Documentary</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;57943004-8026-477d-8ecb-7d2b1e3ee29d&quot;, &quot;filename&quot;: &quot;Siberia Hills : Lookbook&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/57943004-8026-477d-8ecb-7d2b1e3ee29d/{variant}&quot;}"></div><h2>Siberia Hills : Lookbook</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;16c0fece-f3f8-4cb8-a60a-398c0669dfe4&quot;, &quot;filename&quot;: &quot;Spotify : Hip Hop Classics&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/16c0fece-f3f8-4cb8-a60a-398c0669dfe4/{variant}&quot;}"></div><h2>Spotify : Hip Hop Classics</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;229157cc-c2eb-4231-8f1a-3bbd256dc316&quot;, &quot;filename&quot;: &quot;Thom Yorke : Last I Heard&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/229157cc-c2eb-4231-8f1a-3bbd256dc316/{variant}&quot;}"></div><h2>Thom Yorke : Last I Heard</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;07257d2f-870b-47ca-b96a-d56b26191fcb&quot;, &quot;filename&quot;: &quot;Wynn : Awakening&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/07257d2f-870b-47ca-b96a-d56b26191fcb/{variant}&quot;}"></div><h2>Wynn : Awakening</h2></section>
 <script>
 if (new URLSearchParams(window.location.search).get('mobile-shell') === '1') document.documentElement.classList.add('mobile-shell');
 if (new URLSearchParams(window.location.search).get('slow-shell') === '1') window.JDC_NETWORK_OVERRIDE = { effectiveType: '3g', downlink: 1.5, rtt: 250, saveData: false };
-window.JDC_POSTERS = {"04a6e835-4333-44c8-9371-fe856603b3c0": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/24fe5542-f096-4526-9bdc-faafb131b67b/04a6e835-amber-mark-out-of-this-world.jpg", "0e764c18-3c49-4820-8dd1-e05116de7c4d": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/3dec4555-f31a-49af-a867-f6f6b2a5c645/0e764c18-bright-eyes-mariana-trench.jpg", "1afd7cf7-f7eb-4345-9614-e989d5ea7aac": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/2ddc62c1-d91a-4eb4-a7e5-b9431f153054/1afd7cf7-bombas-spring-campaign.jpg", "9340c0e0-12c9-4ca7-a305-149c68f10acf": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/477ca114-53c6-4beb-8227-4bdade29cead/9340c0e0-nike-aja-sabrina.jpg", "c07a7957-7369-4a2e-9e9d-a67314fcea3a": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/b5d07bb0-5410-46e1-964e-7a112cef916d/c07a7957-lovb-x-adidas.jpg", "df93c27e-5dd5-4b58-997d-6664af8af62d": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/c9450e84-e754-4f4a-aa9d-331eb09a57bb/df93c27e-alignment-documentary.jpg", "edc2639e-d736-4107-8580-f3e1a864c81e": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/a651c16e-05d4-44b0-98d6-32d587b992af/edc2639e-gabriel-garzon-montano-aguita.jpg", "f3502f3d-b76f-4b9c-96a1-d78ccf642691": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/cffca8f9-3f2e-4bb2-b1f4-6309e2097e22/f3502f3d-bon-iver-day-one.jpg"};
-window.JDC_PILOT_STANDALONE = true;
+window.JDC_POSTERS = {"01cf1f30-f776-4c12-b875-317556ea587c": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/e024cc4a-c01e-4671-b430-f30b5f497079/01cf1f30-armando-young-prizefighter.jpg", "04a6e835-4333-44c8-9371-fe856603b3c0": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/24fe5542-f096-4526-9bdc-faafb131b67b/04a6e835-amber-mark-out-of-this-world.jpg", "07257d2f-870b-47ca-b96a-d56b26191fcb": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/fbaf4861-3312-4b0e-963f-b0af233ffec9/07257d2f-wynn-awakening.jpg", "0e764c18-3c49-4820-8dd1-e05116de7c4d": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/3dec4555-f31a-49af-a867-f6f6b2a5c645/0e764c18-bright-eyes-mariana-trench.jpg", "14c221d2-d4b1-4bfd-baf5-784fd3d45d82": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/922d0664-c20c-4313-90ec-307331f49230/14c221d2-polymarket-make-your-own-market.jpg", "16c0fece-f3f8-4cb8-a60a-398c0669dfe4": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/93252948-1823-47fd-8ff8-1f1faa43a6eb/16c0fece-spotify-hip-hop-classics.jpg", "1afd7cf7-f7eb-4345-9614-e989d5ea7aac": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/2ddc62c1-d91a-4eb4-a7e5-b9431f153054/1afd7cf7-bombas-spring-campaign.jpg", "229157cc-c2eb-4231-8f1a-3bbd256dc316": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/6e60e12c-5f12-4ac6-ba04-ea585bb9e0df/229157cc-thom-yorke-last-i-heard.jpg", "3b58e12f-1a34-43bc-81db-7c64cedb68cd": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/14817582-3b8c-4672-b776-bca2a2d17ecb/3b58e12f-kelsey-lu-boys-noize-ride-or-die.jpg", "49d7cacc-7149-46db-bc4d-010e1499e15d": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/dcc0191e-930c-4bcf-8bdf-f64612b8ef01/49d7cacc-hbo-shaq.jpg", "4c67c71c-5a65-4b8b-9051-4d309b41a59b": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/07f7dec8-7ad0-47d6-a59f-10432e27d6cc/4c67c71c-celeste-everyday.jpg", "56d1726f-dc13-4596-951d-a630bb754b1f": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/81c26a91-fc6c-4291-bd0c-b4067b8f1dbb/56d1726f-mitski-a-pearl.jpg", "57943004-8026-477d-8ecb-7d2b1e3ee29d": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/b3c11577-5bfd-4406-bfdb-81890b48a6b7/57943004-siberia-hills-lookbook.jpg", "6307f97a-8c88-461d-8606-3f0ca6ed3cca": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/d951ef61-96f1-400a-af66-53032ac7b397/6307f97a-kombilesa-mi-los-peinados.jpg", "8673613f-639d-4112-9ee9-118843e73487": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/5d38d06a-8e20-4ef0-a81e-0082c36b7714/8673613f-gabriel-garzon-montano-acoustic.jpg", "9340c0e0-12c9-4ca7-a305-149c68f10acf": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/477ca114-53c6-4beb-8227-4bdade29cead/9340c0e0-nike-aja-sabrina.jpg", "98fca04a-7159-4eac-a353-f64c3a108353": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/c7911e2a-0693-4eb6-b51a-2c4bb4591710/98fca04a-laufey-tour-visuals.jpg", "c07a7957-7369-4a2e-9e9d-a67314fcea3a": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/b5d07bb0-5410-46e1-964e-7a112cef916d/c07a7957-lovb-x-adidas.jpg", "c32c609a-125d-4a4d-979d-4f828b4ce28b": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/2f61547d-d416-400b-bc84-3a62af6fff99/c32c609a-lovb-launch.jpg", "ca8b291b-73b5-4c4d-ac1a-1462bbe956c5": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/3f857974-72f8-48d7-8036-a7b7714a52e6/ca8b291b-hulu-black-twitter.jpg", "cc69fc05-d021-44b6-9c23-84a73f79f2ea": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/7ffa0a41-e38a-4846-a626-7a818d144fba/cc69fc05-netflix-kings-of-tupelo.jpg", "d1da6b8b-1e04-4762-b8cf-2c7c3f628bb4": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/326472a5-125b-4955-aac8-d2fe4683f8e9/d1da6b8b-nike-jordan-39.jpg", "df93c27e-5dd5-4b58-997d-6664af8af62d": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/c9450e84-e754-4f4a-aa9d-331eb09a57bb/df93c27e-alignment-documentary.jpg", "edc2639e-d736-4107-8580-f3e1a864c81e": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/a651c16e-05d4-44b0-98d6-32d587b992af/edc2639e-gabriel-garzon-montano-aguita.jpg", "f2b6e655-df82-43f3-a5b2-37b03b255062": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/82680288-ea24-43ca-b4b5-60cb0d6cea01/f2b6e655-diamond-terrifier-action-fortress.jpg", "f3502f3d-b76f-4b9c-96a1-d78ccf642691": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/cffca8f9-3f2e-4bb2-b1f4-6309e2097e22/f3502f3d-bon-iver-day-one.jpg", "f47d15d5-b1a3-4029-9d92-a3a46fd75748": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/9822fdd5-fe69-4aff-aecd-870d705d5b63/f47d15d5-bombas-dream-of-comfort.jpg", "fc8b335a-bbab-426f-be91-bdbdd4798970": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/4ea39365-87d9-4262-b3cd-43a0b09c128c/fc8b335a-polymarket-documentary.jpg", "fdc694d9-7d0d-4e80-b49a-f27233bf9679": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/068c6626-04af-49bd-a480-457e2a1f87fe/fdc694d9-armando-young-belladonna.jpg"};
 window.JDC_VIDEO_PILOT = {
   baseUrl: new URL(new URLSearchParams(window.location.search).get('jdc-pilot-fail') === '1' ? './missing/' : './', window.location.href).href,
-  routes: {"04a6e835-4333-44c8-9371-fe856603b3c0": "media/04a6e835-4333-44c8-9371-fe856603b3c0/master.m3u8", "0e764c18-3c49-4820-8dd1-e05116de7c4d": "media/0e764c18-3c49-4820-8dd1-e05116de7c4d/master.m3u8", "1afd7cf7-f7eb-4345-9614-e989d5ea7aac": "media/1afd7cf7-f7eb-4345-9614-e989d5ea7aac/master.m3u8", "9340c0e0-12c9-4ca7-a305-149c68f10acf": "media/9340c0e0-12c9-4ca7-a305-149c68f10acf/master.m3u8", "c07a7957-7369-4a2e-9e9d-a67314fcea3a": "media/c07a7957-7369-4a2e-9e9d-a67314fcea3a/master.m3u8", "df93c27e-5dd5-4b58-997d-6664af8af62d": "media/df93c27e-5dd5-4b58-997d-6664af8af62d/master.m3u8", "edc2639e-d736-4107-8580-f3e1a864c81e": "media/edc2639e-d736-4107-8580-f3e1a864c81e/master.m3u8", "f3502f3d-b76f-4b9c-96a1-d78ccf642691": "media/f3502f3d-b76f-4b9c-96a1-d78ccf642691/master.m3u8"}
+  routes: {"01cf1f30-f776-4c12-b875-317556ea587c": "media/01cf1f30-f776-4c12-b875-317556ea587c/master.m3u8", "04a6e835-4333-44c8-9371-fe856603b3c0": "media/04a6e835-4333-44c8-9371-fe856603b3c0/master.m3u8", "07257d2f-870b-47ca-b96a-d56b26191fcb": "media/07257d2f-870b-47ca-b96a-d56b26191fcb/master.m3u8", "0e764c18-3c49-4820-8dd1-e05116de7c4d": "media/0e764c18-3c49-4820-8dd1-e05116de7c4d/master.m3u8", "14c221d2-d4b1-4bfd-baf5-784fd3d45d82": "media/14c221d2-d4b1-4bfd-baf5-784fd3d45d82/master.m3u8", "16c0fece-f3f8-4cb8-a60a-398c0669dfe4": "media/16c0fece-f3f8-4cb8-a60a-398c0669dfe4/master.m3u8", "1afd7cf7-f7eb-4345-9614-e989d5ea7aac": "media/1afd7cf7-f7eb-4345-9614-e989d5ea7aac/master.m3u8", "229157cc-c2eb-4231-8f1a-3bbd256dc316": "media/229157cc-c2eb-4231-8f1a-3bbd256dc316/master.m3u8", "3b58e12f-1a34-43bc-81db-7c64cedb68cd": "media/3b58e12f-1a34-43bc-81db-7c64cedb68cd/master.m3u8", "49d7cacc-7149-46db-bc4d-010e1499e15d": "media/49d7cacc-7149-46db-bc4d-010e1499e15d/master.m3u8", "4c67c71c-5a65-4b8b-9051-4d309b41a59b": "media/4c67c71c-5a65-4b8b-9051-4d309b41a59b/master.m3u8", "56d1726f-dc13-4596-951d-a630bb754b1f": "media/56d1726f-dc13-4596-951d-a630bb754b1f/master.m3u8", "57943004-8026-477d-8ecb-7d2b1e3ee29d": "media/57943004-8026-477d-8ecb-7d2b1e3ee29d/master.m3u8", "6307f97a-8c88-461d-8606-3f0ca6ed3cca": "media/6307f97a-8c88-461d-8606-3f0ca6ed3cca/master.m3u8", "8673613f-639d-4112-9ee9-118843e73487": "media/8673613f-639d-4112-9ee9-118843e73487/master.m3u8", "9340c0e0-12c9-4ca7-a305-149c68f10acf": "media/9340c0e0-12c9-4ca7-a305-149c68f10acf/master.m3u8", "98fca04a-7159-4eac-a353-f64c3a108353": "media/98fca04a-7159-4eac-a353-f64c3a108353/master.m3u8", "c07a7957-7369-4a2e-9e9d-a67314fcea3a": "media/c07a7957-7369-4a2e-9e9d-a67314fcea3a/master.m3u8", "c32c609a-125d-4a4d-979d-4f828b4ce28b": "media/c32c609a-125d-4a4d-979d-4f828b4ce28b/master.m3u8", "ca8b291b-73b5-4c4d-ac1a-1462bbe956c5": "media/ca8b291b-73b5-4c4d-ac1a-1462bbe956c5/master.m3u8", "cc69fc05-d021-44b6-9c23-84a73f79f2ea": "media/cc69fc05-d021-44b6-9c23-84a73f79f2ea/master.m3u8", "d1da6b8b-1e04-4762-b8cf-2c7c3f628bb4": "media/d1da6b8b-1e04-4762-b8cf-2c7c3f628bb4/master.m3u8", "df93c27e-5dd5-4b58-997d-6664af8af62d": "media/df93c27e-5dd5-4b58-997d-6664af8af62d/master.m3u8", "edc2639e-d736-4107-8580-f3e1a864c81e": "media/edc2639e-d736-4107-8580-f3e1a864c81e/master.m3u8", "f2b6e655-df82-43f3-a5b2-37b03b255062": "media/f2b6e655-df82-43f3-a5b2-37b03b255062/master.m3u8", "f3502f3d-b76f-4b9c-96a1-d78ccf642691": "media/f3502f3d-b76f-4b9c-96a1-d78ccf642691/master.m3u8", "f47d15d5-b1a3-4029-9d92-a3a46fd75748": "media/f47d15d5-b1a3-4029-9d92-a3a46fd75748/master.m3u8", "fc8b335a-bbab-426f-be91-bdbdd4798970": "media/fc8b335a-bbab-426f-be91-bdbdd4798970/master.m3u8", "fdc694d9-7d0d-4e80-b49a-f27233bf9679": "media/fdc694d9-7d0d-4e80-b49a-f27233bf9679/master.m3u8"}
 };
 /* JDC demand-loaded HLS player. Requires jdc_header_video_gate.js to run first. */
 (function () {
@@ -134,7 +164,7 @@ window.JDC_VIDEO_PILOT = {
   var pilotConfig = window.JDC_VIDEO_PILOT || {};
   var pilotRoutes = pilotConfig.routes || {};
   var pilotBaseUrl = String(pilotConfig.baseUrl || "");
-  var pilotEnabled = pilotQuery === "1" && !!pilotBaseUrl && (window.location.pathname === "/" || window.JDC_PILOT_STANDALONE === true);
+  var pilotEnabled = pilotQuery === "1" && !!pilotBaseUrl && window.location.pathname === "/";
   var connection = window.JDC_NETWORK_OVERRIDE || navigator.connection || navigator.mozConnection || navigator.webkitConnection || {};
   var effectiveType = String(connection.effectiveType || "").toLowerCase();
   var downlink = Number(connection.downlink || 0);
@@ -156,6 +186,18 @@ window.JDC_VIDEO_PILOT = {
   var desiredStates = new Set();
   var hlsPromise = null;
   var retryDelays = [1200, 3000, 8000];
+
+  function installBlockAspectStyles() {
+    if (document.getElementById("jdc-project-aspect-ratios")) return;
+    var style = document.createElement("style");
+    style.id = "jdc-project-aspect-ratios";
+    style.textContent = [
+      ".jdc-video-shell.jdc-video-block{width:100%!important;height:auto!important;min-height:0!important;aspect-ratio:var(--jdc-video-aspect,16/9)!important;background-size:contain}",
+      ".jdc-video-shell.jdc-video-block>.native-video-player,.jdc-video-shell.jdc-video-block>.jdc-video-stage{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-height:0!important;padding:0!important;padding-bottom:0!important;aspect-ratio:var(--jdc-video-aspect,16/9)!important}",
+      ".jdc-video-shell.jdc-video-block video{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:contain!important}"
+    ].join("");
+    document.head.appendChild(style);
+  }
 
   function parse(element, attribute) {
     try { return JSON.parse(element.getAttribute(attribute) || "{}"); }
@@ -198,6 +240,45 @@ window.JDC_VIDEO_PILOT = {
     var poster = posterMap[config.systemDataId] || shell.getAttribute("data-jdc-poster");
     if (!poster) return;
     shell.style.setProperty("--jdc-poster", "url(\"" + String(poster).replace(/\"/g, "%22") + "\")");
+  }
+
+  function configuredAspect(config) {
+    var ratio = Number(config && config.aspectRatio);
+    if (Number.isFinite(ratio) && ratio > 0) return ratio;
+    var firstVariant = String(config && config.systemDataVariants || "").split(",")[0].split(":");
+    var width = Number(firstVariant[0]);
+    var height = Number(firstVariant[1]);
+    return Number.isFinite(width) && Number.isFinite(height) && width > 0 && height > 0 ? width / height : 16 / 9;
+  }
+
+  function hasConfiguredAspect(config) {
+    var ratio = Number(config && config.aspectRatio);
+    return Number.isFinite(ratio) && ratio > 0;
+  }
+
+  function setBlockAspect(state, ratio, source) {
+    if (!state || state.kind !== "block") return;
+    ratio = Number(ratio);
+    if (!Number.isFinite(ratio) || ratio <= 0) return;
+    var value = String(Math.round(ratio * 100000000) / 100000000);
+    state.shell.style.setProperty("--jdc-video-aspect", value);
+    [
+      ["width", "100%"], ["height", "auto"], ["min-height", "0"],
+      ["aspect-ratio", value], ["background-size", "contain"]
+    ].forEach(function (pair) { state.shell.style.setProperty(pair[0], pair[1], "important"); });
+    state.stage.style.setProperty("--jdc-video-aspect", value);
+    [
+      ["position", "absolute"], ["inset", "0"], ["width", "100%"],
+      ["height", "100%"], ["min-height", "0"], ["padding", "0"],
+      ["padding-bottom", "0"], ["aspect-ratio", value]
+    ].forEach(function (pair) { state.stage.style.setProperty(pair[0], pair[1], "important"); });
+    if (state.video) {
+      [
+        ["position", "absolute"], ["inset", "0"], ["width", "100%"],
+        ["height", "100%"], ["object-fit", "contain"]
+      ].forEach(function (pair) { state.video.style.setProperty(pair[0], pair[1], "important"); });
+    }
+    state.shell.setAttribute("data-jdc-aspect-source", source || "config");
   }
 
   function makeControls(state) {
@@ -253,6 +334,7 @@ window.JDC_VIDEO_PILOT = {
     video.setAttribute("aria-label", state.config.filename || "Portfolio video");
     state.stage.replaceChildren(video);
     state.video = video;
+    setBlockAspect(state, configuredAspect(state.config), hasConfiguredAspect(state.config) ? "config" : "variant");
     ["play", "pause", "volumechange", "timeupdate"].forEach(function (eventName) {
       video.addEventListener(eventName, function () { updateControls(state); });
     });
@@ -266,7 +348,17 @@ window.JDC_VIDEO_PILOT = {
       state.shell.classList.add("jdc-video-ready");
       maybeExpandPreload(video);
     }, { once: true });
-    video.addEventListener("resize", function () { maybeExpandPreload(video); });
+    video.addEventListener("loadedmetadata", function () {
+      if (!hasConfiguredAspect(state.config) && video.videoWidth && video.videoHeight) {
+        setBlockAspect(state, video.videoWidth / video.videoHeight, "metadata");
+      }
+    }, { once: true });
+    video.addEventListener("resize", function () {
+      if (!hasConfiguredAspect(state.config) && video.videoWidth && video.videoHeight) {
+        setBlockAspect(state, video.videoWidth / video.videoHeight, "metadata");
+      }
+      maybeExpandPreload(video);
+    });
     video.addEventListener("error", function () { scheduleRetry(state); });
     return video;
   }
@@ -453,6 +545,7 @@ window.JDC_VIDEO_PILOT = {
       shell.appendChild(stage);
     }
     var state = { shell: shell, stage: stage, config: config, kind: kind, video: null, hls: null, loading: false, controls: null, retryCount: 0, retryTimer: null, pilotFailed: false, usingPilot: false };
+    setBlockAspect(state, configuredAspect(config), "config");
     states.set(shell, state);
     makeControls(state);
     if (kind === "block") {
@@ -476,6 +569,7 @@ window.JDC_VIDEO_PILOT = {
   }
 
   function start() {
+    installBlockAspectStyles();
     scan(document);
     var mutations = new MutationObserver(function (records) {
       records.forEach(function (record) {
@@ -487,7 +581,7 @@ window.JDC_VIDEO_PILOT = {
   }
 
   window.__JDC_SMART_VIDEO__ = {
-    version: "adaptive-prefetch-pilot-3",
+    version: "adaptive-prefetch-pilot-7-home-29",
     states: states,
     activate: activate,
     unload: unload,
