@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>JDC compression pilot</title>
+<style>
+html, body { margin: 0; background: #000; color: #fff; font-family: Arial, sans-serif; }
+section { position: relative; height: 100vh; min-height: 640px; overflow: hidden; }
+section h2 { position: absolute; z-index: 5; left: 4vw; bottom: 6vh; margin: 0; font-size: clamp(28px, 4vw, 64px); font-weight: 400; }
+.mobile-shell body { width: 390px; }
+.mobile-shell section { width: 390px; height: 844px; min-height: 844px; }
+.jdc-video-shell {
+  position: relative;
+  overflow: hidden;
+  background-color: #050505;
+  background-image: var(--jdc-poster, none);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* Squarespace section backgrounds are absolutely positioned full-bleed media.
+   Keep that geometry while block videos remain relative positioning contexts. */
+.jdc-video-shell.jdc-video-background {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.jdc-video-shell > .native-video-player,
+.jdc-video-shell > .jdc-video-stage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.jdc-video-shell video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 260ms ease;
+}
+
+.jdc-video-shell.jdc-video-playing video,
+.jdc-video-shell.jdc-video-ready video {
+  opacity: 1;
+}
+
+.jdc-video-shell.jdc-video-poster-only::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent 75%, rgba(0, 0, 0, 0.12));
+}
+
+.jdc-video-controls {
+  position: absolute;
+  z-index: 4;
+  left: 16px;
+  right: 16px;
+  bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+
+.jdc-video-block:hover .jdc-video-controls,
+.jdc-video-block:focus-within .jdc-video-controls {
+  opacity: 1;
+}
+
+.jdc-video-controls button {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 11px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.58);
+  font: 600 11px/1 system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.jdc-video-progress {
+  flex: 1;
+  height: 3px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.jdc-video-progress > span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: #fff;
+}
+
+@media (hover: none) {
+  .jdc-video-controls { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jdc-video-shell video { transition: none; }
+}
+
+</style>
+</head>
+<body>
+<section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;f3502f3d-b76f-4b9c-96a1-d78ccf642691&quot;, &quot;filename&quot;: &quot;Bon Iver : Day One&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/f3502f3d-b76f-4b9c-96a1-d78ccf642691/{variant}&quot;}"></div><h2>Bon Iver : Day One</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;c07a7957-7369-4a2e-9e9d-a67314fcea3a&quot;, &quot;filename&quot;: &quot;LOVB x Adidas&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/c07a7957-7369-4a2e-9e9d-a67314fcea3a/{variant}&quot;}"></div><h2>LOVB x Adidas</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;1afd7cf7-f7eb-4345-9614-e989d5ea7aac&quot;, &quot;filename&quot;: &quot;Bombas : Spring Campaign&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/1afd7cf7-f7eb-4345-9614-e989d5ea7aac/{variant}&quot;}"></div><h2>Bombas : Spring Campaign</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;df93c27e-5dd5-4b58-997d-6664af8af62d&quot;, &quot;filename&quot;: &quot;Alignment : Documentary&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/df93c27e-5dd5-4b58-997d-6664af8af62d/{variant}&quot;}"></div><h2>Alignment : Documentary</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;9340c0e0-12c9-4ca7-a305-149c68f10acf&quot;, &quot;filename&quot;: &quot;Nike : Aja &amp; Sabrina&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/9340c0e0-12c9-4ca7-a305-149c68f10acf/{variant}&quot;}"></div><h2>Nike : Aja &amp; Sabrina</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;edc2639e-d736-4107-8580-f3e1a864c81e&quot;, &quot;filename&quot;: &quot;Gabriel Garzon Montano : Aguita&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/edc2639e-d736-4107-8580-f3e1a864c81e/{variant}&quot;}"></div><h2>Gabriel Garzon Montano : Aguita</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;0e764c18-3c49-4820-8dd1-e05116de7c4d&quot;, &quot;filename&quot;: &quot;Bright Eyes : Mariana Trench&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/0e764c18-3c49-4820-8dd1-e05116de7c4d/{variant}&quot;}"></div><h2>Bright Eyes : Mariana Trench</h2></section><section><div class="pilot-video" data-jdc-native-video="{&quot;systemDataId&quot;: &quot;04a6e835-4333-44c8-9371-fe856603b3c0&quot;, &quot;filename&quot;: &quot;Amber Mark : Out of This World&quot;, &quot;alexandriaUrl&quot;: &quot;https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/04a6e835-4333-44c8-9371-fe856603b3c0/{variant}&quot;}"></div><h2>Amber Mark : Out of This World</h2></section>
+<script>
+if (new URLSearchParams(window.location.search).get('mobile-shell') === '1') document.documentElement.classList.add('mobile-shell');
+if (new URLSearchParams(window.location.search).get('slow-shell') === '1') window.JDC_NETWORK_OVERRIDE = { effectiveType: '3g', downlink: 1.5, rtt: 250, saveData: false };
+window.JDC_POSTERS = {"04a6e835-4333-44c8-9371-fe856603b3c0": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/24fe5542-f096-4526-9bdc-faafb131b67b/04a6e835-amber-mark-out-of-this-world.jpg", "0e764c18-3c49-4820-8dd1-e05116de7c4d": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/3dec4555-f31a-49af-a867-f6f6b2a5c645/0e764c18-bright-eyes-mariana-trench.jpg", "1afd7cf7-f7eb-4345-9614-e989d5ea7aac": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/2ddc62c1-d91a-4eb4-a7e5-b9431f153054/1afd7cf7-bombas-spring-campaign.jpg", "9340c0e0-12c9-4ca7-a305-149c68f10acf": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/477ca114-53c6-4beb-8227-4bdade29cead/9340c0e0-nike-aja-sabrina.jpg", "c07a7957-7369-4a2e-9e9d-a67314fcea3a": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/b5d07bb0-5410-46e1-964e-7a112cef916d/c07a7957-lovb-x-adidas.jpg", "df93c27e-5dd5-4b58-997d-6664af8af62d": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/c9450e84-e754-4f4a-aa9d-331eb09a57bb/df93c27e-alignment-documentary.jpg", "edc2639e-d736-4107-8580-f3e1a864c81e": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/a651c16e-05d4-44b0-98d6-32d587b992af/edc2639e-gabriel-garzon-montano-aguita.jpg", "f3502f3d-b76f-4b9c-96a1-d78ccf642691": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/cffca8f9-3f2e-4bb2-b1f4-6309e2097e22/f3502f3d-bon-iver-day-one.jpg"};
+window.JDC_VIDEO_PILOT = {
+  baseUrl: new URL(new URLSearchParams(window.location.search).get('jdc-pilot-fail') === '1' ? './missing/' : './', window.location.href).href,
+  routes: {"04a6e835-4333-44c8-9371-fe856603b3c0": "media/04a6e835-4333-44c8-9371-fe856603b3c0/master.m3u8", "0e764c18-3c49-4820-8dd1-e05116de7c4d": "media/0e764c18-3c49-4820-8dd1-e05116de7c4d/master.m3u8", "1afd7cf7-f7eb-4345-9614-e989d5ea7aac": "media/1afd7cf7-f7eb-4345-9614-e989d5ea7aac/master.m3u8", "9340c0e0-12c9-4ca7-a305-149c68f10acf": "media/9340c0e0-12c9-4ca7-a305-149c68f10acf/master.m3u8", "c07a7957-7369-4a2e-9e9d-a67314fcea3a": "media/c07a7957-7369-4a2e-9e9d-a67314fcea3a/master.m3u8", "df93c27e-5dd5-4b58-997d-6664af8af62d": "media/df93c27e-5dd5-4b58-997d-6664af8af62d/master.m3u8", "edc2639e-d736-4107-8580-f3e1a864c81e": "media/edc2639e-d736-4107-8580-f3e1a864c81e/master.m3u8", "f3502f3d-b76f-4b9c-96a1-d78ccf642691": "media/f3502f3d-b76f-4b9c-96a1-d78ccf642691/master.m3u8"}
+};
+/* JDC demand-loaded HLS player. Requires jdc_header_video_gate.js to run first. */
+(function () {
+  "use strict";
+  if (window.__JDC_SMART_VIDEO__) return;
+
+  var HLS_JS_URL = "https://cdn.jsdelivr.net/npm/hls.js@1.7.1/dist/hls.min.js";
+  var pilotQuery = new URLSearchParams(window.location.search).get("jdc-video-pilot");
+  var pilotConfig = window.JDC_VIDEO_PILOT || {};
+  var pilotRoutes = pilotConfig.routes || {};
+  var pilotBaseUrl = String(pilotConfig.baseUrl || "");
+  var pilotEnabled = pilotQuery === "1" && !!pilotBaseUrl && window.location.pathname === "/";
+  var connection = window.JDC_NETWORK_OVERRIDE || navigator.connection || navigator.mozConnection || navigator.webkitConnection || {};
+  var effectiveType = String(connection.effectiveType || "").toLowerCase();
+  var downlink = Number(connection.downlink || 0);
+  var rtt = Number(connection.rtt || 0);
+  var saveData = !!connection.saveData;
+  var reducedMotion = !!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var forceLow = saveData || effectiveType === "slow-2g" || effectiveType === "2g";
+  var posterOnly = saveData || reducedMotion;
+  var conservative = forceLow || effectiveType === "3g";
+  var turbo = !posterOnly && !conservative && downlink >= 10 && (rtt === 0 || rtt <= 75);
+  var visibleLimit = conservative ? 1 : 2;
+  var preloadAhead = posterOnly ? 0 : conservative ? 1 : turbo ? 2 : 1;
+  var preloadBehind = posterOnly || conservative ? 0 : 1;
+  var maxActive = visibleLimit + preloadAhead + preloadBehind;
+  var posterMap = window.JDC_POSTERS || {};
+  var states = new Map();
+  var visible = new Map();
+  var activeStates = new Set();
+  var desiredStates = new Set();
+  var hlsPromise = null;
+  var retryDelays = [1200, 3000, 8000];
+
+  function parse(element, attribute) {
+    try { return JSON.parse(element.getAttribute(attribute) || "{}"); }
+    catch (error) { console.warn("JDC video config could not be parsed", error); return null; }
+  }
+
+  function squarespaceHlsUrl(config) {
+    return String(config.alexandriaUrl || "").replace("{variant}", "playlist.m3u8");
+  }
+
+  function pilotHlsUrl(config) {
+    var route = pilotRoutes[config.systemDataId];
+    if (!pilotEnabled || !route) return "";
+    try { return new URL(String(route), pilotBaseUrl).href; }
+    catch (error) { return ""; }
+  }
+
+  function hlsUrl(state) {
+    var pilotUrl = !state.pilotFailed && pilotHlsUrl(state.config);
+    state.usingPilot = !!pilotUrl;
+    state.shell.classList.toggle("jdc-video-pilot", state.usingPilot);
+    return pilotUrl || squarespaceHlsUrl(state.config);
+  }
+
+  function ensureHls() {
+    if (window.Hls) return Promise.resolve(window.Hls);
+    if (hlsPromise) return hlsPromise;
+    hlsPromise = new Promise(function (resolve, reject) {
+      var script = document.createElement("script");
+      script.src = HLS_JS_URL;
+      script.async = true;
+      script.onload = function () { window.Hls ? resolve(window.Hls) : reject(new Error("hls.js did not initialize")); };
+      script.onerror = function () { reject(new Error("hls.js failed to load")); };
+      document.head.appendChild(script);
+    });
+    return hlsPromise;
+  }
+
+  function setPoster(shell, config) {
+    var poster = posterMap[config.systemDataId] || shell.getAttribute("data-jdc-poster");
+    if (!poster) return;
+    shell.style.setProperty("--jdc-poster", "url(\"" + String(poster).replace(/\"/g, "%22") + "\")");
+  }
+
+  function makeControls(state) {
+    if (state.kind !== "block") return;
+    var controls = document.createElement("div");
+    controls.className = "jdc-video-controls";
+    controls.innerHTML = '<button type="button" data-jdc-play>Pause</button><div class="jdc-video-progress" aria-hidden="true"><span></span></div><button type="button" data-jdc-mute>Sound</button>';
+    state.shell.appendChild(controls);
+    state.controls = controls;
+    controls.querySelector("[data-jdc-play]").addEventListener("click", function (event) {
+      event.stopPropagation();
+      if (!state.video) return activate(state, true);
+      state.video.paused ? state.video.play().catch(function () {}) : state.video.pause();
+    });
+    controls.querySelector("[data-jdc-mute]").addEventListener("click", function (event) {
+      event.stopPropagation();
+      if (!state.video) return activate(state, true);
+      state.video.muted = !state.video.muted;
+    });
+  }
+
+  function updateControls(state) {
+    if (!state.controls || !state.video) return;
+    state.controls.querySelector("[data-jdc-play]").textContent = state.video.paused ? "Play" : "Pause";
+    state.controls.querySelector("[data-jdc-mute]").textContent = state.video.muted ? "Sound" : "Mute";
+    var progress = state.video.duration ? state.video.currentTime / state.video.duration * 100 : 0;
+    state.controls.querySelector(".jdc-video-progress > span").style.width = progress + "%";
+  }
+
+  function publishLimits() {
+    if (!window.__JDC_SMART_VIDEO__) return;
+    window.__JDC_SMART_VIDEO__.visibleLimit = visibleLimit;
+    window.__JDC_SMART_VIDEO__.preloadAhead = preloadAhead;
+    window.__JDC_SMART_VIDEO__.preloadBehind = preloadBehind;
+    window.__JDC_SMART_VIDEO__.maxActive = maxActive;
+  }
+
+  function maybeExpandPreload(video) {
+    if (posterOnly || conservative || preloadAhead >= 2) return;
+    if (video.readyState < 3 || video.videoWidth < 1280) return;
+    preloadAhead = 2;
+    maxActive = visibleLimit + preloadAhead + preloadBehind;
+    publishLimits();
+    scheduleReconcile();
+  }
+
+  function mountVideo(state) {
+    var video = document.createElement("video");
+    video.playsInline = true;
+    video.muted = true;
+    video.loop = true;
+    video.preload = "metadata";
+    video.setAttribute("aria-label", state.config.filename || "Portfolio video");
+    state.stage.replaceChildren(video);
+    state.video = video;
+    ["play", "pause", "volumechange", "timeupdate"].forEach(function (eventName) {
+      video.addEventListener(eventName, function () { updateControls(state); });
+    });
+    video.addEventListener("playing", function () {
+      state.retryCount = 0;
+      state.shell.classList.add("jdc-video-playing");
+      state.shell.classList.remove("jdc-video-poster-only");
+      maybeExpandPreload(video);
+    });
+    video.addEventListener("canplay", function () {
+      state.shell.classList.add("jdc-video-ready");
+      maybeExpandPreload(video);
+    }, { once: true });
+    video.addEventListener("resize", function () { maybeExpandPreload(video); });
+    video.addEventListener("error", function () { scheduleRetry(state); });
+    return video;
+  }
+
+  function unload(state, preserveRetry) {
+    if (!state) return;
+    if (!preserveRetry && state.retryTimer) {
+      clearTimeout(state.retryTimer);
+      state.retryTimer = null;
+      state.retryCount = 0;
+    }
+    if (state.video) state.video.pause();
+    if (state.hls) { state.hls.destroy(); state.hls = null; }
+    if (state.video) {
+      state.video.removeAttribute("src");
+      state.video.load();
+      state.video.remove();
+    }
+    state.video = null;
+    state.loading = false;
+    state.shell.classList.remove("jdc-video-playing", "jdc-video-ready");
+    state.shell.classList.remove("jdc-video-pilot");
+    state.shell.classList.add("jdc-video-poster-only");
+    updateControls(state);
+    activeStates.delete(state);
+  }
+
+  function scheduleRetry(state) {
+    if (!state || state.retryTimer || !desiredStates.has(state)) return;
+    if (state.usingPilot && !state.pilotFailed) {
+      state.pilotFailed = true;
+      unload(state, true);
+      setTimeout(function () {
+        if (desiredStates.has(state)) activate(state, false);
+      }, 0);
+      return;
+    }
+    var attempt = Math.min(state.retryCount || 0, retryDelays.length - 1);
+    var delay = retryDelays[attempt];
+    state.retryCount = attempt + 1;
+    unload(state, true);
+    state.retryTimer = setTimeout(function () {
+      state.retryTimer = null;
+      if (desiredStates.has(state)) activate(state, false);
+    }, delay);
+  }
+
+  function activate(state, userInitiated) {
+    if (state && state.retryTimer) {
+      if (!userInitiated) return;
+      clearTimeout(state.retryTimer);
+      state.retryTimer = null;
+    }
+    if (!state || state.loading || state.video) {
+      if (state && state.video && userInitiated) state.video.play().catch(function () {});
+      return;
+    }
+    if (posterOnly && !userInitiated) return;
+    if (!activeStates.has(state) && activeStates.size >= maxActive) {
+      var oldest = activeStates.values().next().value;
+      if (oldest) unload(oldest);
+    }
+    activeStates.add(state);
+    state.loading = true;
+    var video = mountVideo(state);
+    var source = hlsUrl(state);
+
+    var nativeAppleHls = navigator.vendor === "Apple Computer, Inc." &&
+      video.canPlayType("application/vnd.apple.mpegurl") &&
+      !/(CriOS|FxiOS|EdgiOS)/.test(navigator.userAgent);
+    if (nativeAppleHls) {
+      video.src = source;
+      state.loading = false;
+      video.play().catch(function () {});
+      return;
+    }
+
+    ensureHls().then(function (Hls) {
+      if (!activeStates.has(state) || state.video !== video) return;
+      if (!Hls.isSupported()) throw new Error("HLS playback is not supported in this browser");
+      var hls = new Hls({
+        startLevel: turbo ? (state.usingPilot ? 2 : 1) : conservative ? 0 : -1,
+        startFragPrefetch: true,
+        capLevelToPlayerSize: true,
+        capLevelOnFPSDrop: true,
+        maxBufferLength: conservative ? 8 : turbo ? 30 : 15,
+        maxMaxBufferLength: conservative ? 12 : turbo ? 60 : 25,
+        backBufferLength: 0
+      });
+      state.hls = hls;
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MEDIA_ATTACHED, function () { hls.loadSource(source); });
+      hls.on(Hls.Events.MANIFEST_PARSED, function () {
+        state.loading = false;
+        video.play().catch(function () {});
+      });
+      hls.on(Hls.Events.ERROR, function (_event, data) {
+        if (!data.fatal) return;
+        console.warn("JDC video playback error", data);
+        scheduleRetry(state);
+      });
+    }).catch(function (error) {
+      console.warn(error);
+      scheduleRetry(state);
+    });
+  }
+
+  function rankedVisible() {
+    return Array.from(visible.entries())
+      .filter(function (entry) { return entry[1] >= 0.08; })
+      .sort(function (a, b) { return b[1] - a[1]; });
+  }
+
+  function playbackWindow() {
+    var ranked = rankedVisible();
+    var primary = ranked.slice(0, visibleLimit).map(function (entry) { return entry[0]; });
+    var desired = new Set(primary);
+    var preloadSlots = preloadAhead + preloadBehind;
+    if (!primary.length) return desired;
+
+    ranked.slice(visibleLimit).some(function (entry) {
+      if (preloadSlots <= 0) return true;
+      desired.add(entry[0]);
+      preloadSlots -= 1;
+      return false;
+    });
+
+    var ordered = Array.from(states.values());
+    var desiredIndexes = Array.from(desired).map(function (state) { return ordered.indexOf(state); });
+    var first = Math.min.apply(Math, desiredIndexes);
+    var last = Math.max.apply(Math, desiredIndexes);
+    var behindSlots = Math.min(preloadBehind, preloadSlots);
+    for (var before = first - 1; before >= 0 && behindSlots > 0; before -= 1) {
+      desired.add(ordered[before]);
+      behindSlots -= 1;
+      preloadSlots -= 1;
+    }
+    for (var index = last + 1; index < ordered.length && preloadSlots > 0; index += 1) {
+      desired.add(ordered[index]);
+      preloadSlots -= 1;
+    }
+    for (var fallback = first - 1; fallback >= 0 && preloadSlots > 0; fallback -= 1) {
+      if (desired.has(ordered[fallback])) continue;
+      desired.add(ordered[fallback]);
+      preloadSlots -= 1;
+    }
+    return desired;
+  }
+
+  function reconcile() {
+    var desired = posterOnly ? new Set() : playbackWindow();
+    desiredStates = desired;
+    Array.from(activeStates).forEach(function (state) {
+      if (!desired.has(state)) unload(state);
+    });
+    desired.forEach(function (state) { activate(state, false); });
+  }
+
+  var pendingReconcile = false;
+  function scheduleReconcile() {
+    if (pendingReconcile) return;
+    pendingReconcile = true;
+    requestAnimationFrame(function () { pendingReconcile = false; reconcile(); });
+  }
+
+  var intersection = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      var state = states.get(entry.target);
+      if (!state) return;
+      entry.isIntersecting ? visible.set(state, entry.intersectionRatio) : visible.delete(state);
+    });
+    scheduleReconcile();
+  }, { threshold: [0, 0.08, 0.25, 0.5, 0.75], rootMargin: "0px" });
+
+  function register(shell, config, kind) {
+    if (!config || !config.alexandriaUrl || shell.__jdcRegistered) return;
+    shell.__jdcRegistered = true;
+    shell.classList.add("jdc-video-shell", kind === "block" ? "jdc-video-block" : "jdc-video-background", "jdc-video-poster-only");
+    setPoster(shell, config);
+    var stage = shell.querySelector(".native-video-player") || shell;
+    if (stage === shell) {
+      stage = document.createElement("div");
+      stage.className = "jdc-video-stage";
+      shell.appendChild(stage);
+    }
+    var state = { shell: shell, stage: stage, config: config, kind: kind, video: null, hls: null, loading: false, controls: null, retryCount: 0, retryTimer: null, pilotFailed: false, usingPilot: false };
+    states.set(shell, state);
+    makeControls(state);
+    if (kind === "block") {
+      shell.addEventListener("click", function (event) {
+        if (event.target.closest(".jdc-video-controls")) return;
+        if (!state.video) return activate(state, true);
+        state.video.muted = !state.video.muted;
+        state.video.play().catch(function () {});
+      });
+    }
+    intersection.observe(shell);
+  }
+
+  function scan(root) {
+    (root || document).querySelectorAll("[data-jdc-native-video]").forEach(function (element) {
+      register(element, parse(element, "data-jdc-native-video"), "background");
+    });
+    (root || document).querySelectorAll("[data-jdc-video]").forEach(function (element) {
+      register(element, parse(element, "data-jdc-video"), "block");
+    });
+  }
+
+  function start() {
+    scan(document);
+    var mutations = new MutationObserver(function (records) {
+      records.forEach(function (record) {
+        record.addedNodes.forEach(function (node) { if (node.nodeType === 1) scan(node.parentElement || node); });
+      });
+    });
+    mutations.observe(document.body, { childList: true, subtree: true });
+    window.__JDC_SMART_VIDEO__.mutations = mutations;
+  }
+
+  window.__JDC_SMART_VIDEO__ = {
+    version: "adaptive-prefetch-pilot-3",
+    states: states,
+    activate: activate,
+    unload: unload,
+    activeStates: activeStates,
+    posterOnly: posterOnly,
+    conservative: conservative,
+    turbo: turbo,
+    pilotEnabled: pilotEnabled,
+    pilotBaseUrl: pilotBaseUrl,
+    pilotAssetIds: Object.keys(pilotRoutes),
+    visibleLimit: visibleLimit,
+    preloadAhead: preloadAhead,
+    preloadBehind: preloadBehind,
+    maxActive: maxActive
+  };
+
+  document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", start, { once: true }) : start();
+})();
+
+</script>
+</body>
+</html>
