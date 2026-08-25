@@ -749,6 +749,7 @@ window.JDC_VIDEO_PILOT = {
       ".jdc-video-shell.jdc-video-block{width:100%!important;height:auto!important;min-height:0!important;aspect-ratio:var(--jdc-video-aspect,16/9)!important;background-size:contain}",
       ".jdc-video-shell.jdc-video-block>.native-video-player,.jdc-video-shell.jdc-video-block>.jdc-video-stage{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-height:0!important;padding:0!important;padding-bottom:0!important;aspect-ratio:var(--jdc-video-aspect,16/9)!important}",
       ".jdc-video-shell.jdc-video-block video{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:contain!important}",
+      ".jdc-video-shell.jdc-video-background>.native-video-player,.jdc-video-shell.jdc-video-background>.jdc-video-stage{z-index:2!important}",
       "@media(min-width:768px) and (orientation:landscape){.jdc-project-spacing .jdc-project-lead-block .jdc-video-shell.jdc-video-portrait-lead{width:min(100%,var(--jdc-portrait-lead-width))!important;margin-left:auto!important;margin-right:auto!important}}"
     ].join("");
     document.head.appendChild(style);
