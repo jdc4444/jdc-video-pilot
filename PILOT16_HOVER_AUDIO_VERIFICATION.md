@@ -35,4 +35,30 @@ A direct click on the video also changed the mode to `enabled` and unmuted it. T
 
 ## Production verification
 
-Pending GitHub Pages publication and Squarespace loader swap.
+- GitHub Pages deployment `32807938597` completed successfully.
+- The public pilot 16 asset matches the committed file byte-for-byte.
+- Pilot 16 SHA-256: `ddabaf14871f879caa5bb387be1061d4b17f1b749ed90be751451393549ae54a`
+- Squarespace saved this exact production loader:
+
+```html
+<script src="https://jdc4444.github.io/jdc-video-pilot/jdc-footer-pilot16.js?v=3f8382f" crossorigin="anonymous" data-jdc-footer="pilot16"></script>
+```
+
+### Live browser verification
+
+Kings of Tupelo loaded the exact pilot 16 asset and reported `adaptive-prefetch-pilot-16-hover-audio`.
+
+| Step | Mode | Muted | Playing | Control |
+| --- | --- | --- | --- | --- |
+| Initial autoplay | `awaiting-gesture` | yes | yes | Sound |
+| Enter before opt-in | `awaiting-gesture` | yes | yes | Sound |
+| Click Sound | `enabled` | no | yes | Mute |
+| Leave video | `enabled` | yes | yes | Sound |
+| Return to video | `enabled` | no | yes | Mute |
+| Leave again | `enabled` | yes | yes | Sound |
+
+The video stayed ready and playing throughout the sequence.
+
+Homepage regression check: the live homepage loaded pilot 16, kept its visible video autoplaying muted, and did not add project-page sound controls to the homepage background video.
+
+Siberia Hills regression check at a 1280 x 720 desktop viewport: the portrait lead remained capped at 319 x 567, loaded ready, and autoplayed muted.
