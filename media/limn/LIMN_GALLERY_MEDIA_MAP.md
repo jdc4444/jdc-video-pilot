@@ -1,0 +1,24 @@
+# Limn gallery media map
+
+Public page: `https://www.josdiazcontreras.com/tobias-rees-limn`
+
+The “source” entries below are the twelve MOV files explicitly supplied for the site update. They are preserved unchanged on Phantom. They are the immediate sources for these exports, not a claim that the screen recordings are the ultimate upstream animation masters.
+
+Export policy: H.264 High, 30 fps, CRF 18, 7 Mbps peak, two-second keyframes, `yuv420p`, no audio (the sources contain no audio), and MP4 fast-start metadata. Width is capped at 1920 px without upscaling. Every poster is decoded from frame zero of its corresponding optimized export.
+
+| # | Supplied source | Source (duration, frame) | Source SHA-256 | Site export | Export (duration, frame, size) | Export SHA-256 | First-frame poster |
+|---:|---|---|---|---|---|---|---|
+| 01 | `Screen Recording 2025-04-13 at 10.03.57 PM.mov` | 4.933 s, 3476×1728 | `52ceea41a4c9a2da1caed7208f3c85d29f227e3b6eb94abca6b0984e0decb619` | `limn-gallery-01-site.mp4` | 4.967 s, 1920×954, 4,091,955 B | `71fc3ade841446a3129e026d68962122041e7190268c2bb83b1283b73341a36a` | `limn-gallery-01-first.jpg` |
+| 02 | `Screen Recording 2025-04-13 at 10.04.08 PM.mov` | 3.467 s, 3476×1728 | `1834676875f39373ceade3a9808342c791f79ebd438983cba218ecb56bc75aa3` | `limn-gallery-02-site.mp4` | 3.500 s, 1920×954, 2,462,204 B | `587ead89218dc83127403e20231c0073c3dba955bad140a688181a37074fe6f5` | `limn-gallery-02-first.jpg` |
+| 03 | `Screen Recording 2025-04-13 at 10.04.23 PM.mov` | 7.400 s, 3476×1728 | `3c4a513369f28d41431d5657baf92ee527fcdaea2a81649c125e731245de02a0` | `limn-gallery-03-site.mp4` | 7.433 s, 1920×954, 5,724,181 B | `ba62e473c1dd0b92384c4a6eac2488b276c307ef100f85560ba42072144db8e2` | `limn-gallery-03-first.jpg` |
+| 04 | `Screen Recording 2025-04-13 at 10.05.03 PM.mov` | 16.583 s, 3458×1716 | `64ffa1e7912fa67559ec0e6ed5900fc6b8150bb9ee47f9c76c58639bd1435584` | `limn-gallery-04-site.mp4` | 16.633 s, 1920×952, 13,555,438 B | `dabb2daa25493d8f5a2e56a77c0463fe19976240c0ceaacd3a52f4b63899525f` | `limn-gallery-04-first.jpg` |
+| 05 | `Screen Recording 2025-04-13 at 10.05.41 PM.mov` | 13.733 s, 2606×1302 | `fabec5bcf885c49a088947fde1c765de48ae05c862bfc3f3d3c1e7ea3b60ef1a` | `limn-gallery-05-site.mp4` | 13.733 s, 1920×960, 10,490,720 B | `2744b472a1fc63459c4f936952240c8af1c31f0c6fdd408fa092a5b82fc2d0b6` | `limn-gallery-05-first.jpg` |
+| 06 | `Screen Recording 2025-04-13 at 10.06.24 PM.mov` | 21.033 s, 2934×1468 | `b15b5daf221e247d116c67bf8ac364e4690d31ea8548bb4944286d4a5ef620df` | `limn-gallery-06-site.mp4` | 21.067 s, 1920×960, 17,621,774 B | `2ac7b585f7e6d76ebbd6efece53ac505830dc41cddbaf7eeb872f21a332fa523` | `limn-gallery-06-first.jpg` |
+| 07 | `Screen Recording 2025-04-13 at 10.07.03 PM.mov` | 39.300 s, 1726×860 | `76b220e0d72dc7c4eb661c2663243031900fa937d94bfe9522e418fa731f0da6` | `limn-gallery-07-site.mp4` | 39.333 s, 1726×860, 31,053,042 B | `fa808491c6b490bc7b9fb0f5a498d740084c84aafe44ea1e798449dc5ac7cb9e` | `limn-gallery-07-first.jpg` |
+| 08 | `Screen Recording 2025-04-13 at 10.08.06 PM.mov` | 17.983 s, 3494×1748 | `ba01d6552a22582e48acd796401e63580a7e9ad0794c5e58dba63acb03f6f837` | `limn-gallery-08-site.mp4` | 18.033 s, 1920×960, 13,592,225 B | `f235ee9c58713619eaa3b8696d834878464cac89e3b364f97f5e91f75c1e345a` | `limn-gallery-08-first.jpg` |
+| 09 | `Screen Recording 2025-04-13 at 10.08.35 PM.mov` | 28.333 s, 2934×1454 | `e585d569531ebf946291d5b77198c2c7cdf258e5c3e91651c2dc02b813f1d9d6` | `limn-gallery-09-site.mp4` | 28.367 s, 1920×952, 22,239,695 B | `d4126df7be49038539540ef854f9623d998b699729b10fe85b398d7845006af5` | `limn-gallery-09-first.jpg` |
+| 10 | `Screen Recording 2025-04-13 at 10.09.24 PM.mov` | 51.283 s, 2394×1196 | `5f2f383477009bf37412c7e7cbe9fa3f5462470e447b3ff9ccf36203826268dd` | `limn-gallery-10-site.mp4` | 51.333 s, 1920×960, 39,994,753 B | `02a9d92263665b85c8b3b725aef529743c67920a9f398ee355f248adb6662c51` | `limn-gallery-10-first.jpg` |
+| 11 | `Screen Recording 2025-04-13 at 10.10.40 PM.mov` | 19.917 s, 1720×846 | `1d03e8c866157b91aea82c3fefa7be4fddd41a1b82225fdc1e5932e51e797c41` | `limn-gallery-11-site.mp4` | 19.967 s, 1720×846, 16,430,140 B | `eaa0796540e56087e2abbe0b4ad647e9f7beb1b8853224858dbd21b84c46b28b` | `limn-gallery-11-first.jpg` |
+| 12 | `Screen Recording 2025-04-13 at 10.11.15 PM.mov` | 18.367 s, 1720×846 | `69d4628e9018f6e7b4db1f86c86da91f033692169f015b151d70e681a6caef1b` | `limn-gallery-12-site.mp4` | 18.367 s, 1720×846, 15,301,937 B | `ed1490b382f9b583812d34e37b1e51a6d6da785ef207fda8f602a465f49d3103` | `limn-gallery-12-first.jpg` |
+
+Squarespace pre-change baseline retained for rollback: the page already contained one 12.05-second 1920×1080 video (`systemDataId` `82e1d037-b0e3-4814-a4d3-101906ef8a6e`) with `limn-frame-one.jpg`; the gallery is additive and does not replace it.
