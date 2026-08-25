@@ -445,16 +445,16 @@ window.JDC_VIDEO_PILOT = {
     "69831a8cbebb38507cf336cc", "6983194c708e544def3d2fe0", "698319de20827368275171f5",
     "6983196b19e5c542555720ea", "698319aaf1ec3c7c8728b618", "698319c0991ebd5edd34a505"
   ];
-  var LAUFEY_GALLERY_POSTERS = {
-    "laufey-1-site.mp4": "https://jdc4444.github.io/jdc-video-pilot/media/laufey/gallery/posters/laufey-1-first.jpg",
-    "laufey-2-site.mp4": "https://jdc4444.github.io/jdc-video-pilot/media/laufey/gallery/posters/laufey-2-first.jpg",
-    "laufey-3-site.mp4": "https://jdc4444.github.io/jdc-video-pilot/media/laufey/gallery/posters/laufey-3-first.jpg",
-    "laufey-4-site.mp4": "https://jdc4444.github.io/jdc-video-pilot/media/laufey/gallery/posters/laufey-4-first.jpg",
-    "laufey-5-site.mp4": "https://jdc4444.github.io/jdc-video-pilot/media/laufey/gallery/posters/laufey-5-first.jpg",
-    "laufey-6-site.mp4": "https://jdc4444.github.io/jdc-video-pilot/media/laufey/gallery/posters/laufey-6-first.jpg",
-    "laufey-7-site.mp4": "https://jdc4444.github.io/jdc-video-pilot/media/laufey/gallery/posters/laufey-7-first.jpg",
-    "laufey-8-site.mp4": "https://jdc4444.github.io/jdc-video-pilot/media/laufey/gallery/posters/laufey-8-first.jpg"
-  };
+  var LAUFEY_GALLERY_CLIPS = [
+    { number: 1, duration: 17.386, poster: "https://jdc4444.github.io/jdc-video-pilot/media/laufey/gallery/posters/laufey-1-first.jpg" },
+    { number: 2, duration: 11.050, poster: "https://jdc4444.github.io/jdc-video-pilot/media/laufey/gallery/posters/laufey-2-first.jpg" },
+    { number: 3, duration: 13.056, poster: "https://jdc4444.github.io/jdc-video-pilot/media/laufey/gallery/posters/laufey-3-first.jpg" },
+    { number: 4, duration: 20.522, poster: "https://jdc4444.github.io/jdc-video-pilot/media/laufey/gallery/posters/laufey-4-first.jpg" },
+    { number: 5, duration: 9.664, poster: "https://jdc4444.github.io/jdc-video-pilot/media/laufey/gallery/posters/laufey-5-first.jpg" },
+    { number: 6, duration: 21.824, poster: "https://jdc4444.github.io/jdc-video-pilot/media/laufey/gallery/posters/laufey-6-first.jpg" },
+    { number: 7, duration: 27.370, poster: "https://jdc4444.github.io/jdc-video-pilot/media/laufey/gallery/posters/laufey-7-first.jpg" },
+    { number: 8, duration: 15.296, poster: "https://jdc4444.github.io/jdc-video-pilot/media/laufey/gallery/posters/laufey-8-first.jpg" }
+  ];
   window.videoGlobalUnmute = false;
 
   function installProjectSpacing() {
@@ -771,14 +771,21 @@ window.JDC_VIDEO_PILOT = {
     var clipsByNumber = new Map();
     document.querySelectorAll("[data-jdc-video]").forEach(function (shell) {
       var config = parse(shell, "data-jdc-video");
-      var filename = String(config && config.filename || "");
-      var match = filename.match(/^laufey-(\d+)-site\.mp4$/i);
-      if (!match) return;
-      var number = Number(match[1]);
-      if (number < 1 || number > 8 || clipsByNumber.has(number)) return;
-      clipsByNumber.set(number, { shell: shell, filename: filename, number: number });
+      var duration = Number(config && config.durationSeconds);
+      if (!Number.isFinite(duration)) return;
+      var match = LAUFEY_GALLERY_CLIPS.reduce(function (best, candidate) {
+        var difference = Math.abs(duration - candidate.duration);
+        return !best || difference < best.difference ? { clip: candidate, difference: difference } : best;
+      }, null);
+      if (!match || match.difference > 0.35 || clipsByNumber.has(match.clip.number)) return;
+      clipsByNumber.set(match.clip.number, {
+        shell: shell,
+        config: config,
+        number: match.clip.number,
+        poster: match.clip.poster
+      });
     });
-    if (clipsByNumber.size !== 8) return false;
+    if (![1, 2, 3, 4, 5, 6, 7].every(function (number) { return clipsByNumber.has(number); })) return false;
 
     var clips = Array.from(clipsByNumber.values()).sort(function (a, b) { return a.number - b.number; });
     var section = clips[0].shell.closest(".page-section, section");
@@ -790,15 +797,14 @@ window.JDC_VIDEO_PILOT = {
     }
 
     clips.forEach(function (clip) {
-      clip.shell.setAttribute("data-jdc-poster", LAUFEY_GALLERY_POSTERS[clip.filename]);
+      clip.shell.setAttribute("data-jdc-poster", clip.poster);
       clip.shell.setAttribute("data-jdc-laufey-clip", String(clip.number));
     });
-    if (section.querySelector(":scope > .content-wrapper > .jdc-laufey-gallery-grid")) return true;
 
     var content = section.querySelector(":scope > .content-wrapper") || section.querySelector(".content-wrapper");
     if (!content) return false;
     var wrappers = clips.map(function (clip) { return clip.shell.closest(".fe-block") || clip.shell; });
-    if (new Set(wrappers).size !== 8) return false;
+    if (new Set(wrappers).size !== clips.length) return false;
 
     if (!document.getElementById("jdc-laufey-gallery-styles")) {
       var style = document.createElement("style");
@@ -819,17 +825,24 @@ window.JDC_VIDEO_PILOT = {
       document.head.appendChild(style);
     }
 
-    var grid = document.createElement("div");
-    grid.className = "jdc-laufey-gallery-grid";
-    grid.setAttribute("data-jdc-laufey-gallery-count", "8");
+    var grid = section.querySelector(":scope > .content-wrapper > .jdc-laufey-gallery-grid");
+    if (!grid) {
+      grid = document.createElement("div");
+      grid.className = "jdc-laufey-gallery-grid";
+      content.appendChild(grid);
+    }
+    grid.setAttribute("data-jdc-laufey-gallery-count", String(clips.length));
+    grid.setAttribute("data-jdc-laufey-gallery-expected", "8");
     wrappers.forEach(function (wrapper, index) {
       wrapper.classList.add("jdc-laufey-gallery-item");
-      wrapper.setAttribute("data-jdc-laufey-order", String(index + 1));
-      grid.appendChild(wrapper);
+      wrapper.setAttribute("data-jdc-laufey-order", String(clips[index].number));
     });
+    var currentWrappers = Array.prototype.slice.call(grid.children);
+    if (wrappers.some(function (wrapper, index) { return currentWrappers[index] !== wrapper; })) {
+      wrappers.forEach(function (wrapper) { grid.appendChild(wrapper); });
+    }
     section.classList.add("jdc-laufey-gallery-section");
-    section.setAttribute("data-jdc-laufey-gallery", "ready");
-    content.appendChild(grid);
+    section.setAttribute("data-jdc-laufey-gallery", clipsByNumber.has(8) ? "ready" : "processing-clip-8");
     return true;
   }
 
