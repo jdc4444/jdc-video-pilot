@@ -32,4 +32,23 @@ Squarespace retained a viewport-height intro section after the lead video and pr
 - The gallery retained its original clips and grid order.
 - Kings of Tupelo control check: no Bombas spacing marker, no playlist marker, normal looping enabled, and muted autoplay ready and playing.
 
-Pending publication, Squarespace loader swap, and live verification.
+## Production publication
+
+- GitHub Pages deployment `32812339453` completed successfully.
+- Published pilot 19 matched the local file byte-for-byte at 87,805 bytes.
+- Pilot 19 SHA-256: `c4f00472a57b2eebc6ed7d35cef2e6f25a1bf67dc553e52bd6fede742bd7a629`
+- Squarespace was saved with exactly this loader and no pilot 18 loader:
+
+```html
+<script src="https://jdc4444.github.io/jdc-video-pilot/jdc-footer-pilot19.js?v=1449075" crossorigin="anonymous" data-jdc-footer="pilot19"></script>
+```
+
+## Live browser verification
+
+- Clean production URL with no test query loaded only pilot 19.
+- Narrow viewport 627 x 921: visible credit-to-gallery gap measured 24.01 px.
+- Desktop viewport 1280 x 720: visible credit-to-gallery gap measured 38.4 px.
+- Bombas retained all 21 gallery video blocks and all 21 playlist items.
+- The playlist lead remained ready, playing, muted until hover permission, and configured for natural playlist advancement rather than native looping.
+- Homepage control check: the visible video remained ready and autoplaying muted, with no Bombas spacing marker.
+- Kings of Tupelo control check: no Bombas spacing or playlist marker, native looping enabled, and muted autoplay ready and playing.
