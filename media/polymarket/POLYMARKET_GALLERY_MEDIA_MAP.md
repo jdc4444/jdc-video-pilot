@@ -1,0 +1,17 @@
+# Polymarket gallery media map
+
+Public page: `/polymarket-make-your-own-market`
+
+The GIFs below are the immediate files supplied for this gallery. They are not claimed to be the ultimate upstream animation masters. Every MP4 is video-only H.264 with `faststart`; every JPEG poster is decoded from frame zero of its corresponding optimized MP4.
+
+| Order | Supplied source | Source media | Source SHA-256 | Site export | Export media | Export SHA-256 | Poster SHA-256 |
+| ---: | --- | --- | --- | --- | --- | --- | --- |
+| 1 | `POLY_Text_style_01.2025-04-13 10_30_03.gif` | 4.880 s, 845×475, 12.5 fps, 7,345,310 B | `cbc7e9710c3b751c8de60b8b7105f290a66e118f6cba183e022343f8c883fecd` | `polymarket-gallery-1-site.mp4` | 4.880 s, 844×474, 12.5 fps, 2,422,665 B | `8756a2ce4a09fd4444d30828ecd36b7092ce2599d87fb8c9d52227971aa76015` | `9334ab5aad1a265295963663742e856d74c6aacc7ef1a0ccb55276a421678c4c` |
+| 2 | `new tests.2025-04-13 10_34_56.gif` | 13.200 s, 600×337, 12.5 fps, 8,731,489 B | `fd233c8d9998f02bb986711903e535196bca81644404e410a01f2a809315238a` | `polymarket-gallery-2-site.mp4` | 13.200 s, 600×336, 12.5 fps, 3,418,165 B | `bc2f5732db84601e7b7c19aea6a1bc5856516ec7d9afaf1cf183b595456016b2` | `897225ace7888c0f4a9bdd5e2c16e3ab93811aaec2d46d268e32ac8edee59cb0` |
+| 3 | `print press1.1.2025-04-13 10_26_17.gif` | 5.760 s, 845×475, 12.5 fps, 7,385,081 B | `e56efd24d22ee91d2b4d20326f34cc14bf548d356adcbfe33ffb7f9105f76a7b` | `polymarket-gallery-3-site.mp4` | 5.760 s, 844×474, 12.5 fps, 1,779,560 B | `c1e3a500d952dcab6b58db208f0df8c852ef6ff044b1b5386d19525871b12674` | `235d953c05569bad593d245cec47bb65bc74d90f34cf21595ca73fd4caffea29` |
+| 4 | `PolyMarket_Scene_2_V6_A[0000-0336] _video_4.2025-04-13 10_34_20.gif` | 7.520 s, 600×337, 12.5 fps, 10,268,222 B | `ff600ca385520dab1cb2dbf07da1e5f480b8c7a511c11f6b587d67dac0847ffa` | `polymarket-gallery-4-site.mp4` | 7.520 s, 600×336, 12.5 fps, 2,391,136 B | `9afebe361b760201b5abbe45d1b223bcc47a1fe462bfafb3eab24aee6b16b724` | `73b411550880fdd26c52ce0b702d2c4ba8551ae2c96ba2c49fa23eb77a6ec56e` |
+| 5 | `PolyMarket_Scene_V12_A_video_3.2025-04-13 10_32_57.gif` | 11.040 s, 845×475, 12.5 fps, 11,120,265 B | `43819b6a507c4bfdb73dc0f38bf22985a6c90c52ab88109043c8e2833269248c` | `polymarket-gallery-5-site.mp4` | 11.040 s, 844×474, 12.5 fps, 5,349,396 B | `8ebfa44981c4ca422fe8497845da14dfc0df9c2af908aba69d27a1d4752647db` | `007740954695aef76743620ebe78c945c1cf59192cbfa71f139b17ec1741cd99` |
+| 6 | `PolyMarket_Scene_V15_B_video_1.2025-04-11 19_42_48.gif` | 4.240 s, 845×475, 12.5 fps, 11,371,414 B | `7d4e5b5f606651eacdecbc8e6abcd60e768a0bbcea7dac8ac180c817bbd822c6` | `polymarket-gallery-6-site.mp4` | 4.240 s, 844×474, 12.5 fps, 2,456,902 B | `64031383e378ecf4d5b6bcbce11dba23de39f9bc5ed81d98f98bc586fc14a87a` | `9a216f9f91e3714d205e3c48bd46f13802b77f925d9556119c6b383e55e4ca36` |
+| 7 | `SG_Intro_CrystalBall_A002.2025-04-13 10_39_03.gif` | 3.840 s, 845×474, 12.5 fps, 3,769,047 B | `8d5160f8c9134d176091886ad902a1234035c7c080f3d7e1b3efb11999c1c035` | `polymarket-gallery-7-site.mp4` | 3.840 s, 844×474, 12.5 fps, 514,567 B | `26028876a12dbf061091f6008681a263e77d64146be22ab95e96e05aa2f3a95f` | `d84f5c1236b4b93946355f3f137039c7ec3126de2660ca41eb7f51c17d4ee4d0` |
+
+Optimized exports live at `/Volumes/Phantom/Portfolio/website gifs/site optimized exports/polymarket-commercial/`. Posters live at `media/polymarket/gallery/posters/` in this repository.
