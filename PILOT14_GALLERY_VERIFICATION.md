@@ -32,7 +32,9 @@ Date: 2026-08-25
 ## Publication
 
 - Pilot 14 SHA-256: `69e8efb1f0be958ea8c6e740167177bbc2275633b499fcbd136bb81e0b68c162`
-- Git commit: pending
-- Public checksum: pending
-- Squarespace persisted loader: pending
-- Live verification: pending
+- Controller commit: `7590c32`
+- Public checksum: matched the local SHA-256 above after the successful GitHub Pages deployment.
+- Squarespace persisted loader: `jdc-footer-pilot14.js?v=7590c32`; confirmed after a full editor reload, with no pilot 13 loader remaining.
+- Live Bombas Spring: nine of nine visible gallery clips played after scrolling down, farther down, and back up; startup peak remained two.
+- Live Siberia Hills: six of six visible vertical clips played at the multi-clip position; `0.5625` aspect ratios remained intact; upward scrolling repopulated correctly.
+- Live homepage regression: pilot 14 loaded in standard mode and the visible optimized homepage video played.
