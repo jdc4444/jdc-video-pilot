@@ -11,12 +11,19 @@ from __future__ import annotations
 
 import json
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 MEDIA_ROOT = ROOT / "media" / "user-selected-clip-galleries"
+DEFAULT_VIDEO_FILTER = "scale=min(960\\,iw):-2:flags=lanczos"
+VIDEO_FILTERS = {
+    # The selected Awakening HLS edits retain the 88px theatrical matte from
+    # their 1280x720 source. Deliver the native 40:17 image instead.
+    "wynn-awakening": "crop=1280:544:0:88,scale=min(960\\,iw):-2:flags=lanczos",
+}
 
 
 def run(command: list[str]) -> subprocess.CompletedProcess[str]:
@@ -38,11 +45,11 @@ def video_stream(data: dict) -> dict:
     return videos[0]
 
 
-def export_mp4(source: Path, destination: Path) -> None:
+def export_mp4(source: Path, destination: Path, video_filter: str) -> None:
     run([
         "ffmpeg", "-y", "-v", "error", "-i", str(source),
         "-map", "0:v:0", "-an",
-        "-vf", "scale=min(960\\,iw):-2:flags=lanczos",
+        "-vf", video_filter,
         "-c:v", "libx264", "-preset", "slow", "-profile:v", "high", "-level", "4.1",
         "-crf", "22", "-maxrate", "2600k", "-bufsize", "5200k",
         "-pix_fmt", "yuv420p", "-g", "48", "-keyint_min", "48", "-sc_threshold", "0",
@@ -69,6 +76,13 @@ def has_faststart(path: Path) -> bool:
 
 def main() -> None:
     manifests = sorted(MEDIA_ROOT.glob("*/selection.json"))
+    requested_slugs = set(sys.argv[1:])
+    if requested_slugs:
+        available_slugs = {path.parent.name for path in manifests}
+        missing_slugs = requested_slugs - available_slugs
+        if missing_slugs:
+            raise RuntimeError(f"Unknown gallery slug(s): {', '.join(sorted(missing_slugs))}")
+        manifests = [path for path in manifests if path.parent.name in requested_slugs]
     total_clips = sum(len(json.loads(path.read_text())["clips"]) for path in manifests)
     completed = 0
     total_bytes = 0
@@ -76,11 +90,12 @@ def main() -> None:
 
     for manifest_path in manifests:
         manifest = json.loads(manifest_path.read_text())
+        video_filter = VIDEO_FILTERS.get(manifest["slug"], DEFAULT_VIDEO_FILTER)
         for index, clip in enumerate(manifest["clips"], 1):
             clip_dir = manifest_path.parent / f"clip-{index:02d}"
             source = clip_dir / "high.m3u8"
             destination = clip_dir / "gallery.mp4"
-            export_mp4(source, destination)
+            export_mp4(source, destination, video_filter)
             export_poster(destination, manifest_path.parent / clip["poster"])
 
             data = probe(destination)

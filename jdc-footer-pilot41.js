@@ -7,6 +7,7 @@
   var SCRIPT_URL = document.currentScript && document.currentScript.src ? document.currentScript.src : window.location.href;
   var ASSET_BASE = new URL(".", SCRIPT_URL).href;
   var DATA_URL = new URL("jdc-clip-data-pilot38.js", ASSET_BASE).href;
+  var GALLERY_ASPECTS = { "wynn-awakening": 40 / 17 };
   var galleryPaths = new Set([
     "/amber-mark-out-of-this-world",
     "/armando-young-belladonna",
@@ -94,7 +95,7 @@
   function buildClipItem(definition, clip, index) {
     var item = document.createElement("div");
     item.className = "jdc-clip-gallery-item";
-    item.style.setProperty("--jdc-clip-aspect", String(definition.aspect));
+    item.style.setProperty("--jdc-clip-aspect", String(GALLERY_ASPECTS[definition.slug] || definition.aspect));
     item.setAttribute("data-jdc-clip-index", String(index + 1));
     item.setAttribute("data-jdc-clip-range", (clip[3] == null ? clip[0] : clip[3]) + "-" + (clip[4] == null ? clip[1] : clip[4]));
 
