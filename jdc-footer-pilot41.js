@@ -288,13 +288,23 @@
   }
 
   function installGallery() {
-    if (installed) return true;
     var data = window.JDC_CLIP_GALLERIES_PILOT38 || {};
     var path = normalizePath(window.location.pathname);
     var definition = data[path];
     if (!definition) return false;
     var existing = document.querySelector(".jdc-clip-gallery-section[data-jdc-gallery-slug='" + definition.slug + "']");
-    if (existing) return existing.getAttribute("data-jdc-gallery-delivery") === RELEASE + "-progressive-mp4";
+    if (existing) {
+      installed = true;
+      return existing.getAttribute("data-jdc-gallery-delivery") === RELEASE + "-progressive-mp4";
+    }
+    if (installed || states.length) {
+      states.forEach(function (state) {
+        if (state.retryTimer) window.clearTimeout(state.retryTimer);
+        try { state.video.pause(); } catch (error) {}
+      });
+      states.length = 0;
+      installed = false;
+    }
     installStyles();
     var before = states.length;
     var items = definition.clips.map(function (clip, index) { return buildClipItem(definition, clip, index); });
