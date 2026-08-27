@@ -12,6 +12,9 @@
   var POLYMARKET_HOME_ROUTE = "media/3b76b000-8a29-4aee-915d-858c0b1d1a42/master.m3u8";
   var POLYMARKET_HOME_POSTER = "https://jdc4444.github.io/jdc-video-pilot/media/3b76b000-8a29-4aee-915d-858c0b1d1a42/poster.jpg";
   var TOP_PATHS = [
+    "/day-one",
+    "/lovb-adidas",
+    "/bombas-dream-of-comfort",
     "/nike-aja-sabrina",
     "/bombas-spring",
     "/polymarket-documentary",
