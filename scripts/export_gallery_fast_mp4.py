@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Create one compact, progressive MP4 for every approved gallery clip.
 
-The existing high HLS rendition is the authoritative selected edit.  This
-script keeps that exact timing, makes a 960-pixel muted H.264 derivative with
-the MP4 index at the front of the file, and regenerates the visible poster from
-frame zero of that delivered MP4.
+The selection manifest supplies the authoritative source and cut-bounded timing.
+This makes a 960-pixel muted H.264 derivative with the MP4 index at the front of
+the file and regenerates the visible poster from frame zero of that delivered
+MP4.
 """
 
 from __future__ import annotations
@@ -45,9 +45,10 @@ def video_stream(data: dict) -> dict:
     return videos[0]
 
 
-def export_mp4(source: Path, destination: Path, video_filter: str) -> None:
+def export_mp4(source: Path, destination: Path, video_filter: str, start: float, duration: float) -> None:
     run([
-        "ffmpeg", "-y", "-v", "error", "-i", str(source),
+        "ffmpeg", "-y", "-v", "error", "-ss", f"{start:.3f}", "-i", str(source),
+        "-t", f"{duration:.3f}",
         "-map", "0:v:0", "-an",
         "-vf", video_filter,
         "-c:v", "libx264", "-preset", "slow", "-profile:v", "high", "-level", "4.1",
@@ -91,11 +92,14 @@ def main() -> None:
     for manifest_path in manifests:
         manifest = json.loads(manifest_path.read_text())
         video_filter = VIDEO_FILTERS.get(manifest["slug"], DEFAULT_VIDEO_FILTER)
+        source = Path(manifest["source"])
+        if not source.is_file():
+            raise RuntimeError(f"Missing source master for {manifest['slug']}: {source}")
         for index, clip in enumerate(manifest["clips"], 1):
             clip_dir = manifest_path.parent / f"clip-{index:02d}"
-            source = clip_dir / "high.m3u8"
             destination = clip_dir / "gallery.mp4"
-            export_mp4(source, destination, video_filter)
+            clip_dir.mkdir(parents=True, exist_ok=True)
+            export_mp4(source, destination, video_filter, float(clip["start"]), float(clip["duration"]))
             export_poster(destination, manifest_path.parent / clip["poster"])
 
             data = probe(destination)
