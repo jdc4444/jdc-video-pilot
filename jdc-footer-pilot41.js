@@ -76,6 +76,7 @@
       ".jdc-clip-gallery-item img,.jdc-clip-gallery-item video{position:absolute!important;inset:0!important;display:block!important;width:100%!important;height:100%!important;max-width:none!important;object-fit:cover!important;object-position:center!important;margin:0!important;padding:0!important;border:0!important}",
       ".jdc-clip-gallery-item img{z-index:1!important;opacity:1!important;transition:opacity .18s linear!important}",
       ".jdc-clip-gallery-item video{z-index:2!important;opacity:0!important;background:transparent!important}",
+      ".jdc-clip-gallery-item[data-jdc-flip-x='true'] img,.jdc-clip-gallery-item[data-jdc-flip-x='true'] video{transform:scaleX(-1)!important}",
       ".jdc-clip-gallery-item[data-jdc-clip-playing='true'] video{opacity:1!important}",
       ".jdc-clip-gallery-item[data-jdc-clip-playing='true'] img{opacity:0!important}",
       ".jdc-clip-gallery-item[data-jdc-clip-error='true'] video{display:none!important}",
@@ -98,6 +99,7 @@
     item.style.setProperty("--jdc-clip-aspect", String(GALLERY_ASPECTS[definition.slug] || definition.aspect));
     item.setAttribute("data-jdc-clip-index", String(index + 1));
     item.setAttribute("data-jdc-clip-range", (clip[3] == null ? clip[0] : clip[3]) + "-" + (clip[4] == null ? clip[1] : clip[4]));
+    if (definition.slug === "day-one" && index === 7) item.setAttribute("data-jdc-flip-x", "true");
 
     var poster = document.createElement("img");
     poster.src = asset("media/user-selected-clip-galleries/" + definition.slug + "/" + clip[2]);
@@ -274,15 +276,13 @@
       var host = btsShell && btsShell.closest(".fe-block");
       var nativeBlock = btsShell && btsShell.closest(".sqs-block");
       if (!host || !nativeBlock) return false;
-      items.slice(0, 3).forEach(function (item) { grid.appendChild(item); });
+      items.forEach(function (item) { grid.appendChild(item); });
       var btsItem = document.createElement("div");
       btsItem.className = "jdc-clip-bts-item";
       btsItem.setAttribute("data-jdc-bts-id", definition.btsId);
       btsItem.appendChild(nativeBlock);
       grid.appendChild(btsItem);
-      items.slice(3).forEach(function (item) { grid.appendChild(item); });
-      host.style.setProperty("display", "none", "important");
-      host.setAttribute("data-jdc-bts-relocated", RELEASE);
+      host.remove();
       normalizeBts(definition, btsItem);
     } else {
       items.forEach(function (item) { grid.appendChild(item); });
@@ -359,16 +359,24 @@
   }
 
   function finish() {
-    if (!galleryPaths.has(normalizePath(window.location.pathname))) return;
+    if (!galleryPaths.has(normalizePath(window.location.pathname))) {
+      loadCore();
+      return;
+    }
     loadData().then(function () {
-      [0, 120, 400, 1000, 2500, 5000, 7500].forEach(function (delay) {
+      installGallery();
+      loadCore();
+      [120, 400, 1000, 2500, 5000, 7500].forEach(function (delay) {
         window.setTimeout(function () {
           installGallery();
           schedulePlaybackUpdate();
           if (document.body) document.body.setAttribute("data-jdc-footer-release", RELEASE);
         }, delay);
       });
-    }).catch(function (error) { console.warn("JDC progressive clip data failed to load", error); });
+    }).catch(function (error) {
+      loadCore();
+      console.warn("JDC progressive clip data failed to load", error);
+    });
   }
 
   blockLegacyGallery();
@@ -376,7 +384,6 @@
   window.addEventListener("resize", schedulePlaybackUpdate, { passive: true });
   window.addEventListener("pageshow", schedulePlaybackUpdate, { passive: true });
   document.addEventListener("visibilitychange", schedulePlaybackUpdate, { passive: true });
-  loadCore();
   finish();
   window.__JDC_CLIP_GALLERY_PILOT41__ = { states: states, update: updatePlayback };
 })();
