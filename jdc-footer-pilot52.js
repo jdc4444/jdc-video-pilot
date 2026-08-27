@@ -21,6 +21,56 @@
     (document.head || document.documentElement).appendChild(script);
   }
 
+  function enablePreviewVideoGate() {
+    window.__JDC_VIDEO_V2_ENABLED__ = true;
+    if (window.__JDC_VIDEO_GATE__) return;
+
+    var pairs = [
+      ["data-config-native-video", "data-jdc-native-video"],
+      ["data-config-video", "data-jdc-video"]
+    ];
+
+    function quarantineNativeController(element) {
+      if (!element || element.nodeType !== 1) return;
+      var controllers = element.getAttribute("data-controller");
+      if (!controllers) return;
+      var retained = controllers.split(/\s+/).filter(function (controller) {
+        return controller && controller !== "VideoBackgroundNative";
+      });
+      if (retained.length) element.setAttribute("data-controller", retained.join(" "));
+      else element.removeAttribute("data-controller");
+    }
+
+    function quarantineElement(element) {
+      if (!element || element.nodeType !== 1) return;
+      pairs.forEach(function (pair) {
+        if (!element.hasAttribute(pair[0])) return;
+        element.setAttribute(pair[1], element.getAttribute(pair[0]));
+        element.removeAttribute(pair[0]);
+      });
+    }
+
+    function quarantine(root) {
+      if (!root) return;
+      quarantineNativeController(root);
+      quarantineElement(root);
+      if (!root.querySelectorAll) return;
+      root.querySelectorAll('[data-controller~="VideoBackgroundNative"]').forEach(quarantineNativeController);
+      pairs.forEach(function (pair) {
+        root.querySelectorAll("[" + pair[0] + "]").forEach(quarantineElement);
+      });
+    }
+
+    var observer = new MutationObserver(function (records) {
+      records.forEach(function (record) {
+        record.addedNodes.forEach(quarantine);
+      });
+    });
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+    quarantine(document.documentElement);
+    window.__JDC_VIDEO_GATE__ = { quarantine: quarantine, observer: observer };
+  }
+
   function stabilizeBombas() {
     if (!bombasPath) return;
     var lastKey = "";
@@ -61,6 +111,8 @@
     });
   }
 
-  if (previewActive) load(PLAYER_URL, "data-jdc-pilot52-player", "pilot27", loadCreditsCore);
-  else loadCreditsCore();
+  if (previewActive) {
+    enablePreviewVideoGate();
+    load(PLAYER_URL, "data-jdc-pilot52-player", "pilot27", loadCreditsCore);
+  } else loadCreditsCore();
 })();
