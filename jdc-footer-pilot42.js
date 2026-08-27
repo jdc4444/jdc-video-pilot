@@ -139,6 +139,11 @@
 
   function normalizeSectionGaps() {
     if (!document.body || !document.body.classList.contains("jdc-project-spacing")) return false;
+    // Bombas has its own playlist/gallery compositor in pilot27. Running the
+    // generic section-gap pass over that moving layout can temporarily place
+    // the gallery over the lead film while the playlist swaps media.
+    if (/^\/bombas-spring\/?$/.test(window.location.pathname) ||
+        ["3", "4"].indexOf(document.body.getAttribute("data-jdc-credits-option")) !== -1) return false;
     Array.prototype.slice.call(document.querySelectorAll(".jdc-section-gap-anchor42")).forEach(function (section) {
       section.classList.remove("jdc-section-gap-anchor42");
     });

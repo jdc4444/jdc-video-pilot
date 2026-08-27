@@ -15,6 +15,34 @@
   var option = requested === "1" || requested === "2" ? "3" : requested;
   var observer = null;
   var scheduled = false;
+  var LOVB_FULL_CREDITS = [
+    "League One Volleyball x Adidas Campaign",
+    "Futuro LLC — Production Company",
+    "Jos Diaz — Director & Executive Producer",
+    "Jessica Flores — Producer",
+    "Jennifer Kim-Matsuzawa — LOVB Producer",
+    "Daniel Routh — Director of Photography",
+    "Michael Ciancio — Camera Operator",
+    "Justin Bowers — Bolt Operator",
+    "Michael Raphael Ciancio — Phantom Operator",
+    "Vincent Briseno — Assistant Camera",
+    "Ceasar Quintanilla — Gaffer",
+    "Billy Daniel — Best Electric",
+    "Jensen Tidwell — Third Electric",
+    "Pete Stockton — Key Grip",
+    "Sean Maxwell — Best Grip",
+    "Leo Talento — Swing",
+    "Gerald Morris — Location Audio",
+    "Dayna Bantz — Hair and Makeup",
+    "Sebastian Espinosa — Stylist",
+    "Karla Martinez — Production Assistant",
+    "Lexi Rodrigues — Featuring",
+    "Jordyn Poulter — Featuring",
+    "Clair Chaussee — Featuring",
+    "Jordan Thompson — Featuring",
+    "Tia Jimmerson — Featuring",
+    "Madi Skinner — Featuring"
+  ];
 
   function normalizeLegacyOption() {
     if (requested !== "1" && requested !== "2") return;
@@ -134,6 +162,7 @@
   }
 
   function sourceLines(body) {
+    if (/^\/lovb-adidas\/?$/.test(window.location.pathname)) return LOVB_FULL_CREDITS.slice();
     return Array.prototype.slice.call(body.querySelectorAll("p")).map(function (paragraph) {
       return paragraph.textContent.replace(/\s+/g, " ").trim();
     }).filter(Boolean);
@@ -183,15 +212,17 @@
   function positionBeforeGallery() {
     if (option !== "3") return;
     var infoBand = document.querySelector("main .jdc-project-info-band");
-    var gallery = document.querySelector(".jdc-clip-gallery-section");
+    var gallery = document.querySelector(".jdc-clip-gallery-section") ||
+      (/^\/lovb-adidas\/?$/.test(window.location.pathname) && document.querySelector(".jdc-lovb-gallery-section"));
     if (!infoBand || !gallery) return;
     takeOverSectionSpacing(gallery);
-    gallery.style.setProperty("margin-top", "0px", "important");
     var infoRect = infoBand.getBoundingClientRect();
     var galleryRect = gallery.getBoundingClientRect();
+    var currentMargin = Number.parseFloat(window.getComputedStyle(gallery).marginTop) || 0;
+    var baseTop = galleryRect.top - currentMargin;
     var gap = window.innerWidth <= 767 ? 28 : Math.max(30, Math.min(58, window.innerWidth * 0.042));
-    var push = Math.max(0, infoRect.bottom + gap - galleryRect.top);
-    gallery.style.setProperty("margin-top", Math.round(push) + "px", "important");
+    var push = Math.max(0, infoRect.bottom + gap - baseTop);
+    if (Math.abs(push - currentMargin) > 1) gallery.style.setProperty("margin-top", Math.round(push) + "px", "important");
   }
 
   function takeOverSectionSpacing(gallery) {

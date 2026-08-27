@@ -588,6 +588,8 @@ window.JDC_VIDEO_PILOT = {
 
     var pending = false;
     var rerun = false;
+    var headerAnchorBottom = null;
+    var headerAnchorWidth = 0;
     var measureCanvas = document.createElement("canvas");
     var measureContext = measureCanvas.getContext("2d");
     function pixel(value) {
@@ -706,6 +708,10 @@ window.JDC_VIDEO_PILOT = {
       return { shift: Math.min(0, sectionShift), blockShift: blockShift, gap: actualGap, overlap: overlap };
     }
     function schedule() {
+      if (bombasProject && window.__JDC_BOMBAS_LAYOUT_FROZEN52__) {
+        if (Math.abs(window.innerWidth - window.__JDC_BOMBAS_LAYOUT_FROZEN52__.width) <= 1) return;
+        window.__JDC_BOMBAS_LAYOUT_FROZEN52__ = null;
+      }
       if (pending) {
         rerun = true;
         return;
@@ -724,7 +730,12 @@ window.JDC_VIDEO_PILOT = {
         var leadRect = leadMedia.getBoundingClientRect();
         var engineStyle = getComputedStyle(engine);
         var currentTopShift = pixel(engineStyle.getPropertyValue("--jdc-project-top-shift"));
-        var headerBottom = headerTextBottom(headerRect);
+        var measuredHeaderBottom = headerTextBottom(headerRect) + window.scrollY;
+        if (headerAnchorBottom === null || Math.abs(window.innerWidth - headerAnchorWidth) > 1 || window.scrollY < 1) {
+          headerAnchorBottom = measuredHeaderBottom;
+          headerAnchorWidth = window.innerWidth;
+        }
+        var headerBottom = headerAnchorBottom - window.scrollY;
         var topDelta = headerBottom + gap - leadRect.top;
         setPixel(engine, "--jdc-project-top-shift", currentTopShift + topDelta);
 
@@ -1221,6 +1232,10 @@ window.JDC_VIDEO_PILOT = {
   }
 
   function configuredAspect(config) {
+    if (/^\/ggm-aguita\/?$/.test(window.location.pathname) &&
+        String(config && config.systemDataId || "") === "d684e4b1-9e3a-4594-b9ed-b5876fa116fd") {
+      return 8 / 3;
+    }
     var ratio = Number(config && config.aspectRatio);
     if (Number.isFinite(ratio) && ratio > 0) return ratio;
     var firstVariant = String(config && config.systemDataVariants || "").split(",")[0].split(":");
