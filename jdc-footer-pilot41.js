@@ -193,12 +193,18 @@
   function updatePlayback() {
     updateQueued = false;
     if (!states.length) return;
+    if (document.hidden) {
+      states.forEach(function (state) { setActive(state, false); });
+      document.documentElement.setAttribute("data-jdc-clip-gallery-attached", String(states.filter(function (state) { return state.attached; }).length));
+      document.documentElement.setAttribute("data-jdc-clip-gallery-playing", "0");
+      return;
+    }
     var connection = connectionClass();
     var maxPlaying = connection === "slow" ? 1 :
       connection === "medium" ? (window.innerWidth >= 900 ? 3 : 2) :
-      window.innerWidth >= 900 ? 6 : window.innerWidth >= 768 ? 4 : 2;
-    var warmCount = connection === "slow" ? 2 : connection === "medium" ? 4 : window.innerWidth >= 900 ? 9 : 5;
-    var warmMargin = connection === "slow" ? 350 : connection === "medium" ? 500 : Math.max(600, window.innerHeight * 0.85);
+      states.length;
+    var warmCount = connection === "slow" ? 2 : connection === "medium" ? 4 : states.length;
+    var warmMargin = connection === "slow" ? 350 : connection === "medium" ? 500 : Math.max(900, window.innerHeight * 1.5);
     var nearby = states.filter(function (state) {
       var rect = state.item.getBoundingClientRect();
       return rect.bottom > -warmMargin && rect.top < window.innerHeight + warmMargin;
@@ -369,6 +375,7 @@
   window.addEventListener("scroll", schedulePlaybackUpdate, { passive: true });
   window.addEventListener("resize", schedulePlaybackUpdate, { passive: true });
   window.addEventListener("pageshow", schedulePlaybackUpdate, { passive: true });
+  document.addEventListener("visibilitychange", schedulePlaybackUpdate, { passive: true });
   loadCore();
   finish();
   window.__JDC_CLIP_GALLERY_PILOT41__ = { states: states, update: updatePlayback };
