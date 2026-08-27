@@ -24,6 +24,7 @@
     "/lovb-launch",
     "/mitski-a-pearl",
     "/mtv-vote-early",
+    "/nike-jordan",
     "/shaq-hbo",
     "/thom-yorke-last-i-heard",
     "/wynn-awakening"
@@ -75,8 +76,10 @@
       ".jdc-clip-gallery-section{display:block!important;box-sizing:border-box!important;width:100%!important;height:auto!important;min-height:0!important;background:#fff!important;color:#000!important;overflow:clip!important}",
       ".jdc-clip-gallery-flow{display:block!important;box-sizing:border-box!important;width:100%!important;max-width:none!important;padding:clamp(30px,4.2vw,58px) 4.2vw clamp(38px,5vw,68px)!important}",
       ".jdc-clip-gallery-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:clamp(18px,2.2vw,34px) clamp(12px,1.55vw,20px)!important;width:100%!important;box-sizing:border-box!important;align-items:start!important}",
+      ".jdc-clip-gallery-grid[data-jdc-grid-columns='2']{grid-template-columns:repeat(2,minmax(0,1fr))!important}",
       ".jdc-clip-gallery-grid[data-jdc-clip-count='4']{grid-template-columns:repeat(2,minmax(0,1fr))!important}",
       ".jdc-clip-gallery-grid[data-jdc-clip-count='7']>.jdc-clip-gallery-item:last-child{grid-column:2!important}",
+      "@media(max-width:1023px) and (min-width:768px){.jdc-clip-gallery-grid[data-jdc-hide-one-at-two-columns='true']>.jdc-clip-gallery-item[data-jdc-last-added='true']{display:none!important}}",
       ".jdc-clip-gallery-item{position:relative!important;inset:auto!important;display:block!important;box-sizing:border-box!important;width:100%!important;min-width:0!important;height:auto!important;min-height:0!important;aspect-ratio:var(--jdc-clip-aspect,16/9)!important;overflow:hidden!important;background:#080808!important;transform:none!important;translate:none!important}",
       ".jdc-clip-gallery-item img,.jdc-clip-gallery-item video{position:absolute!important;inset:0!important;display:block!important;width:100%!important;height:100%!important;max-width:none!important;object-fit:cover!important;object-position:center!important;margin:0!important;padding:0!important;border:0!important}",
       ".jdc-clip-gallery-item img{z-index:1!important;opacity:1!important;transition:opacity .18s linear!important}",
@@ -91,17 +94,21 @@
       ".jdc-clip-bts-item [data-jdc-video],.jdc-clip-bts-item [data-config-video]{position:relative!important;inset:auto!important;display:block!important;width:100%!important;height:auto!important;min-height:0!important;aspect-ratio:var(--jdc-bts-aspect,16/9)!important;background-position:center!important;background-size:cover!important;overflow:hidden!important}",
       ".jdc-clip-bts-item .native-video-player,.jdc-clip-bts-item .jdc-video-stage,.jdc-clip-bts-item video{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;aspect-ratio:var(--jdc-bts-aspect,16/9)!important;object-fit:cover!important}",
       "@media(max-width:1023px) and (min-width:768px){.jdc-clip-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.jdc-clip-gallery-grid[data-jdc-clip-count='7']>.jdc-clip-gallery-item:last-child{grid-column:1/-1!important;width:calc(50% - 10px)!important;justify-self:center!important}}",
-      "@media(max-width:767px){.jdc-clip-gallery-flow{padding:28px 6vw 38px!important}.jdc-clip-gallery-grid,.jdc-clip-gallery-grid[data-jdc-clip-count='4']{grid-template-columns:minmax(0,1fr)!important;gap:24px!important}.jdc-clip-gallery-grid[data-jdc-clip-count='7']>.jdc-clip-gallery-item:last-child{grid-column:auto!important;width:100%!important;justify-self:stretch!important}.jdc-clip-gallery-host>.jdc-clip-gallery-grid{grid-template-columns:minmax(0,1fr)!important}.jdc-clip-bts-item>.sqs-block{width:var(--jdc-bts-mobile-width,100%)!important}}",
+      "@media(max-width:767px){.jdc-clip-gallery-flow{padding:28px 6vw 38px!important}.jdc-clip-gallery-grid,.jdc-clip-gallery-grid[data-jdc-grid-columns='2'],.jdc-clip-gallery-grid[data-jdc-clip-count='4']{grid-template-columns:minmax(0,1fr)!important;gap:24px!important}.jdc-clip-gallery-grid[data-jdc-clip-count='7']>.jdc-clip-gallery-item:last-child{grid-column:auto!important;width:100%!important;justify-self:stretch!important}.jdc-clip-gallery-host>.jdc-clip-gallery-grid{grid-template-columns:minmax(0,1fr)!important}.jdc-clip-bts-item>.sqs-block{width:var(--jdc-bts-mobile-width,100%)!important}}",
       "@media(prefers-reduced-motion:reduce){.jdc-clip-gallery-item img{transition:none!important}}"
     ].join("");
     (document.head || document.documentElement).appendChild(style);
   }
 
-  function buildClipItem(definition, clip, index) {
+  function buildClipItem(definition, clip, sourceIndex) {
     var item = document.createElement("div");
     item.className = "jdc-clip-gallery-item";
     item.style.setProperty("--jdc-clip-aspect", String(GALLERY_ASPECTS[definition.slug] || definition.aspect));
-    item.setAttribute("data-jdc-clip-index", String(index + 1));
+    item.setAttribute("data-jdc-clip-index", String(sourceIndex + 1));
+    item.setAttribute("data-jdc-source-index", String(sourceIndex));
+    if (definition.lastAddedIndex != null && sourceIndex === Number(definition.lastAddedIndex)) {
+      item.setAttribute("data-jdc-last-added", "true");
+    }
     item.setAttribute("data-jdc-clip-range", (clip[3] == null ? clip[0] : clip[3]) + "-" + (clip[4] == null ? clip[1] : clip[4]));
     var poster = document.createElement("img");
     poster.src = asset("media/user-selected-clip-galleries/" + definition.slug + "/" + clip[2]);
@@ -124,7 +131,7 @@
     var state = {
       item: item,
       video: video,
-      source: asset("media/user-selected-clip-galleries/" + definition.slug + "/clip-" + String(index + 1).padStart(2, "0") + "/gallery.mp4"),
+      source: asset("media/user-selected-clip-galleries/" + definition.slug + "/clip-" + String(sourceIndex + 1).padStart(2, "0") + "/gallery.mp4"),
       attached: false,
       active: false,
       failed: false,
@@ -145,6 +152,25 @@
     });
     video.addEventListener("error", function () { retryState(state); });
     return item;
+  }
+
+  function displayClipEntries(definition) {
+    var clips = (definition.clips || []).map(function (clip, sourceIndex) {
+      return { clip: clip, sourceIndex: sourceIndex };
+    });
+    // Three-column desktop galleries must end in a complete row. Even totals
+    // use two columns instead; an odd non-multiple drops the newest selection,
+    // falling back to the final chronological clip only for legacy data.
+    if (clips.length > 3 && clips.length % 3 !== 0 && clips.length % 2 !== 0) {
+      var newestIndex = definition.lastAddedIndex != null && Number.isInteger(Number(definition.lastAddedIndex)) ? Number(definition.lastAddedIndex) : clips.length - 1;
+      var newestPosition = clips.findIndex(function (entry) { return entry.sourceIndex === newestIndex; });
+      clips.splice(newestPosition >= 0 ? newestPosition : clips.length - 1, 1);
+    }
+    return clips;
+  }
+
+  function desktopColumns(count) {
+    return count % 3 === 0 ? 3 : 2;
   }
 
   function attachState(state) {
@@ -273,6 +299,10 @@
     var grid = document.createElement("div");
     grid.className = "jdc-clip-gallery-grid";
     grid.setAttribute("data-jdc-clip-count", String(items.length));
+    grid.setAttribute("data-jdc-grid-columns", String(desktopColumns(items.length)));
+    if (items.length % 2 !== 0 && items.some(function (item) { return item.getAttribute("data-jdc-last-added") === "true"; })) {
+      grid.setAttribute("data-jdc-hide-one-at-two-columns", "true");
+    }
 
     if (definition.btsId) {
       var btsShell = shellById(definition.btsId);
@@ -317,11 +347,16 @@
     }
     installStyles();
     var before = states.length;
-    var items = definition.clips.map(function (clip, index) { return buildClipItem(definition, clip, index); });
-    if (definition.slug === "day-one" && items.length >= 8) {
-      var upperLeftItem = items[4];
-      items[4] = items[7];
-      items[7] = upperLeftItem;
+    var entries = displayClipEntries(definition);
+    var items = entries.map(function (entry) { return buildClipItem(definition, entry.clip, entry.sourceIndex); });
+    if (Array.isArray(definition.displaySwapIndices) && definition.displaySwapIndices.length === 2) {
+      var firstPosition = items.findIndex(function (item) { return Number(item.getAttribute("data-jdc-source-index")) === Number(definition.displaySwapIndices[0]); });
+      var secondPosition = items.findIndex(function (item) { return Number(item.getAttribute("data-jdc-source-index")) === Number(definition.displaySwapIndices[1]); });
+      if (firstPosition >= 0 && secondPosition >= 0) {
+        var swappedItem = items[firstPosition];
+        items[firstPosition] = items[secondPosition];
+        items[secondPosition] = swappedItem;
+      }
     }
     if (!buildSection(definition, items)) {
       states.splice(before, items.length);
@@ -330,7 +365,8 @@
     installed = true;
     document.documentElement.setAttribute("data-jdc-clip-gallery", RELEASE);
     document.documentElement.setAttribute("data-jdc-clip-gallery-slug", definition.slug);
-    document.documentElement.setAttribute("data-jdc-clip-gallery-count", String(definition.clips.length));
+    document.documentElement.setAttribute("data-jdc-clip-gallery-count", String(items.length));
+    document.documentElement.setAttribute("data-jdc-clip-gallery-source-count", String(definition.clips.length));
     document.documentElement.setAttribute("data-jdc-clip-gallery-delivery", "progressive-mp4");
     schedulePlaybackUpdate();
     return true;
