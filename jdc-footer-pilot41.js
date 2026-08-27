@@ -76,7 +76,6 @@
       ".jdc-clip-gallery-item img,.jdc-clip-gallery-item video{position:absolute!important;inset:0!important;display:block!important;width:100%!important;height:100%!important;max-width:none!important;object-fit:cover!important;object-position:center!important;margin:0!important;padding:0!important;border:0!important}",
       ".jdc-clip-gallery-item img{z-index:1!important;opacity:1!important;transition:opacity .18s linear!important}",
       ".jdc-clip-gallery-item video{z-index:2!important;opacity:0!important;background:transparent!important}",
-      ".jdc-clip-gallery-item[data-jdc-flip-x='true'] img,.jdc-clip-gallery-item[data-jdc-flip-x='true'] video{transform:scaleX(-1)!important}",
       ".jdc-clip-gallery-item[data-jdc-clip-playing='true'] video{opacity:1!important}",
       ".jdc-clip-gallery-item[data-jdc-clip-playing='true'] img{opacity:0!important}",
       ".jdc-clip-gallery-item[data-jdc-clip-error='true'] video{display:none!important}",
@@ -99,8 +98,6 @@
     item.style.setProperty("--jdc-clip-aspect", String(GALLERY_ASPECTS[definition.slug] || definition.aspect));
     item.setAttribute("data-jdc-clip-index", String(index + 1));
     item.setAttribute("data-jdc-clip-range", (clip[3] == null ? clip[0] : clip[3]) + "-" + (clip[4] == null ? clip[1] : clip[4]));
-    if (definition.slug === "day-one" && index === 7) item.setAttribute("data-jdc-flip-x", "true");
-
     var poster = document.createElement("img");
     poster.src = asset("media/user-selected-clip-galleries/" + definition.slug + "/" + clip[2]);
     poster.alt = "";
@@ -315,6 +312,11 @@
     installStyles();
     var before = states.length;
     var items = definition.clips.map(function (clip, index) { return buildClipItem(definition, clip, index); });
+    if (definition.slug === "day-one" && items.length >= 8) {
+      var upperLeftItem = items[4];
+      items[4] = items[7];
+      items[7] = upperLeftItem;
+    }
     if (!buildSection(definition, items)) {
       states.splice(before, items.length);
       return false;
