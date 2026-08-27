@@ -25,6 +25,12 @@ VIDEO_FILTERS = {
     # master resolves to 3840x1632+0+264 before the gallery downscale.
     "wynn-awakening": "crop=iw:iw*17/40:0:(ih-iw*17/40)/2,scale=min(960\\,iw):-2:flags=lanczos",
 }
+CLIP_VIDEO_FILTERS = {
+    # Aguita clip 06 contains thin baked-in black wedges at the bottom of two
+    # shots.  On the 4096x1536 master, this 2.1% edge crop clears them while
+    # preserving the delivered 8:3 gallery frame after scaling.
+    ("ggm-aguita", 6): "crop=4012:1504:42:0,scale=min(960\\,iw):-2:flags=lanczos",
+}
 
 
 def run(command: list[str]) -> subprocess.CompletedProcess[str]:
@@ -92,11 +98,14 @@ def main() -> None:
 
     for manifest_path in manifests:
         manifest = json.loads(manifest_path.read_text())
-        video_filter = VIDEO_FILTERS.get(manifest["slug"], DEFAULT_VIDEO_FILTER)
+        project_video_filter = VIDEO_FILTERS.get(manifest["slug"], DEFAULT_VIDEO_FILTER)
         source = Path(manifest["source"])
         if not source.is_file():
             raise RuntimeError(f"Missing source master for {manifest['slug']}: {source}")
         for index, clip in enumerate(manifest["clips"], 1):
+            video_filter = CLIP_VIDEO_FILTERS.get(
+                (manifest["slug"], index), project_video_filter
+            )
             clip_dir = manifest_path.parent / f"clip-{index:02d}"
             destination = clip_dir / "gallery.mp4"
             clip_dir.mkdir(parents=True, exist_ok=True)
