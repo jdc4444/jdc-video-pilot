@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Preview live Squarespace pages with the local pilot49 credits switcher."""
+"""Preview live Squarespace pages with the local pilot50 credits switcher."""
 
 from __future__ import annotations
 
@@ -35,7 +35,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             body = response.read().decode("utf-8", "replace")
         local_url = (
             f"http://127.0.0.1:{self.server.server_port}/"
-            "jdc-footer-pilot49.js?v=credits-preview-local-1"
+            "jdc-footer-pilot50.js?v=credits-preview-local-2"
         )
         body = re.sub(
             r"https://cdn\.jsdelivr\.net/gh/jdc4444/jdc-video-pilot@[^\"']+/jdc-footer-pilot\d+\.js",
@@ -44,7 +44,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         )
         local_loader = (
             f'<script src="{local_url}" '
-            'data-jdc-footer="pilot49-local-preview"></script>'
+            'data-jdc-footer="pilot50-local-preview"></script>'
         )
         body, replacements = re.subn(
             r'<script[^>]+data-jdc-footer="[^"]+"[^>]*></script>',
