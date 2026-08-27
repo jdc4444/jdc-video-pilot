@@ -20,9 +20,10 @@ ROOT = Path(__file__).resolve().parents[1]
 MEDIA_ROOT = ROOT / "media" / "user-selected-clip-galleries"
 DEFAULT_VIDEO_FILTER = "scale=min(960\\,iw):-2:flags=lanczos"
 VIDEO_FILTERS = {
-    # The selected Awakening HLS edits retain the 88px theatrical matte from
-    # their 1280x720 source. Deliver the native 40:17 image instead.
-    "wynn-awakening": "crop=1280:544:0:88,scale=min(960\\,iw):-2:flags=lanczos",
+    # The 4K Awakening master carries a centered 40:17 image inside a 16:9
+    # frame. Express the crop from the input dimensions so the 3840x2160
+    # master resolves to 3840x1632+0+264 before the gallery downscale.
+    "wynn-awakening": "crop=iw:iw*17/40:0:(ih-iw*17/40)/2,scale=min(960\\,iw):-2:flags=lanczos",
 }
 
 

@@ -12,6 +12,7 @@
     "/amber-mark-out-of-this-world",
     "/armando-young-belladonna",
     "/armando-young-prizefighyer",
+    "/black-twitter",
     "/bright-eyes-mariana-trench",
     "/celeste-everyday",
     "/day-one",
@@ -22,6 +23,8 @@
     "/kombilesa-mi-los-peinados",
     "/lovb-launch",
     "/mitski-a-pearl",
+    "/mtv-vote-early",
+    "/shaq-hbo",
     "/thom-yorke-last-i-heard",
     "/wynn-awakening"
   ]);
@@ -72,6 +75,8 @@
       ".jdc-clip-gallery-section{display:block!important;box-sizing:border-box!important;width:100%!important;height:auto!important;min-height:0!important;background:#fff!important;color:#000!important;overflow:clip!important}",
       ".jdc-clip-gallery-flow{display:block!important;box-sizing:border-box!important;width:100%!important;max-width:none!important;padding:clamp(30px,4.2vw,58px) 4.2vw clamp(38px,5vw,68px)!important}",
       ".jdc-clip-gallery-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:clamp(18px,2.2vw,34px) clamp(12px,1.55vw,20px)!important;width:100%!important;box-sizing:border-box!important;align-items:start!important}",
+      ".jdc-clip-gallery-grid[data-jdc-clip-count='4']{grid-template-columns:repeat(2,minmax(0,1fr))!important}",
+      ".jdc-clip-gallery-grid[data-jdc-clip-count='7']>.jdc-clip-gallery-item:last-child{grid-column:2!important}",
       ".jdc-clip-gallery-item{position:relative!important;inset:auto!important;display:block!important;box-sizing:border-box!important;width:100%!important;min-width:0!important;height:auto!important;min-height:0!important;aspect-ratio:var(--jdc-clip-aspect,16/9)!important;overflow:hidden!important;background:#080808!important;transform:none!important;translate:none!important}",
       ".jdc-clip-gallery-item img,.jdc-clip-gallery-item video{position:absolute!important;inset:0!important;display:block!important;width:100%!important;height:100%!important;max-width:none!important;object-fit:cover!important;object-position:center!important;margin:0!important;padding:0!important;border:0!important}",
       ".jdc-clip-gallery-item img{z-index:1!important;opacity:1!important;transition:opacity .18s linear!important}",
@@ -85,8 +90,8 @@
       ".jdc-clip-bts-item>.sqs-block{position:relative!important;inset:auto!important;box-sizing:border-box!important;width:var(--jdc-bts-width,100%)!important;height:auto!important;min-height:0!important;margin:0!important;padding:0!important;transform:none!important;translate:none!important}",
       ".jdc-clip-bts-item [data-jdc-video],.jdc-clip-bts-item [data-config-video]{position:relative!important;inset:auto!important;display:block!important;width:100%!important;height:auto!important;min-height:0!important;aspect-ratio:var(--jdc-bts-aspect,16/9)!important;background-position:center!important;background-size:cover!important;overflow:hidden!important}",
       ".jdc-clip-bts-item .native-video-player,.jdc-clip-bts-item .jdc-video-stage,.jdc-clip-bts-item video{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;aspect-ratio:var(--jdc-bts-aspect,16/9)!important;object-fit:cover!important}",
-      "@media(max-width:1023px) and (min-width:768px){.jdc-clip-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}",
-      "@media(max-width:767px){.jdc-clip-gallery-flow{padding:28px 6vw 38px!important}.jdc-clip-gallery-grid{grid-template-columns:minmax(0,1fr)!important;gap:24px!important}.jdc-clip-gallery-host>.jdc-clip-gallery-grid{grid-template-columns:minmax(0,1fr)!important}.jdc-clip-bts-item>.sqs-block{width:var(--jdc-bts-mobile-width,100%)!important}}",
+      "@media(max-width:1023px) and (min-width:768px){.jdc-clip-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.jdc-clip-gallery-grid[data-jdc-clip-count='7']>.jdc-clip-gallery-item:last-child{grid-column:1/-1!important;width:calc(50% - 10px)!important;justify-self:center!important}}",
+      "@media(max-width:767px){.jdc-clip-gallery-flow{padding:28px 6vw 38px!important}.jdc-clip-gallery-grid,.jdc-clip-gallery-grid[data-jdc-clip-count='4']{grid-template-columns:minmax(0,1fr)!important;gap:24px!important}.jdc-clip-gallery-grid[data-jdc-clip-count='7']>.jdc-clip-gallery-item:last-child{grid-column:auto!important;width:100%!important;justify-self:stretch!important}.jdc-clip-gallery-host>.jdc-clip-gallery-grid{grid-template-columns:minmax(0,1fr)!important}.jdc-clip-bts-item>.sqs-block{width:var(--jdc-bts-mobile-width,100%)!important}}",
       "@media(prefers-reduced-motion:reduce){.jdc-clip-gallery-item img{transition:none!important}}"
     ].join("");
     (document.head || document.documentElement).appendChild(style);
@@ -267,6 +272,7 @@
     flow.className = "jdc-clip-gallery-flow";
     var grid = document.createElement("div");
     grid.className = "jdc-clip-gallery-grid";
+    grid.setAttribute("data-jdc-clip-count", String(items.length));
 
     if (definition.btsId) {
       var btsShell = shellById(definition.btsId);
