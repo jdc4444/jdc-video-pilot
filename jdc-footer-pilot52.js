@@ -6,7 +6,7 @@
 
   var SCRIPT_URL = document.currentScript && document.currentScript.src ? document.currentScript.src : window.location.href;
   var PLAYER_URL = new URL("jdc-footer-pilot27.js", SCRIPT_URL).href;
-  var CORE_URL = new URL("jdc-footer-pilot51.js", SCRIPT_URL).href;
+  var CORE_URL = new URL("jdc-footer-pilot53.js", SCRIPT_URL).href;
   var bombasPath = /^\/bombas-spring\/?$/.test(window.location.pathname);
   var requested = new URLSearchParams(window.location.search).get("jdc-credits");
   var previewActive = ["0", "1", "2", "3", "4"].indexOf(requested) !== -1;
@@ -105,8 +105,8 @@
   }
 
   function loadCreditsCore() {
-    load(CORE_URL, "data-jdc-pilot52-core", "pilot51", function () {
-      document.documentElement.setAttribute("data-jdc-stability-release", "pilot52");
+    load(CORE_URL, "data-jdc-pilot52-core", "pilot53", function () {
+      document.documentElement.setAttribute("data-jdc-stability-release", "pilot53");
       stabilizeBombas();
     });
   }
