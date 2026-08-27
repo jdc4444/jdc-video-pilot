@@ -8,7 +8,7 @@
   var HOME_PATH = "/";
   var SCRIPT_URL = document.currentScript && document.currentScript.src ? document.currentScript.src : window.location.href;
   var CORE_URL = new URL("jdc-footer-pilot43.js", SCRIPT_URL).href;
-  var POLYMARKET_HOME_ID = "3b76b000-8a29-4aee-915d-858c0b1d1a42";
+  var POLYMARKET_HOME_ID = "14c221d2-d4b1-4bfd-baf5-784fd3d45d82";
   var POLYMARKET_HOME_ROUTE = "media/3b76b000-8a29-4aee-915d-858c0b1d1a42/master.m3u8";
   var POLYMARKET_HOME_POSTER = "https://jdc4444.github.io/jdc-video-pilot/media/3b76b000-8a29-4aee-915d-858c0b1d1a42/poster.jpg";
   var TOP_PATHS = [
@@ -29,6 +29,7 @@
 
   function patchPilotConfig(value) {
     if (!value || typeof value !== "object") return value;
+    if (window.location.pathname !== HOME_PATH) return value;
     value.routes = value.routes || {};
     value.routes[POLYMARKET_HOME_ID] = POLYMARKET_HOME_ROUTE;
     return value;
@@ -36,6 +37,7 @@
 
   function patchPosterMap(value) {
     if (!value || typeof value !== "object") value = {};
+    if (window.location.pathname !== HOME_PATH) return value;
     value[POLYMARKET_HOME_ID] = POLYMARKET_HOME_POSTER;
     return value;
   }
