@@ -82,7 +82,7 @@
     "/kelsey-lu-boys-noize-ride-or-die": "Kelsey Lu & Boys Noize : Ride or Die",
     "/black-twitter": "Hulu : Black Twitter",
     "/mitski-a-pearl": "Mitski : A Pearl",
-    "/ggm-accoustic": "Gabriel Garzon Montano : Acoustic",
+    "/ggm-accoustic": "Gabriel Garzón-Montano : Fender Sessions",
     "/kombilesa-mi-los-peinados": "Kombilesa Mi : Los Peinados",
     "/lovb-launch": "LOVB : Launch",
     "/diamond-terrifier-action-fortress": "Diamond Terrifier : Action Fortress",
@@ -529,6 +529,22 @@
 
   function pagePath() {
     return String(window.location.pathname || "/").replace(/\/+$/, "") || "/";
+  }
+
+  function syncHomepageProjectTitles() {
+    if (pagePath() !== "/") return;
+    Array.prototype.slice.call(document.querySelectorAll("main a[href]")).forEach(function (link) {
+      var linkPath = "";
+      try {
+        linkPath = String(new URL(link.href, window.location.href).pathname || "").replace(/\/+$/, "") || "/";
+      } catch (error) {
+        return;
+      }
+      var title = homepageProjectTitles65[linkPath];
+      if (!title) return;
+      var heading = link.closest("h1,h2,h3");
+      (heading || link).textContent = title;
+    });
   }
 
   function originalProjectHeading() {
@@ -1191,6 +1207,7 @@
     scheduled = false;
     if (!previewActive) return;
     ensureStyles();
+    syncHomepageProjectTitles();
     document.documentElement.setAttribute("data-jdc-project-look", behindTheScenesLook ? "behind-the-scenes" : "portfolio");
     if (document.body) document.body.setAttribute("data-jdc-credits-option", option);
     if (creditColumnsEnabled && document.body) document.body.setAttribute("data-jdc-credit-columns", "4");
