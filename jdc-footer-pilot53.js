@@ -58,6 +58,39 @@
     "/thom-yorke-last-i-heard": true,
     "/wynn-awakening": true
   };
+  var homepageProjectTitles65 = {
+    "/day-one": "Bon Iver : Day One",
+    "/lovb-adidas": "LOVB x Adidas",
+    "/bombas-dream-of-comfort": "Bombas : Dream of Comfort",
+    "/nike-aja-sabrina": "Nike : Aja & Sabrina",
+    "/bombas-spring": "Bombas : Spring Campaign",
+    "/polymarket-documentary": "Polymarket : Documentary",
+    "/siberia-hills": "Siberia Hills : Lookbook",
+    "/alignment-documentary": "Alignment : Documentary",
+    "/ggm-aguita": "Gabriel Garzon Montano : Agüita",
+    "/wynn-awakening": "Wynn : Awakening",
+    "/amber-mark-out-of-this-world": "Amber Mark : Out of This World",
+    "/thom-yorke-last-i-heard": "Thom Yorke : Last I Heard",
+    "/polymarket-make-your-own-market": "Polymarket : Make Your Own Market",
+    "/nike-jordan": "Nike : Jordan 39",
+    "/shaq-hbo": "HBO : Shaq",
+    "/bright-eyes-mariana-trench": "Bright Eyes : Mariana Trench",
+    "/kings-of-tupelo": "Netflix : Kings of Tupelo",
+    "/celeste-everyday": "Celeste : Everyday",
+    "/spotify-hip-hop-classics-1": "Spotify : Hip Hop Classics",
+    "/armando-young-prizefighyer": "Armando Young : Prizefighter",
+    "/kelsey-lu-boys-noize-ride-or-die": "Kelsey Lu & Boys Noize : Ride or Die",
+    "/black-twitter": "Hulu : Black Twitter",
+    "/mitski-a-pearl": "Mitski : A Pearl",
+    "/ggm-accoustic": "Gabriel Garzon Montano : Acoustic",
+    "/kombilesa-mi-los-peinados": "Kombilesa Mi : Los Peinados",
+    "/lovb-launch": "LOVB : Launch",
+    "/diamond-terrifier-action-fortress": "Diamond Terrifier : Action Fortress",
+    "/armando-young-belladonna": "Armando Young : Belladonna",
+    "/laufey-tour-visuals": "Laufey : Tour Visuals",
+    "/dig-brand-identity": "DIG : Brand Identity",
+    "/mtv-vote-early": "MTV : Vote Early"
+  };
   var observer = null;
   var scheduled = false;
   var brightEyesSpacingQuiesced = false;
@@ -507,18 +540,16 @@
   }
 
   function makeBalancedTitle() {
+    var canonicalTitle = homepageProjectTitles65[pagePath()] || "";
     var block = document.querySelector("main .jdc-layout4-title51");
     if (block) {
       var existingHeading = block.querySelector("h1,h2,h3");
-      if (existingHeading) existingHeading.textContent = formatBalancedTitle(existingHeading.textContent);
+      if (existingHeading) existingHeading.textContent = formatBalancedTitle(canonicalTitle || existingHeading.textContent);
       return block;
     }
     var data = projectData();
     var source = originalProjectHeading();
-    var titleOverrides = {
-      "/ggm-accoustic": "Gabriel Garzón-Montano : Fender Sessions"
-    };
-    var text = titleOverrides[pagePath()] || (source ? source.textContent.trim() : data && data.title ? data.title : document.title.split("—")[0].trim());
+    var text = canonicalTitle || (source ? source.textContent.trim() : data && data.title ? data.title : document.title.split("—")[0].trim());
     text = formatBalancedTitle(text);
     if (!text) return null;
     block = document.createElement("div");
