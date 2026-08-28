@@ -919,6 +919,7 @@
     scheduled = false;
     if (!previewActive) return;
     ensureStyles();
+    if (document.body) document.body.setAttribute("data-jdc-credits-option", option);
     if (creditColumnsEnabled && document.body) document.body.setAttribute("data-jdc-credit-columns", "4");
     installCreditStylePreview();
     installCreditFlowPreview();
