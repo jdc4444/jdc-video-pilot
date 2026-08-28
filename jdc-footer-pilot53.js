@@ -74,8 +74,47 @@
 
   function roleScore(value) {
     var text = String(value || "").toLowerCase();
-    var matches = text.match(/\b(director|producer|production|executive|creative|cinematographer|cinematography|photographer|photography|editor|editing|designer|design|animation|animator|vfx|visual effects|colorist|color|music|composer|sound|audio|stylist|styling|wardrobe|costume|hair|makeup|gaffer|grip|camera|operator|assistant|agency|client|artist|featuring|cast|choreographer|choreography|title|story|copywriter|copywriting)\b/g);
+    var matches = text.match(/\b(director|producer|production|executive|creative|cinematographer|cinematography|photographer|photography|editor|editing|designer|design|animation|animator|vfx|visual effects|colorist|color|music|composer|sound|audio|stylist|styling|wardrobe|costume|hair|makeup|gaffer|grip|camera|operator|assistant|agency|client|artist|featuring|cast|casting|choreographer|choreography|title|story|copywriter|copywriting|label|commissioner|post house|set pas|prod co|dp|ep|pm|ac|ae|slt|hmu|bts|bbg)\b/g);
     return matches ? matches.length : 0;
+  }
+
+  function makeCreditItem(person, credit) {
+    var item = document.createElement("div");
+    item.className = "jdc-credit-item51";
+    var name = document.createElement("span");
+    name.className = "jdc-credit-name51";
+    name.textContent = person;
+    item.appendChild(name);
+    var role = document.createElement("span");
+    role.className = "jdc-credit-role51";
+    role.textContent = credit;
+    item.appendChild(role);
+    return item;
+  }
+
+  function repairCreditLines() {
+    Array.prototype.slice.call(document.querySelectorAll(".jdc-credit-item51")).forEach(function (item) {
+      var name = item.querySelector(".jdc-credit-name51");
+      var role = item.querySelector(".jdc-credit-role51");
+      if (!name) return;
+
+      var featuring = !role && name.textContent.match(/^Featuring\s+(.+)$/i);
+      if (featuring) {
+        name.textContent = featuring[1].trim();
+        var featuringRole = document.createElement("span");
+        featuringRole.className = "jdc-credit-role51";
+        featuringRole.textContent = "Featuring";
+        item.appendChild(featuringRole);
+        item.removeAttribute("data-jdc-single");
+        return;
+      }
+
+      if (role && /^BBG$/i.test(name.textContent.trim()) && /^Thorn Shaffer\s+B-Unit Gaffer\s*[-–—]\s*Trevor Dunnigan,\s*Monty Sloan$/i.test(role.textContent.trim())) {
+        name.textContent = "Thorn Shaffer";
+        role.textContent = "BBG";
+        item.parentNode.insertBefore(makeCreditItem("Trevor Dunnigan, Monty Sloan", "B-Unit Gaffer"), item.nextSibling);
+      }
+    });
   }
 
   function normalizeCreditHierarchy() {
@@ -86,7 +125,7 @@
       if (!name || !role) return;
       var nameScore = roleScore(name.textContent);
       var roleValueScore = roleScore(role.textContent);
-      var large = roleValueScore > nameScore ? "role" : "name";
+      var large = roleValueScore > nameScore ? "name" : "role";
       item.setAttribute("data-jdc-large53", large);
     });
     return items.length > 0;
@@ -180,6 +219,7 @@
     scheduled = false;
     if (!previewActive) return;
     ensureStyles();
+    repairCreditLines();
     normalizeCreditHierarchy();
     buildPressSection();
   }
