@@ -244,8 +244,10 @@ window.JDC_POSTERS = {
   "1d9bd042-3957-4c17-b472-214633973ffb": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/4fe1149b-2b82-4ad5-a54f-7411eadd6df6/1d9bd042-nike-aja-sabrina.jpg",
   "210e0681-2ffe-4c6a-b67f-c8441b6b31b5": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/169acee5-1b5b-4336-9300-6fe915d5bb15/210e0681-nike-aja-sabrina.jpg",
   "229157cc-c2eb-4231-8f1a-3bbd256dc316": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/6e60e12c-5f12-4ac6-ba04-ea585bb9e0df/229157cc-thom-yorke-last-i-heard.jpg",
+  "2342dda3-3593-4faf-97cd-094101864c9b": new URL("media/2342dda3-3593-4faf-97cd-094101864c9b/homepage-first.jpg", document.currentScript && document.currentScript.src ? document.currentScript.src : window.location.href).href,
   "23239866-e8b1-4c2c-8132-c0ee306b5dd6": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/047a38e9-6198-4560-88d8-97b6831d715e/23239866-nike-aja-sabrina.jpg",
   "27e4c31e-d11e-4359-9703-ff34a1c064ee": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/5aa7137f-b514-467f-b68d-4175a59f2d2c/27e4c31e-bombas-spring.jpg",
+  "2a2cf45f-4929-433a-ba6f-bf0589bd9025": new URL("media/2a2cf45f-4929-433a-ba6f-bf0589bd9025/project-first.jpg", document.currentScript && document.currentScript.src ? document.currentScript.src : window.location.href).href,
   "2acacb1c-6b84-416b-8994-7c6fe9622eae": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/314773f3-aa7b-45ac-88fb-14161e71afa5/2acacb1c-diamond-terrifier-action-fortress.jpg",
   "2bd13f1a-46d7-49df-bcbe-96e481f267be": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/51905bb8-dee7-4daf-956b-4f2b38ffd352/2bd13f1a-bombas-spring.jpg",
   "378cff19-7f11-4e2a-b701-dc3061475a4d": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/00d629eb-dfee-4f41-a7bb-f696255a628f/378cff19-spotify-hip-hop-classics.jpg",
@@ -253,11 +255,14 @@ window.JDC_POSTERS = {
   "398da2c2-90a7-4caf-8d40-a5c35b839320": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/a2b4097c-7f80-4e8a-8373-d88618fde54e/398da2c2-celeste-everyday.jpg",
   "3b58e12f-1a34-43bc-81db-7c64cedb68cd": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/14817582-3b8c-4672-b776-bca2a2d17ecb/3b58e12f-kelsey-lu-boys-noize-ride-or-die.jpg",
   "3b76b000-8a29-4aee-915d-858c0b1d1a42": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/29162fa8-9ed2-46e4-8544-9d9cbeb36353/3b76b000-polymarket-commercial.jpg",
+  "3babe599-f500-4a8f-9324-d88ba0041bcd": new URL("media/3babe599-f500-4a8f-9324-d88ba0041bcd/project-first.jpg", document.currentScript && document.currentScript.src ? document.currentScript.src : window.location.href).href,
   "41a705e0-e118-4f6e-bf45-f4585403b442": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/27eec08a-00a9-4466-acda-0d52e824d1e9/41a705e0-hulu-black-twitter-graphics.jpg",
   "43ad8f38-2795-45e1-ac47-43bcb8a935a6": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/23670475-1894-4090-a64b-80efc07eb089/43ad8f38-awakening-the-first-day.jpg",
+  "45141279-52cc-4c9b-9bb2-45e7ef12fe52": new URL("media/45141279-52cc-4c9b-9bb2-45e7ef12fe52/project-first.jpg", document.currentScript && document.currentScript.src ? document.currentScript.src : window.location.href).href,
   "460e4fcf-17dc-4a28-8da5-422463b21d8b": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/39dfd37c-7ad4-4774-b329-0293d71e6fb7/460e4fcf-siberia-hills-lookbook.jpg",
   "477191e0-7531-4b97-862c-56c1b0f8710a": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/58d90714-992c-4161-8b37-8d92ea9cdd89/477191e0-alignment-documentary.jpg",
   "4827aa1e-51d5-4b05-89d6-9a149fcc7728": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/45f608e1-44f2-4129-aba5-173bc284ee53/4827aa1e-bombas-spring.jpg",
+  "494fb507-3709-46cc-91fc-c6c39ecfff2e": new URL("media/494fb507-3709-46cc-91fc-c6c39ecfff2e/project-first.jpg", document.currentScript && document.currentScript.src ? document.currentScript.src : window.location.href).href,
   "49d7cacc-7149-46db-bc4d-010e1499e15d": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/dcc0191e-930c-4bcf-8bdf-f64612b8ef01/49d7cacc-hbo-shaq.jpg",
   "4c67c71c-5a65-4b8b-9051-4d309b41a59b": "https://jdc4444.github.io/jdc-video-pilot/media/4c67c71c-5a65-4b8b-9051-4d309b41a59b/v2-visible-start/poster.jpg",
   "4ca78e76-34c6-4d27-8a56-44cd3d65f673": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/252cc0a5-2b43-4bbc-b34c-608f7f527f8b/4ca78e76-siberia-hills-lookbook.jpg",
@@ -320,6 +325,7 @@ window.JDC_POSTERS = {
   "c0948cac-10ce-4881-8c0a-f70f041f6cfb": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/18108620-c3f6-4502-b9db-105413068837/c0948cac-nike-jordan-39.jpg",
   "c1e56f2c-33a3-4fb1-b221-a7c964548622": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/6d7c6ce3-72a1-4e49-9842-d4b3d4d1a10b/c1e56f2c-bon-iver-day-one.jpg",
   "c32c609a-125d-4a4d-979d-4f828b4ce28b": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/2f61547d-d416-400b-bc84-3a62af6fff99/c32c609a-lovb-launch.jpg",
+  "d2b918e5-a79d-49fc-ab4c-84bb600d86c9": "https://images.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/c2fea4b6-646c-468b-ab11-d42c8234dc43/dig-web-v2-frame-one.jpg",
   "c5babbbe-aa6c-46e5-b6b2-9b6caf4f2558": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/e15ae810-31a8-4dee-a64c-a212ce79865d/c5babbbe-bombas-spring.jpg",
   "c6d0e231-d085-4d4d-b1c7-6ea8b9e4853a": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/9cf798bb-5c3a-4bb3-9ae8-4d0b11dfbe94/c6d0e231-gabriel-garzon-montano-acoustic-performances.jpg",
   "c7b9e3e0-5dc5-475c-9de2-fb85378680d0": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/be1100d8-434f-4301-8134-edfdeeafc07d/c7b9e3e0-siberia-hills-lookbook.jpg",
@@ -340,6 +346,7 @@ window.JDC_POSTERS = {
   "ed2b7d1e-36bb-4c44-9caf-4ce8b0b94255": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/4227de83-c0f7-4f2e-ad01-a2f9d107decd/ed2b7d1e-netflix-the-kings-of-tupelo.jpg",
   "edba3959-0eca-4ac9-a905-3509cf700da3": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/643be003-b682-40a5-8841-45a36080d23a/edba3959-armando-young-prizefighter.jpg",
   "edc2639e-d736-4107-8580-f3e1a864c81e": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/a651c16e-05d4-44b0-98d6-32d587b992af/edc2639e-gabriel-garzon-montano-aguita.jpg",
+  "e6be4a13-2eae-4430-9f3a-fd2d26003ce2": new URL("media/e6be4a13-2eae-4430-9f3a-fd2d26003ce2/homepage-first.jpg", document.currentScript && document.currentScript.src ? document.currentScript.src : window.location.href).href,
   "f2b6e655-df82-43f3-a5b2-37b03b255062": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/82680288-ea24-43ca-b4b5-60cb0d6cea01/f2b6e655-diamond-terrifier-action-fortress.jpg",
   "f30f9a87-0534-40cf-90a2-2a640b61bfb6": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/3ffe97a7-d8b1-4c5a-85d7-b3e88ff42d68/f30f9a87-bombas-spring.jpg",
   "f3502f3d-b76f-4b9c-96a1-d78ccf642691": "https://images.squarespace-cdn.com/content/559d52abe4b0cebfa4f0b439/cffca8f9-3f2e-4bb2-b1f4-6309e2097e22/f3502f3d-bon-iver-day-one.jpg",
@@ -350,7 +357,16 @@ window.JDC_POSTERS = {
 };
 
 window.JDC_VIDEO_PILOT = {
-  "baseUrl": "https://jdc4444.github.io/jdc-video-pilot/",
+  "baseUrl": (function () {
+    var scriptSrc = document.currentScript && document.currentScript.src;
+    if (scriptSrc) {
+      var scriptUrl = new URL(scriptSrc, window.location.href);
+      if (scriptUrl.hostname === "127.0.0.1" || scriptUrl.hostname === "localhost") {
+        return new URL("./", scriptUrl).href;
+      }
+    }
+    return "https://jdc4444.github.io/jdc-video-pilot/";
+  })(),
   "routes": {
     "01cf1f30-f776-4c12-b875-317556ea587c": "media/01cf1f30-f776-4c12-b875-317556ea587c/master.m3u8",
     "04a6e835-4333-44c8-9371-fe856603b3c0": "media/04a6e835-4333-44c8-9371-fe856603b3c0/master.m3u8",
@@ -399,7 +415,12 @@ window.JDC_VIDEO_PILOT = {
   var projectPage = window.location.pathname !== "/";
   var bombasProject = /^\/bombas-spring\/?$/.test(window.location.pathname) || queryParams.get("jdc-bombas-playlist") === "1";
   var pilotEnabled = pilotQuery !== "0" && !!pilotBaseUrl && window.location.pathname === "/";
-  var projectSpacingEnabled = projectSpacingQuery !== "0" && projectPage;
+  // Dedicated release adapters own their section geometry. Running the older
+  // Fluid Engine spacing loop at the same time makes page height depend on
+  // which video is active and causes bottom-to-top scroll jumps.
+  var projectSpacingEnabled = projectSpacingQuery !== "0" && projectPage &&
+    window.__JDC_PILOT64_PATH_VIDEO_OPT_IN__ !== true &&
+    window.__JDC_PILOT53_SITEWIDE_WINNER__ !== true;
   var connection = window.JDC_NETWORK_OVERRIDE || navigator.connection || navigator.mozConnection || navigator.webkitConnection || {};
   var effectiveType = String(connection.effectiveType || "").toLowerCase();
   var downlink = Number(connection.downlink || 0);
@@ -455,6 +476,7 @@ window.JDC_VIDEO_PILOT = {
     { number: 7, duration: 27.370, poster: "https://jdc4444.github.io/jdc-video-pilot/media/laufey/gallery/posters/laufey-7-first.jpg" },
     { number: 8, duration: 15.296, poster: "https://jdc4444.github.io/jdc-video-pilot/media/laufey/gallery/posters/laufey-8-first.jpg" }
   ];
+  var LAUFEY_PERFORMANCE_ID = "757b7b53-188b-4a7e-912d-ce6fda95f78b";
   var POLYMARKET_GALLERY_CLIPS = [
     { number: 1, duration: 4.880, poster: "https://jdc4444.github.io/jdc-video-pilot/media/polymarket/gallery/posters/polymarket-gallery-1-first.jpg" },
     { number: 2, duration: 13.200, poster: "https://jdc4444.github.io/jdc-video-pilot/media/polymarket/gallery/posters/polymarket-gallery-2-first.jpg" },
@@ -845,6 +867,61 @@ window.JDC_VIDEO_PILOT = {
     document.head.appendChild(style);
   }
 
+  function laufeyColumnCount() {
+    if (window.innerWidth <= 767) return 1;
+    if (window.innerWidth <= 1023) return 2;
+    return 3;
+  }
+
+  function orderLaufeyGallery(grid) {
+    if (!grid) return false;
+    var performance = grid.querySelector(":scope > .jdc-laufey-performance-item");
+    if (!performance) return false;
+    var clips = Array.prototype.slice.call(grid.children).filter(function (item) {
+      return /^\d+$/.test(item.getAttribute("data-jdc-laufey-order") || "");
+    }).sort(function (a, b) {
+      return Number(a.getAttribute("data-jdc-laufey-order")) - Number(b.getAttribute("data-jdc-laufey-order"));
+    });
+    if (!clips.length) return false;
+    var columns = laufeyColumnCount();
+    var target = clips[columns] || null;
+    if (target && performance.nextElementSibling !== target) grid.insertBefore(performance, target);
+    if (!target && performance !== grid.lastElementChild) grid.appendChild(performance);
+    grid.setAttribute("data-jdc-laufey-gallery-count", String(clips.length + 1));
+    grid.setAttribute("data-jdc-laufey-performance-after-columns", String(columns));
+    return true;
+  }
+
+  function integrateLaufeyPerformance(grid) {
+    if (!grid) return false;
+    var performanceShell = Array.prototype.slice.call(document.querySelectorAll("[data-jdc-video]")).find(function (shell) {
+      var config = parse(shell, "data-jdc-video");
+      return config && config.systemDataId === LAUFEY_PERFORMANCE_ID;
+    });
+    if (!performanceShell) return false;
+    var wrapper = performanceShell.closest(".fe-block") || performanceShell;
+    if (!wrapper.classList.contains("jdc-laufey-performance-item")) {
+      var sourceSection = wrapper.closest(".page-section, section");
+      wrapper.classList.add("jdc-laufey-gallery-item", "jdc-laufey-performance-item");
+      wrapper.setAttribute("data-jdc-laufey-order", "performance");
+      wrapper.style.setProperty("grid-column", "1 / -1", "important");
+      grid.appendChild(wrapper);
+      if (sourceSection && !sourceSection.querySelector(".fe-block")) {
+        sourceSection.classList.add("jdc-laufey-performance-source-section");
+        sourceSection.setAttribute("aria-hidden", "true");
+      }
+    }
+    orderLaufeyGallery(grid);
+    document.documentElement.setAttribute("data-jdc-laufey-performance-layout", "pilot65-after-first-row");
+    if (!window.__JDC_LAUFEY_PERFORMANCE_RESIZE65__) {
+      window.__JDC_LAUFEY_PERFORMANCE_RESIZE65__ = true;
+      window.addEventListener("resize", function () {
+        orderLaufeyGallery(document.querySelector(".jdc-laufey-gallery-grid"));
+      });
+    }
+    return true;
+  }
+
   function installLaufeyGallery() {
     if (!/^\/laufey-tour-visuals\/?$/.test(window.location.pathname)) return false;
 
@@ -871,7 +948,9 @@ window.JDC_VIDEO_PILOT = {
     var section = clips[0].shell.closest(".page-section, section");
     if (!section || !clips.every(function (clip) { return clip.shell.closest(".page-section, section") === section; })) return false;
     var previousSection = section.previousElementSibling;
-    if (previousSection && previousSection.matches(".page-section, section") && !previousSection.querySelector(".sqs-block, [data-jdc-native-video]")) {
+    if (previousSection && previousSection.matches(".page-section, section") &&
+        !previousSection.classList.contains("jdc-balanced-meta57") &&
+        !previousSection.querySelector(".sqs-block, [data-jdc-native-video]")) {
       previousSection.classList.add("jdc-laufey-empty-section");
       previousSection.setAttribute("aria-hidden", "true");
     }
@@ -883,7 +962,10 @@ window.JDC_VIDEO_PILOT = {
 
     var contentWrapper = section.querySelector(":scope > .content-wrapper") || section.querySelector(".content-wrapper");
     if (!contentWrapper) return false;
-    var content = contentWrapper.querySelector(":scope > .content") || contentWrapper;
+    // Keep the compact grid beside Squarespace's native `.content` element.
+    // Nesting it inside `.content` makes the lookup miss it on the next
+    // MutationObserver pass and creates grids forever.
+    var content = contentWrapper;
     var wrappers = clips.map(function (clip) { return clip.shell.closest(".fe-block") || clip.shell; });
     if (new Set(wrappers).size !== clips.length) return false;
 
@@ -900,6 +982,9 @@ window.JDC_VIDEO_PILOT = {
         ".jdc-laufey-gallery-grid>.jdc-laufey-gallery-item>.sqs-block{box-sizing:border-box!important;width:100%!important;height:auto!important;min-height:0!important;padding:0!important}",
         ".jdc-laufey-gallery-grid .sqs-block-content{height:auto!important;min-height:0!important}",
         ".jdc-laufey-gallery-grid [data-jdc-video]{display:block!important;width:100%!important;height:auto!important;min-height:0!important;aspect-ratio:16/9!important;background-position:center!important;background-size:cover!important}",
+        ".jdc-laufey-performance-source-section{display:none!important}",
+        ".jdc-laufey-gallery-grid>.jdc-laufey-performance-item{position:relative!important;inset:auto!important;grid-area:auto!important;grid-column:1/-1!important;transform:none!important;width:100%!important;height:auto!important;min-width:0!important;min-height:0!important}",
+        ".jdc-laufey-gallery-grid>.jdc-laufey-performance-item>.sqs-block{box-sizing:border-box!important;width:100%!important;height:auto!important;min-height:0!important;padding:0!important}",
         "@media(max-width:1023px){.jdc-laufey-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}",
         "@media(max-width:767px){.jdc-laufey-gallery-section>.content-wrapper{padding-top:14px!important;padding-bottom:14px!important}.jdc-laufey-gallery-grid{grid-template-columns:1fr!important;gap:12px!important}}"
       ].join("");
@@ -918,10 +1003,13 @@ window.JDC_VIDEO_PILOT = {
       wrapper.classList.add("jdc-laufey-gallery-item");
       wrapper.setAttribute("data-jdc-laufey-order", String(clips[index].number));
     });
-    var currentWrappers = Array.prototype.slice.call(grid.children);
+    var currentWrappers = Array.prototype.slice.call(grid.children).filter(function (child) {
+      return wrappers.indexOf(child) !== -1;
+    });
     if (wrappers.some(function (wrapper, index) { return currentWrappers[index] !== wrapper; })) {
       wrappers.forEach(function (wrapper) { grid.appendChild(wrapper); });
     }
+    integrateLaufeyPerformance(grid);
     section.classList.add("jdc-laufey-gallery-section");
     section.setAttribute("data-jdc-laufey-gallery", clipsByNumber.has(8) ? "ready" : "processing-clip-8");
     return true;
@@ -989,7 +1077,9 @@ window.JDC_VIDEO_PILOT = {
       wrapper.classList.add("jdc-polymarket-gallery-item");
       wrapper.setAttribute("data-jdc-polymarket-order", String(clips[index].number));
     });
-    var currentWrappers = Array.prototype.slice.call(grid.children);
+    var currentWrappers = Array.prototype.slice.call(grid.children).filter(function (child) {
+      return wrappers.indexOf(child) !== -1;
+    });
     if (wrappers.some(function (wrapper, index) { return currentWrappers[index] !== wrapper; })) {
       wrappers.forEach(function (wrapper) { grid.appendChild(wrapper); });
     }
@@ -1038,6 +1128,9 @@ window.JDC_VIDEO_PILOT = {
       var style = document.createElement("style");
       style.id = "jdc-limn-gallery-styles";
       style.textContent = [
+        ".jdc-limn-gallery-section{min-height:0!important;height:auto!important;overflow:clip!important}",
+        ".jdc-limn-gallery-section>.content-wrapper{display:block!important;box-sizing:border-box!important;min-height:0!important;padding-top:clamp(20px,2.2vw,34px)!important;padding-bottom:clamp(20px,2.2vw,34px)!important}",
+        ".jdc-limn-gallery-section>.content-wrapper>.content,.jdc-limn-gallery-section>.content-wrapper>.fluid-engine{display:none!important}",
         ".jdc-limn-gallery-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:clamp(10px,1.2vw,18px)!important;width:100%!important;box-sizing:border-box!important;margin-top:clamp(20px,2.2vw,34px)!important;margin-bottom:clamp(20px,2.2vw,34px)!important}",
         ".jdc-limn-gallery-grid>.jdc-limn-gallery-item{position:relative!important;inset:auto!important;grid-area:auto!important;transform:none!important;width:100%!important;height:auto!important;min-width:0!important;min-height:0!important}",
         ".jdc-limn-gallery-grid>.jdc-limn-gallery-item>.sqs-block{box-sizing:border-box!important;width:100%!important;height:auto!important;min-height:0!important;padding:0!important}",
@@ -1059,7 +1152,9 @@ window.JDC_VIDEO_PILOT = {
       wrapper.classList.add("jdc-limn-gallery-item");
       wrapper.setAttribute("data-jdc-limn-order", String(clips[index].number));
     });
-    var currentWrappers = Array.prototype.slice.call(grid.children);
+    var currentWrappers = Array.prototype.slice.call(grid.children).filter(function (child) {
+      return wrappers.indexOf(child) !== -1;
+    });
     if (wrappers.some(function (wrapper, index) { return currentWrappers[index] !== wrapper; })) {
       wrappers.forEach(function (wrapper) { grid.appendChild(wrapper); });
     }
@@ -1113,6 +1208,9 @@ window.JDC_VIDEO_PILOT = {
       var style = document.createElement("style");
       style.id = "jdc-basis-project-styles";
       style.textContent = [
+        ".jdc-basis-project-section{min-height:0!important;height:auto!important}",
+        ".jdc-basis-project-section>.content-wrapper{display:block!important;box-sizing:border-box!important;min-height:0!important;padding-top:clamp(20px,2.2vw,34px)!important;padding-bottom:clamp(20px,2.2vw,34px)!important}",
+        ".jdc-basis-project-section>.content-wrapper>.content,.jdc-basis-project-section>.content-wrapper>.fluid-engine{display:none!important}",
         ".jdc-basis-project-section .fluid-engine:empty{display:none!important}",
         ".jdc-basis-project-grid{display:grid!important;grid-template-columns:minmax(0,1fr)!important;width:100%!important;box-sizing:border-box!important;gap:0!important;margin:0!important}",
         ".jdc-basis-project-grid>.jdc-basis-project-item{position:relative!important;inset:auto!important;grid-area:auto!important;transform:none!important;width:100%!important;height:auto!important;min-width:0!important;min-height:0!important}",
@@ -1138,7 +1236,9 @@ window.JDC_VIDEO_PILOT = {
       wrapper.classList.toggle("jdc-basis-title", index === 1);
       wrapper.classList.toggle("jdc-basis-phone", index === 2);
     });
-    var currentWrappers = Array.prototype.slice.call(grid.children);
+    var currentWrappers = Array.prototype.slice.call(grid.children).filter(function (child) {
+      return wrappers.indexOf(child) !== -1;
+    });
     if (wrappers.some(function (wrapper, index) { return currentWrappers[index] !== wrapper; })) {
       wrappers.forEach(function (wrapper) { grid.appendChild(wrapper); });
     }

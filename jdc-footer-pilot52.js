@@ -10,7 +10,7 @@
   var CORE_URL = new URL("jdc-footer-pilot53.js" + SCRIPT_QUERY, SCRIPT_URL).href;
   var bombasPath = /^\/bombas-spring\/?$/.test(window.location.pathname);
   var requested = new URLSearchParams(window.location.search).get("jdc-credits");
-  var releaseVideoOptIn = window.__JDC_PILOT64_PATH_VIDEO_OPT_IN__ === true;
+  var releaseVideoOptIn = window.__JDC_PILOT64_VIDEO_OPT_IN__ === true || window.__JDC_PILOT64_PATH_VIDEO_OPT_IN__ === true;
   var previewActive = releaseVideoOptIn || ["0", "1", "2", "3", "4"].indexOf(requested) !== -1;
 
   function load(url, attribute, value, complete) {

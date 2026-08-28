@@ -184,7 +184,7 @@
       "body[data-jdc-credit-flow55] .jdc-layout4-credits51 .jdc-credit-item51[data-jdc-single='true']{grid-column:1/-1!important}",
       "body[data-jdc-credit-flow55] .jdc-clip-gallery-grid>.jdc-project-press53,body[data-jdc-credit-flow55] .jdc-clip-gallery-grid>.jdc-project-quotes-section53{grid-column:1/-1!important;min-width:0!important;padding-left:0!important;padding-right:0!important}",
       "body[data-jdc-credit-flow55='3'].jdc-balanced-preview-ready57 .jdc-project-info-band{display:none!important}",
-      "body[data-jdc-credit-flow55='3'] .jdc-balanced-meta57{display:block!important;box-sizing:border-box!important;width:100%!important;height:auto!important;min-height:0!important;margin:0!important;padding:0!important;background:#fff!important;color:#050505!important}",
+      "body[data-jdc-credit-flow55='3'] .jdc-balanced-meta57{display:block!important;position:relative!important;z-index:5!important;box-sizing:border-box!important;width:100%!important;height:auto!important;min-height:0!important;margin:0!important;padding:0!important;background:#fff!important;color:#050505!important}",
       "body[data-jdc-credit-flow55='3'] .jdc-balanced-meta-flow57{display:block!important;box-sizing:border-box!important;width:100%!important;margin:0!important;padding:0!important}",
       "body[data-jdc-credit-flow55='3'] .jdc-balanced-meta57 .jdc-layout4-title51{padding-bottom:18px!important}",
       "body[data-jdc-credit-flow55='3'] .jdc-balanced-meta57 .jdc-project-press53{padding-top:24px!important}",
@@ -628,7 +628,12 @@
 
   function compactNativeHeroCopy(meta, heroSection) {
     if (!meta || !heroSection) return false;
-    var media = Array.prototype.slice.call(heroSection.querySelectorAll("video"));
+    // Measure the persistent media shell as well as the transient <video>.
+    // The adaptive player intentionally unmounts far-offscreen video elements;
+    // spacing must not expand just because the hero is outside the viewport.
+    var media = Array.prototype.slice.call(heroSection.querySelectorAll(
+      "[data-jdc-video],[data-jdc-native-video],[data-config-video],[data-config-native-video],video"
+    ));
     var mediaRects = media.map(function (node) { return node.getBoundingClientRect(); }).filter(function (rect) {
       return rect.height >= 100 && rect.width >= 100;
     });
@@ -644,6 +649,23 @@
     var pull = Math.max(0, sectionRect.bottom - mediaBottom - desiredGap);
     meta.style.setProperty("margin-top", pull > 1 ? (-Math.round(pull)) + "px" : "0px", "important");
     heroSection.setAttribute("data-jdc-sitewide-native-hero64", "compacted");
+    return true;
+  }
+
+  function compactSectionTail(nextNode, mediaSection) {
+    if (!nextNode || !mediaSection) return false;
+    var media = Array.prototype.slice.call(mediaSection.querySelectorAll(
+      "[data-jdc-video],[data-jdc-native-video],[data-config-video],[data-config-native-video],video"
+    ));
+    var mediaRects = media.map(function (node) { return node.getBoundingClientRect(); }).filter(function (rect) {
+      return rect.height >= 100 && rect.width >= 100;
+    });
+    if (!mediaRects.length) return false;
+    var mediaBottom = Math.max.apply(Math, mediaRects.map(function (rect) { return rect.bottom; }));
+    var sectionRect = mediaSection.getBoundingClientRect();
+    var desiredGap = window.innerWidth <= 767 ? 28 : 44;
+    var pull = Math.max(0, sectionRect.bottom - mediaBottom - desiredGap);
+    nextNode.style.setProperty("margin-top", pull > 1 ? (-Math.round(pull)) + "px" : "0px", "important");
     return true;
   }
 
@@ -663,12 +685,17 @@
       var items = Array.prototype.slice.call(container.children).filter(function (item) {
         return item.matches(specs[index][1]);
       });
+      if (specs[index][3] === "laufey") {
+        items = items.filter(function (item) {
+          return !item.classList.contains("jdc-laufey-performance-item");
+        });
+      }
       return {
         container: container,
         items: items,
         split: specs[index][2],
         type: specs[index][3],
-        section: container.closest(".page-section")
+        section: container.closest(".page-section, section")
       };
     }
     var bombas = document.querySelector("main .jdc-bombas-gallery-section");
@@ -705,9 +732,34 @@
     return true;
   }
 
+  function resetSingleFluidMeta(meta) {
+    if (meta) {
+      meta.classList.remove("jdc-native-single-meta65");
+      meta.style.removeProperty("--jdc-native-single-top65");
+      meta.style.setProperty("margin-top", "0px", "important");
+    }
+    Array.prototype.slice.call(document.querySelectorAll("main .jdc-native-single-engine65")).forEach(function (engine) {
+      engine.classList.remove("jdc-native-single-engine65");
+      engine.style.removeProperty("--jdc-native-single-shift65");
+      engine.style.removeProperty("--jdc-native-single-extension65");
+    });
+    Array.prototype.slice.call(document.querySelectorAll("main .jdc-native-single-shift65")).forEach(function (block) {
+      block.classList.remove("jdc-native-single-shift65");
+    });
+    Array.prototype.slice.call(document.querySelectorAll("main .jdc-native-single-section65")).forEach(function (section) {
+      section.classList.remove("jdc-native-single-section65");
+      section.removeAttribute("data-jdc-native-single-winner65");
+      section.removeAttribute("data-jdc-native-single-shift65");
+    });
+    document.documentElement.removeAttribute("data-jdc-native-single-layout");
+  }
+
   function placeSingleFluidMeta(meta) {
     if (!sitewideWinnerEnabled || !meta) return false;
     if (nativeClipGalleryPaths65[pagePath()]) return false;
+    // A separately inserted BTS section is the natural boundary after the
+    // hero. Do not pull metadata upward with the one-section Fluid fallback.
+    if (document.querySelector("main .jdc-bts-section40")) return false;
     var sections = Array.prototype.slice.call(document.querySelectorAll("main .page-section"));
     if (sections.length !== 1) return false;
     var section = sections[0];
@@ -760,9 +812,30 @@
 
   function placeMeta(meta, descriptor) {
     if (!meta) return false;
+    var bts = document.querySelector("main .jdc-bts-section40");
     var projectSection = document.querySelector("main .jdc-project-info-band") &&
       document.querySelector("main .jdc-project-info-band").closest(".page-section");
+    if (descriptor || bts) resetSingleFluidMeta(meta);
+    var pageSections = Array.prototype.slice.call(document.querySelectorAll("main .page-section"));
+    var heroSection = pageSections.find(function (section) {
+      return Array.prototype.some.call(section.querySelectorAll(
+        "[data-jdc-video],[data-jdc-native-video],[data-config-video],[data-config-native-video],video"
+      ), function (media) {
+        var rect = media.getBoundingClientRect();
+        return getComputedStyle(media).display !== "none" && rect.width >= 100 && rect.height >= 100;
+      });
+    });
+    if (descriptor && descriptor.type === "alignment" && pageSections.length > 1 && pageSections[1].parentNode) {
+      compactNativeHeroCopy(meta, heroSection || pageSections[0]);
+      var movedAlignmentMeta = stableInsert(pageSections[1].parentNode, meta, pageSections[1]);
+      compactSectionTail(descriptor.section, pageSections[1]);
+      return movedAlignmentMeta;
+    }
+    if (descriptor && descriptor.type === "basis" && descriptor.container) {
+      return stableInsert(descriptor.container, meta, descriptor.items[1] || null);
+    }
     if (descriptor && descriptor.section) {
+      if (heroSection && heroSection !== descriptor.section) compactNativeHeroCopy(meta, heroSection);
       if (descriptor.container && (descriptor.section.contains(originalProjectHeading()) || descriptor.section.querySelector(".jdc-project-lead-block"))) {
         return stableInsert(descriptor.container.parentNode, meta, descriptor.container);
       }
@@ -772,18 +845,18 @@
       // Native Squarespace projects often keep the hero in the first section
       // and the gallery in a later section. Place the Winner composition at
       // that natural break without enabling the alternate video-layout pilot.
-      var nativeSections = Array.prototype.slice.call(document.querySelectorAll("main .page-section"));
+      var nativeSections = pageSections;
       var firstGallerySection = nativeSections.slice(1).find(function (section) {
         var media = section.querySelectorAll("video,[data-config-video],[data-config-native-video],[data-jdc-video]");
         return media.length >= 2;
       });
       if (firstGallerySection && firstGallerySection.parentNode) {
+        resetSingleFluidMeta(meta);
         compactNativeHeroCopy(meta, nativeSections[0]);
         return stableInsert(firstGallerySection.parentNode, meta, firstGallerySection);
       }
     }
     if (placeSingleFluidMeta(meta)) return true;
-    var bts = document.querySelector("main .jdc-bts-section40");
     if (bts) return stableInsert(bts.parentNode, meta, bts);
     if (projectSection && projectSection.parentNode) return stableInsert(projectSection.parentNode, meta, projectSection.nextElementSibling);
     var regions = document.querySelector("main .page-regions");

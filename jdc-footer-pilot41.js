@@ -122,6 +122,7 @@
     video.playsInline = true;
     video.loop = true;
     video.preload = "none";
+    video.poster = poster.src;
     video.setAttribute("muted", "");
     video.setAttribute("playsinline", "");
     video.setAttribute("webkit-playsinline", "");
@@ -144,13 +145,21 @@
       item.setAttribute("data-jdc-clip-playing", "true");
       item.removeAttribute("data-jdc-clip-error");
     });
+    ["waiting", "stalled"].forEach(function (eventName) {
+      video.addEventListener(eventName, function () {
+        item.removeAttribute("data-jdc-clip-playing");
+      });
+    });
     video.addEventListener("pause", function () {
       if (!state.active) item.removeAttribute("data-jdc-clip-playing");
     });
     video.addEventListener("canplay", function () {
       if (state.active) video.play().catch(function () {});
     });
-    video.addEventListener("error", function () { retryState(state); });
+    video.addEventListener("error", function () {
+      item.removeAttribute("data-jdc-clip-playing");
+      retryState(state);
+    });
     return item;
   }
 
@@ -232,8 +241,9 @@
     var connection = connectionClass();
     var maxPlaying = connection === "slow" ? 1 :
       connection === "medium" ? (window.innerWidth >= 900 ? 3 : 2) :
-      states.length;
-    var warmCount = connection === "slow" ? 2 : connection === "medium" ? 4 : states.length;
+      (window.innerWidth >= 900 ? 6 : 3);
+    var warmCount = connection === "slow" ? 2 : connection === "medium" ? 4 :
+      (window.innerWidth >= 900 ? 6 : 4);
     var warmMargin = connection === "slow" ? 350 : connection === "medium" ? 500 : Math.max(900, window.innerHeight * 1.5);
     var nearby = states.filter(function (state) {
       var rect = state.item.getBoundingClientRect();
