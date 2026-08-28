@@ -5,11 +5,13 @@
   window.__JDC_PILOT52__ = true;
 
   var SCRIPT_URL = document.currentScript && document.currentScript.src ? document.currentScript.src : window.location.href;
-  var PLAYER_URL = new URL("jdc-footer-pilot27.js", SCRIPT_URL).href;
-  var CORE_URL = new URL("jdc-footer-pilot53.js", SCRIPT_URL).href;
+  var SCRIPT_QUERY = new URL(SCRIPT_URL, window.location.href).search;
+  var PLAYER_URL = new URL("jdc-footer-pilot27.js" + SCRIPT_QUERY, SCRIPT_URL).href;
+  var CORE_URL = new URL("jdc-footer-pilot53.js" + SCRIPT_QUERY, SCRIPT_URL).href;
   var bombasPath = /^\/bombas-spring\/?$/.test(window.location.pathname);
   var requested = new URLSearchParams(window.location.search).get("jdc-credits");
-  var previewActive = ["0", "1", "2", "3", "4"].indexOf(requested) !== -1;
+  var releaseVideoOptIn = window.__JDC_PILOT64_PATH_VIDEO_OPT_IN__ === true;
+  var previewActive = releaseVideoOptIn || ["0", "1", "2", "3", "4"].indexOf(requested) !== -1;
 
   function load(url, attribute, value, complete) {
     var script = document.createElement("script");
