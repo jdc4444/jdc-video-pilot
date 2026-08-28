@@ -161,7 +161,7 @@
       "body[data-jdc-project-design61] .jdc-layout4-credits51 .jdc-credit-list51{width:100%!important;max-width:1180px!important;margin-left:auto!important;margin-right:auto!important}",
       "html[data-jdc-project-design-preview='1'] body .jdc-clip-gallery-flow{padding-top:0!important}",
       "html[data-jdc-project-design-preview='1'] body .jdc-layout4-title51{box-sizing:border-box!important;width:100%!important;padding:clamp(42px,4.8vw,64px) 4vw 0!important;text-align:center!important}",
-      "html[data-jdc-project-design-preview='1'] body .jdc-layout4-title51 h1{max-width:none!important;margin:0 auto!important;font-size:clamp(48px,5vw,68px)!important;font-weight:400!important;letter-spacing:-.04em!important;line-height:.92!important;text-align:center!important;text-transform:none!important;overflow-wrap:normal!important}",
+      "html[data-jdc-project-design-preview='1'] body .jdc-layout4-title51 h1{max-width:none!important;margin:0 auto!important;color:#000!important;font-size:clamp(48px,5vw,68px)!important;font-weight:400!important;letter-spacing:-.04em!important;line-height:.92!important;text-align:center!important;text-transform:none!important;overflow-wrap:normal!important}",
       "html[data-jdc-project-design-preview='1'] body .jdc-clip-gallery-grid>.jdc-layout4-credits51:first-child,html[data-jdc-project-design-preview='1'] body .jdc-balanced-meta-flow57>.jdc-layout4-credits51{box-sizing:border-box!important;width:100%!important;padding:clamp(28px,3.2vw,42px) 4vw clamp(42px,4.8vw,64px)!important}",
       "html[data-jdc-project-design-preview='1'] body .jdc-layout4-credits51 .jdc-credit-list51{justify-items:stretch!important}",
       "html[data-jdc-project-design-preview='1'] body .jdc-layout4-credits51 .jdc-credit-item51{align-items:flex-start!important;text-align:left!important}",
@@ -465,12 +465,21 @@
     return document.querySelector("main .jdc-project-info-band .jdc-project-title-block h1,main .jdc-project-info-band .jdc-project-title-block h2,main .jdc-project-info-band .jdc-project-title-block h3");
   }
 
+  function formatBalancedTitle(text) {
+    return String(text || "").trim().replace(/\s+[–—-]\s+/, " : ");
+  }
+
   function makeBalancedTitle() {
     var block = document.querySelector("main .jdc-layout4-title51");
-    if (block) return block;
+    if (block) {
+      var existingHeading = block.querySelector("h1,h2,h3");
+      if (existingHeading) existingHeading.textContent = formatBalancedTitle(existingHeading.textContent);
+      return block;
+    }
     var source = originalProjectHeading();
     var data = projectData();
     var text = source ? source.textContent.trim() : data && data.title ? data.title : document.title.split("—")[0].trim();
+    text = formatBalancedTitle(text);
     if (!text) return null;
     block = document.createElement("div");
     block.className = "jdc-layout4-title51";
