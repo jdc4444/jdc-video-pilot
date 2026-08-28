@@ -37,6 +37,27 @@
   var creditStylePreview = creditStyleEnabled && !creditFlowEnabled && /^\/day-one\/?$/.test(window.location.pathname);
   var sitewideWinnerEnabled = creditFlowEnabled && creditFlow === "3";
   var orderAltEnabled = sitewideWinnerEnabled;
+  var nativeClipGalleryPaths65 = {
+    "/amber-mark-out-of-this-world": true,
+    "/armando-young-belladonna": true,
+    "/armando-young-prizefighyer": true,
+    "/black-twitter": true,
+    "/bright-eyes-mariana-trench": true,
+    "/celeste-everyday": true,
+    "/day-one": true,
+    "/diamond-terrifier-action-fortress": true,
+    "/ggm-aguita": true,
+    "/kelsey-lu-boys-noize-ride-or-die": true,
+    "/kings-of-tupelo": true,
+    "/kombilesa-mi-los-peinados": true,
+    "/lovb-launch": true,
+    "/mitski-a-pearl": true,
+    "/mtv-vote-early": true,
+    "/nike-jordan": true,
+    "/shaq-hbo": true,
+    "/thom-yorke-last-i-heard": true,
+    "/wynn-awakening": true
+  };
   var observer = null;
   var scheduled = false;
   var brightEyesSpacingQuiesced = false;
@@ -178,6 +199,10 @@
       "html[data-jdc-project-design-preview='1'] body .jdc-balanced-meta-flow57{display:block!important;width:100%!important;padding:0!important}",
       "html[data-jdc-project-design-preview='1'] body .jdc-project-press53{clear:both!important}",
       "html[data-jdc-project-design-preview='1'] body [data-jdc-sitewide-native-copy64]{display:none!important}",
+      "html[data-jdc-sitewide-winner='pilot64'] body [data-jdc-sitewide-native-copy64]{display:none!important}",
+      "html[data-jdc-sitewide-winner='pilot64'] body .jdc-native-single-engine65{box-sizing:content-box!important;padding-bottom:var(--jdc-native-single-extension65,0px)!important}",
+      "html[data-jdc-sitewide-winner='pilot64'] body .jdc-native-single-meta65{position:absolute!important;z-index:4!important;left:0!important;top:var(--jdc-native-single-top65,0px)!important;box-sizing:border-box!important;width:100%!important;max-width:none!important;margin:0!important;background:#fff!important}",
+      "html[data-jdc-sitewide-winner='pilot64'] body .jdc-native-single-shift65{transform:translateY(var(--jdc-native-single-shift65,0px))!important}",
       "html[data-jdc-project-design-preview='1'] body .jdc-polymarket-gallery-section{height:auto!important;min-height:0!important}",
       "html[data-jdc-project-design-preview='1'] body .jdc-polymarket-gallery-section>.content-wrapper{box-sizing:border-box!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;width:100%!important;max-width:none!important;padding:0!important}",
       "html[data-jdc-project-design-preview='1'] body .jdc-polymarket-gallery-section .jdc-project-spacing-engine{position:relative!important;order:1!important;display:block!important;width:100%!important;height:auto!important;min-height:0!important;inset:auto!important;transform:none!important}",
@@ -620,6 +645,88 @@
     return null;
   }
 
+  function markSupersededNativeCopy() {
+    if (!sitewideWinnerEnabled || !document.querySelector("main .jdc-layout4-title51") || !document.querySelector("main .jdc-layout4-credits51")) return false;
+    var changed = false;
+    Array.prototype.slice.call(document.querySelectorAll("main .sqs-block-html")).forEach(function (block) {
+      if (block.closest(".jdc-balanced-meta57,.jdc-clip-gallery-section,.jdc-project-press53,.jdc-project-quotes-section53")) return;
+      if (!block.textContent.replace(/\s+/g, " ").trim()) return;
+      if (block.getAttribute("data-jdc-sitewide-native-copy64") !== "superseded") {
+        block.setAttribute("data-jdc-sitewide-native-copy64", "superseded");
+        changed = true;
+      }
+    });
+    return changed;
+  }
+
+  function pxNumber(value) {
+    var number = Number.parseFloat(String(value || ""));
+    return Number.isFinite(number) ? number : 0;
+  }
+
+  function setStyleValue(node, name, value, priority) {
+    if (!node || !node.style) return false;
+    var currentValue = node.style.getPropertyValue(name);
+    var currentPriority = node.style.getPropertyPriority(name);
+    var nextPriority = priority || "";
+    if (currentValue === value && currentPriority === nextPriority) return false;
+    node.style.setProperty(name, value, nextPriority);
+    return true;
+  }
+
+  function placeSingleFluidMeta(meta) {
+    if (!sitewideWinnerEnabled || !meta) return false;
+    if (nativeClipGalleryPaths65[pagePath()]) return false;
+    var sections = Array.prototype.slice.call(document.querySelectorAll("main .page-section"));
+    if (sections.length !== 1) return false;
+    var section = sections[0];
+    var engine = section.querySelector(":scope > .content-wrapper > .fluid-engine,:scope > .content-wrapper .fluid-engine");
+    if (!engine) return false;
+    var mediaBlocks = Array.prototype.slice.call(engine.querySelectorAll(":scope > .fe-block")).filter(function (block) {
+      return !!block.querySelector("video,[data-config-video],[data-config-native-video],[data-jdc-video]");
+    });
+    if (!mediaBlocks.length) return false;
+
+    stableInsert(engine, meta, null);
+    meta.classList.add("jdc-native-single-meta65");
+    engine.classList.add("jdc-native-single-engine65");
+    section.classList.add("jdc-native-single-section65");
+
+    var currentShift = pxNumber(engine.style.getPropertyValue("--jdc-native-single-shift65"));
+    var currentExtension = pxNumber(engine.style.getPropertyValue("--jdc-native-single-extension65"));
+    var engineRect = engine.getBoundingClientRect();
+    var baseEngineHeight = Math.max(0, engineRect.height - currentExtension);
+    var geometry = mediaBlocks.map(function (block) {
+      var rect = block.getBoundingClientRect();
+      var shifted = block.classList.contains("jdc-native-single-shift65") ? currentShift : 0;
+      return { block: block, top: rect.top - shifted, bottom: rect.bottom - shifted, width: rect.width, height: rect.height };
+    }).filter(function (item) { return item.width >= 100 && item.height >= 100; });
+    if (!geometry.length) return false;
+    geometry.sort(function (a, b) {
+      if (Math.abs(a.top - b.top) > 2) return a.top - b.top;
+      return b.width - a.width;
+    });
+    var hero = geometry[0];
+    var gallery = geometry.filter(function (item) { return item.block !== hero.block; });
+    var galleryTop = gallery.length ? Math.min.apply(Math, gallery.map(function (item) { return item.top; })) : null;
+    var gap = window.innerWidth <= 767 ? 28 : 44;
+    var metaTop = Math.max(0, Math.round(hero.bottom - engineRect.top + gap));
+    setStyleValue(meta, "--jdc-native-single-top65", metaTop + "px", "");
+    var metaHeight = Math.max(1, meta.getBoundingClientRect().height);
+    var shift = galleryTop === null ? 0 : Math.max(0, Math.round(metaTop + metaHeight + gap - (galleryTop - engineRect.top)));
+    var extension = galleryTop === null ? Math.max(0, Math.round(metaTop + metaHeight + gap - baseEngineHeight)) : shift;
+
+    gallery.forEach(function (item) {
+      if (!item.block.classList.contains("jdc-native-single-shift65")) item.block.classList.add("jdc-native-single-shift65");
+    });
+    setStyleValue(engine, "--jdc-native-single-shift65", shift + "px", "");
+    setStyleValue(engine, "--jdc-native-single-extension65", extension + "px", "");
+    section.setAttribute("data-jdc-native-single-winner65", "true");
+    section.setAttribute("data-jdc-native-single-shift65", String(shift));
+    document.documentElement.setAttribute("data-jdc-native-single-layout", "pilot65");
+    return true;
+  }
+
   function placeMeta(meta, descriptor) {
     if (!meta) return false;
     var projectSection = document.querySelector("main .jdc-project-info-band") &&
@@ -644,6 +751,7 @@
         return stableInsert(firstGallerySection.parentNode, meta, firstGallerySection);
       }
     }
+    if (placeSingleFluidMeta(meta)) return true;
     var bts = document.querySelector("main .jdc-bts-section40");
     if (bts) return stableInsert(bts.parentNode, meta, bts);
     if (projectSection && projectSection.parentNode) return stableInsert(projectSection.parentNode, meta, projectSection.nextElementSibling);
@@ -764,6 +872,7 @@
       cleanBalancedScaffolding(title, credits, meta);
     }
 
+    markSupersededNativeCopy();
     document.body.classList.add("jdc-balanced-preview-ready57", "jdc-credits-layout4-ready51");
     document.body.setAttribute("data-jdc-credit-columns", "4");
     document.documentElement.setAttribute("data-jdc-credit-flow-preview", "3");
