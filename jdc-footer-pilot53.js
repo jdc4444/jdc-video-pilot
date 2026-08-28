@@ -25,6 +25,9 @@
   var orderAlt = "5";
   var PROJECT_DESIGN_PARAM = "jdc-project-design";
   var projectDesign = "1";
+  var PROJECT_LOOK_PARAM = "jdc-project-look";
+  var projectLook = new URLSearchParams(window.location.search).get(PROJECT_LOOK_PARAM);
+  var behindTheScenesLook = sitewideRelease && projectLook === "behind-the-scenes";
   var creditFlowEnabled = previewActive && option === "4" && (
     creditFlow === "3" ||
     (["1", "2"].indexOf(creditFlow) !== -1 && /^\/day-one\/?$/.test(window.location.pathname))
@@ -446,12 +449,13 @@
     var completedRows = clips.length >= rowSize * 2 ? rowSize * 2 :
       (clips.length > rowSize ? rowSize : clips.length);
     var gridOrder = [];
-    if (press) gridOrder.push(press);
+    if (behindTheScenesLook && press) gridOrder.push(press);
     if (credits) gridOrder.push(credits);
     gridOrder = gridOrder.concat(clips.slice(0, completedRows));
-    if (quotes) gridOrder.push(quotes);
+    if (behindTheScenesLook && quotes) gridOrder.push(quotes);
+    if (!behindTheScenesLook && press) gridOrder.push(press);
     gridOrder = gridOrder.concat(clips.slice(completedRows), extras);
-    if (press) press.setAttribute("data-jdc-order-alt-placement59", "between-title-and-credits");
+    if (press) press.setAttribute("data-jdc-order-alt-placement59", behindTheScenesLook ? "between-title-and-credits" : "after-complete-rows");
     if (credits) credits.setAttribute("data-jdc-order-alt-placement59", "before-first-row");
     if (quotes) quotes.setAttribute("data-jdc-order-alt-placement59", "after-complete-rows");
 
@@ -483,9 +487,12 @@
       if (existingHeading) existingHeading.textContent = formatBalancedTitle(existingHeading.textContent);
       return block;
     }
-    var source = originalProjectHeading();
     var data = projectData();
-    var text = source ? source.textContent.trim() : data && data.title ? data.title : document.title.split("—")[0].trim();
+    var source = originalProjectHeading();
+    var titleOverrides = {
+      "/ggm-accoustic": "Gabriel Garzón-Montano : Fender Sessions"
+    };
+    var text = titleOverrides[pagePath()] || (source ? source.textContent.trim() : data && data.title ? data.title : document.title.split("—")[0].trim());
     text = formatBalancedTitle(text);
     if (!text) return null;
     block = document.createElement("div");
@@ -723,7 +730,7 @@
       var meta = ensureBalancedMeta();
       var metaFlow = meta.querySelector(":scope > .jdc-balanced-meta-flow57");
       if (title) stableInsert(metaFlow, title, metaFlow.firstElementChild);
-      if (sitewideWinnerEnabled && press) {
+      if (sitewideWinnerEnabled && behindTheScenesLook && press) {
         stableInsert(metaFlow, press, null);
         press.setAttribute("data-jdc-order-alt-placement59", "between-title-and-credits");
       }
@@ -731,7 +738,7 @@
 
       if (descriptor && descriptor.container) {
         descriptor.container.classList.add("jdc-sitewide-winner-grid64");
-        var galleryPress = sitewideWinnerEnabled ? quotes : press;
+        var galleryPress = sitewideWinnerEnabled && behindTheScenesLook ? quotes : press;
         if (galleryPress) {
           var customColumns = window.getComputedStyle ? window.getComputedStyle(descriptor.container).gridTemplateColumns : "";
           var customRowSize = customColumns && customColumns !== "none" ? customColumns.trim().split(/\s+/).length : 2;
@@ -742,13 +749,13 @@
           galleryPress.setAttribute("data-jdc-order-alt-placement59", "after-complete-rows");
         }
         descriptor.section && descriptor.section.setAttribute("data-jdc-balanced-layout57", descriptor.type);
-      } else if (descriptor && descriptor.section && (sitewideWinnerEnabled ? quotes : press)) {
-        var afterGalleryPress = sitewideWinnerEnabled ? quotes : press;
+      } else if (descriptor && descriptor.section && (sitewideWinnerEnabled && behindTheScenesLook ? quotes : press)) {
+        var afterGalleryPress = sitewideWinnerEnabled && behindTheScenesLook ? quotes : press;
         stableInsert(descriptor.section.parentNode, afterGalleryPress, descriptor.section.nextElementSibling);
         afterGalleryPress.setAttribute("data-jdc-order-alt-placement59", "after-gallery");
-      } else if (sitewideWinnerEnabled && quotes) {
+      } else if (sitewideWinnerEnabled && behindTheScenesLook && quotes) {
         stableInsert(metaFlow, quotes, null);
-      } else if (!sitewideWinnerEnabled && press) {
+      } else if (press) {
         stableInsert(metaFlow, press, null);
       }
       placeMeta(meta, descriptor);
@@ -901,7 +908,7 @@
   }
 
   function splitWinnerPressSection(section) {
-    if (!sitewideWinnerEnabled || !section) return null;
+    if (!sitewideWinnerEnabled || !behindTheScenesLook || !section) return null;
     var existing = document.querySelector(".jdc-project-quotes-section53");
     if (existing) return existing;
     var quotes = section.querySelector(".jdc-project-quotes53");
@@ -970,6 +977,7 @@
     scheduled = false;
     if (!previewActive) return;
     ensureStyles();
+    document.documentElement.setAttribute("data-jdc-project-look", behindTheScenesLook ? "behind-the-scenes" : "portfolio");
     if (document.body) document.body.setAttribute("data-jdc-credits-option", option);
     if (creditColumnsEnabled && document.body) document.body.setAttribute("data-jdc-credit-columns", "4");
     installCreditStylePreview();
