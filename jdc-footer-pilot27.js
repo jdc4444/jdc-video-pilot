@@ -707,7 +707,22 @@ window.JDC_VIDEO_PILOT = {
       var overlap = textBottom - gallerySection.getBoundingClientRect().top;
       return { shift: Math.min(0, sectionShift), blockShift: blockShift, gap: actualGap, overlap: overlap };
     }
+    function legacySpacingLocked() {
+      return /^\/day-one\/?$/.test(window.location.pathname) &&
+        document.body.classList.contains("jdc-day-one-scroll-lock43");
+    }
     function schedule() {
+      // Pilot 43 freezes Day One after the media and text have settled. The
+      // ResizeObserver can be disconnected there, but the event listeners and
+      // already queued animation frames installed by this older engine remain.
+      // Letting those callbacks continue rewrites the hero padding from the
+      // current scroll position and makes the gallery jump by hundreds of
+      // pixels. Respect the newer lock at both entry points.
+      if (legacySpacingLocked()) {
+        pending = false;
+        rerun = false;
+        return;
+      }
       if (bombasProject && window.__JDC_BOMBAS_LAYOUT_FROZEN52__) {
         if (Math.abs(window.innerWidth - window.__JDC_BOMBAS_LAYOUT_FROZEN52__.width) <= 1) return;
         window.__JDC_BOMBAS_LAYOUT_FROZEN52__ = null;
@@ -718,6 +733,11 @@ window.JDC_VIDEO_PILOT = {
       }
       pending = true;
       requestAnimationFrame(function () {
+        if (legacySpacingLocked()) {
+          pending = false;
+          rerun = false;
+          return;
+        }
         var desktop = window.matchMedia("(min-width:768px)").matches;
         setInfoGrid(desktop);
         var gap = desktop ? Math.min(52, Math.max(32, window.innerWidth * 0.03)) : 24;

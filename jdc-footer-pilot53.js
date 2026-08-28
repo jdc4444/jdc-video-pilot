@@ -196,17 +196,35 @@
     title.setAttribute("data-jdc-credit-flow55", creditFlow);
     gallery.setAttribute("data-jdc-credit-flow55", creditFlow);
 
-    flow.insertBefore(title, flow.firstChild);
+    // This installer is intentionally re-run as Squarespace and the gallery
+    // hydrate. Moving an element that is already in the right place still
+    // emits child-list mutations, which used to make this observer schedule
+    // itself forever. Besides wasting a frame on every cycle, temporarily
+    // detaching the large press/credits blocks changes the document height and
+    // makes Safari's scroll anchoring jump. Only move a block when its actual
+    // sibling relationship needs to change.
+    if (title.parentNode !== flow || title !== flow.firstElementChild) {
+      flow.insertBefore(title, flow.firstElementChild);
+    }
     if (creditFlow === "1") {
-      flow.insertBefore(press, grid);
-      flow.appendChild(credits);
+      if (press.parentNode !== flow || press.nextElementSibling !== grid) {
+        flow.insertBefore(press, grid);
+      }
+      if (credits.parentNode !== flow || credits !== flow.lastElementChild) {
+        flow.appendChild(credits);
+      }
       press.setAttribute("data-jdc-credit-flow-placement55", "before-gallery");
     } else {
-      flow.insertBefore(credits, grid);
+      if (credits.parentNode !== flow || credits.nextElementSibling !== grid) {
+        flow.insertBefore(credits, grid);
+      }
       var clips = Array.prototype.slice.call(grid.children).filter(function (item) {
         return item.classList.contains("jdc-clip-gallery-item");
       });
-      grid.insertBefore(press, clips[6] || null);
+      var splitPoint = clips[6] || null;
+      if (press.parentNode !== grid || press.nextElementSibling !== splitPoint) {
+        grid.insertBefore(press, splitPoint);
+      }
       press.setAttribute("data-jdc-credit-flow-placement55", "inside-gallery");
     }
     document.documentElement.setAttribute("data-jdc-credit-flow-preview", creditFlow);

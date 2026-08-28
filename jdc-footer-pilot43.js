@@ -23,6 +23,13 @@
     var style = document.createElement("style");
     style.id = "jdc-day-one-scroll-lock43";
     style.textContent = [
+      "html[data-jdc-day-one-scroll-lock]{",
+      "scroll-snap-type:none!important",
+      "}",
+      "html[data-jdc-day-one-scroll-lock] body .page-section{",
+      "scroll-snap-align:none!important;",
+      "scroll-snap-stop:normal!important",
+      "}",
       "body.jdc-day-one-scroll-lock43 .jdc-project-spacing-engine{",
       "transform:translateY(var(--jdc-day-one-stable-top-shift,0px))!important",
       "}",
