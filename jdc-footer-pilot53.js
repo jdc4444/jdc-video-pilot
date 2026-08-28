@@ -666,6 +666,16 @@
     var clipFlow = clipGallery && clipGallery.querySelector(":scope > .jdc-clip-gallery-flow");
     var clipGrid = clipFlow && clipFlow.querySelector(":scope > .jdc-clip-gallery-grid");
     if (clipFlow && clipGrid && title && credits) {
+      if (sitewideWinnerEnabled) {
+        var nativeSections = Array.prototype.slice.call(document.querySelectorAll("main .page-section"));
+        var nativeHeroSection = nativeSections.find(function (section) {
+          return !section.classList.contains("jdc-clip-gallery-section") &&
+            section.querySelector("video,[data-config-video],[data-config-native-video]");
+        });
+        if (nativeHeroSection && nativeHeroSection !== clipGallery) {
+          compactNativeHeroCopy(clipGallery, nativeHeroSection);
+        }
+      }
       stableInsert(clipFlow, title, clipFlow.firstElementChild);
       if (sitewideWinnerEnabled) {
         stableInsert(clipGrid, credits, clipGrid.firstElementChild);
