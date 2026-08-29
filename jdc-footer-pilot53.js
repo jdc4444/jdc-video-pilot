@@ -82,7 +82,7 @@
     "/kelsey-lu-boys-noize-ride-or-die": "Kelsey Lu & Boys Noize : Ride or Die",
     "/black-twitter": "Hulu : Black Twitter",
     "/mitski-a-pearl": "Mitski : A Pearl",
-    "/ggm-accoustic": "Gabriel Garzón-Montano : Fender Sessions",
+    "/ggm-accoustic": "Gabriel Garzón-Montano : Acoustic Sessions",
     "/kombilesa-mi-los-peinados": "Kombilesa Mi : Los Peinados",
     "/lovb-launch": "LOVB : Launch",
     "/diamond-terrifier-action-fortress": "Diamond Terrifier : Action Fortress",
