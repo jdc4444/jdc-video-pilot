@@ -125,7 +125,8 @@
     var style = document.createElement("style");
     style.id = "jdc-project-blocks-styles53";
     style.textContent = [
-      "html[data-jdc-home-title-fix='pilot67'] body main h1 a,html[data-jdc-home-title-fix='pilot67'] body main h1 a:visited{color:#fff!important;text-decoration:none!important}",
+      "html[data-jdc-home-title-fix='pilot68'] body main h1,html[data-jdc-home-title-fix='pilot68'] body main h2,html[data-jdc-home-title-fix='pilot68'] body main h3{position:relative!important;z-index:2147483000!important;pointer-events:auto!important}",
+      "html[data-jdc-home-title-fix='pilot68'] body main h1 a,html[data-jdc-home-title-fix='pilot68'] body main h1 a:visited,html[data-jdc-home-title-fix='pilot68'] body main h2 a,html[data-jdc-home-title-fix='pilot68'] body main h2 a:visited,html[data-jdc-home-title-fix='pilot68'] body main h3 a,html[data-jdc-home-title-fix='pilot68'] body main h3 a:visited{position:relative!important;z-index:1!important;pointer-events:auto!important;cursor:pointer!important;color:#fff!important;text-decoration:none!important}",
       "body[data-jdc-credits-option='3'] .jdc-project-body-block .jdc-credit-list51{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))!important;align-content:start!important;gap:10px 18px!important}",
       "body[data-jdc-credits-option='4'] .jdc-layout4-credits51 .jdc-credit-list51{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;align-content:start!important;gap:10px 18px!important}",
       "body[data-jdc-credits-option='4'][data-jdc-credit-columns='4'] .jdc-layout4-credits51 .jdc-credit-list51{grid-template-columns:repeat(4,minmax(0,1fr))!important}",
@@ -554,8 +555,30 @@
         link.appendChild(label);
       }
       label.textContent = title;
-      document.documentElement.setAttribute("data-jdc-home-title-fix", "pilot67");
+      document.documentElement.setAttribute("data-jdc-home-title-fix", "pilot68");
     });
+  }
+
+  function installHomepageProjectNavigation() {
+    if (pagePath() !== "/" || window.__JDC_HOME_PROJECT_NAV68__) return;
+    window.__JDC_HOME_PROJECT_NAV68__ = true;
+    document.addEventListener("click", function (event) {
+      if (pagePath() !== "/" || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      var heading = event.target && event.target.closest ? event.target.closest("main h1,main h2,main h3") : null;
+      if (!heading) return;
+      var link = heading.querySelector("a[href]");
+      if (!link) return;
+      var destination;
+      try {
+        destination = new URL(link.getAttribute("href"), window.location.href);
+      } catch (error) {
+        return;
+      }
+      if (destination.origin !== window.location.origin) return;
+      event.preventDefault();
+      event.stopPropagation();
+      window.location.assign(destination.href);
+    }, true);
   }
 
   function originalProjectHeading() {
@@ -1219,6 +1242,7 @@
     if (!previewActive) return;
     ensureStyles();
     syncHomepageProjectTitles();
+    installHomepageProjectNavigation();
     document.documentElement.setAttribute("data-jdc-project-look", behindTheScenesLook ? "behind-the-scenes" : "portfolio");
     if (document.body) document.body.setAttribute("data-jdc-credits-option", option);
     if (creditColumnsEnabled && document.body) document.body.setAttribute("data-jdc-credit-columns", "4");
