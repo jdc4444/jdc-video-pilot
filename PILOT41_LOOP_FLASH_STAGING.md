@@ -44,5 +44,15 @@ The MP4 audit found no encoded black frames in the MTV gallery files.
 
 ## Publication status
 
-Staged only. The public Squarespace loader remains pinned to `092e0e6` until
-explicit approval to publish.
+Published after explicit approval. Both Squarespace Code Injection fields are
+pinned to commit `d941b8cb176417d1d61c3492697e43715c011b6d` through
+`jdc-footer-pilot64.js`.
+
+The public MTV page loaded `pilot41-loop74` with nine gallery clips. A
+nine-second live trace covered 51 loop resets and 12 loop-boundary buffering
+moments with zero playing-layer drops. A second live gallery produced eight
+more loop resets with zero playing-layer drops. Safari also showed the complete
+three-by-three MTV gallery without black or poster flashes.
+
+Rollback restores the prior `092e0e6` loader in both fields; see
+`backups/squarespace-code-injection-pre-d941b8c-2026-08-29.md`.
