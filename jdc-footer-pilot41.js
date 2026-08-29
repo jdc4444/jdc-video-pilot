@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var RELEASE = "pilot41";
+  var RELEASE = "pilot41-mobile71";
   var LEGACY_RELEASE = "pilot38";
   var CORE_URL = "https://cdn.jsdelivr.net/gh/jdc4444/jdc-video-pilot@d76657fe91db4aadcfb9a2d1f344f1fab2d32ce5/jdc-footer-pilot40.js";
   var SCRIPT_URL = document.currentScript && document.currentScript.src ? document.currentScript.src : window.location.href;
@@ -215,6 +215,7 @@
   function setActive(state, active) {
     if (!state) return;
     state.active = active;
+    state.item.setAttribute("data-jdc-clip-active", active ? "true" : "false");
     if (active) {
       attachState(state);
       state.video.play().catch(function () {});
@@ -254,14 +255,31 @@
     var visible = nearby.filter(function (state) {
       var rect = state.item.getBoundingClientRect();
       return rect.bottom > -80 && rect.top < window.innerHeight + 120;
-    }).sort(function (a, b) {
-      return a.item.getBoundingClientRect().top - b.item.getBoundingClientRect().top;
+    });
+    var galleryBottom = states.reduce(function (bottom, state) {
+      return Math.max(bottom, state.item.getBoundingClientRect().bottom);
+    }, -Infinity);
+    var galleryEndVisible = galleryBottom > -80 && galleryBottom < window.innerHeight + 120;
+    visible.sort(function (a, b) {
+      /*
+       * On a one-column phone gallery, four or five tiles can overlap the
+       * viewport while only three are allowed to play. Prioritizing document
+       * order permanently starved the final one or two tiles. When the end of
+       * the gallery is on screen, give the available slots to the final tiles
+       * first—even on slow connections that permit only one active clip.
+       * Everywhere else, the closest tiles are what the visitor is looking at.
+       */
+      if (galleryEndVisible) {
+        return b.item.getBoundingClientRect().bottom - a.item.getBoundingClientRect().bottom;
+      }
+      return viewportDistance(a.item) - viewportDistance(b.item);
     });
     var playbackOrder = visible.concat(nearby.filter(function (state) { return visible.indexOf(state) === -1; }));
     var desired = new Set(playbackOrder.slice(0, maxPlaying));
     states.forEach(function (state) { setActive(state, desired.has(state)); });
     document.documentElement.setAttribute("data-jdc-clip-gallery-attached", String(states.filter(function (state) { return state.attached; }).length));
     document.documentElement.setAttribute("data-jdc-clip-gallery-playing", String(states.filter(function (state) { return state.active; }).length));
+    document.documentElement.setAttribute("data-jdc-clip-gallery-priority", galleryEndVisible ? "gallery-end" : "viewport-center");
   }
 
   function schedulePlaybackUpdate() {
@@ -439,5 +457,10 @@
   window.addEventListener("pageshow", schedulePlaybackUpdate, { passive: true });
   document.addEventListener("visibilitychange", schedulePlaybackUpdate, { passive: true });
   finish();
-  window.__JDC_CLIP_GALLERY_PILOT41__ = { states: states, update: updatePlayback };
+  window.__JDC_CLIP_GALLERY_PILOT41__ = {
+    states: states,
+    update: updatePlayback,
+    release: RELEASE,
+    priority: "viewport-center-with-gallery-end"
+  };
 })();
