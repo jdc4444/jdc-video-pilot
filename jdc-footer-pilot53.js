@@ -554,7 +554,11 @@
         link.textContent = "";
         link.appendChild(label);
       }
-      label.textContent = title;
+      // Do not rewrite an already-correct label. This function runs from the
+      // sitewide MutationObserver; replacing the text node on every pass can
+      // keep Safari in a continuous mutation/render cycle while a person is
+      // pressing the link.
+      if (label.textContent !== title) label.textContent = title;
       document.documentElement.setAttribute("data-jdc-home-title-fix", "pilot68");
     });
   }

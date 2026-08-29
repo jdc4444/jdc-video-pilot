@@ -16,15 +16,15 @@
   // loading. Squarespace video layers can briefly sit above the visible title
   // while a panel initializes, so resolve clicks against the title link's
   // actual painted line boxes instead of trusting the event target alone.
-  if (path === "/" && !window.__JDC_HOME_PROJECT_NAV69__) {
-    window.__JDC_HOME_PROJECT_NAV69__ = true;
-    document.documentElement.setAttribute("data-jdc-home-nav", "pilot69");
+  if (path === "/" && !window.__JDC_HOME_PROJECT_NAV70__) {
+    window.__JDC_HOME_PROJECT_NAV70__ = true;
+    document.documentElement.setAttribute("data-jdc-home-nav", "pilot70");
 
     var homeNavStyle = document.createElement("style");
-    homeNavStyle.id = "jdc-home-project-nav69";
+    homeNavStyle.id = "jdc-home-project-nav70";
     homeNavStyle.textContent = [
-      "html[data-jdc-home-nav='pilot69'] main h1,html[data-jdc-home-nav='pilot69'] main h2,html[data-jdc-home-nav='pilot69'] main h3{position:relative!important;z-index:2147483646!important;pointer-events:auto!important}",
-      "html[data-jdc-home-nav='pilot69'] main h1 a[href],html[data-jdc-home-nav='pilot69'] main h2 a[href],html[data-jdc-home-nav='pilot69'] main h3 a[href]{position:relative!important;z-index:2147483647!important;pointer-events:auto!important;cursor:pointer!important}"
+      "html[data-jdc-home-nav='pilot70'] main h1,html[data-jdc-home-nav='pilot70'] main h2,html[data-jdc-home-nav='pilot70'] main h3{position:relative!important;z-index:2147483646!important;pointer-events:auto!important}",
+      "html[data-jdc-home-nav='pilot70'] main h1 a[href],html[data-jdc-home-nav='pilot70'] main h2 a[href],html[data-jdc-home-nav='pilot70'] main h3 a[href]{position:relative!important;z-index:2147483647!important;pointer-events:auto!important;cursor:pointer!important}"
     ].join("");
     (document.head || document.documentElement).appendChild(homeNavStyle);
 
@@ -46,7 +46,7 @@
       return null;
     };
 
-    document.addEventListener("click", function (event) {
+    var navigateHomepageTitle = function (event) {
       if (
         (window.location.pathname.replace(/\/+$/, "") || "/") !== "/" ||
         event.defaultPrevented || event.button !== 0 ||
@@ -69,7 +69,13 @@
       event.preventDefault();
       event.stopImmediatePropagation();
       window.location.assign(destination.href);
-    }, true);
+    };
+
+    // Safari can cancel the eventual click when a video layer changes during
+    // the press. Mouse-down is stable on desktop Safari and still leaves the
+    // normal click path in place for touch, keyboard and other browsers.
+    document.addEventListener("mousedown", navigateHomepageTitle, true);
+    document.addEventListener("click", navigateHomepageTitle, true);
   }
   // The release player owns native video delivery everywhere video can appear.
   // Its exact first-frame poster remains visible until the first decoded frame,
