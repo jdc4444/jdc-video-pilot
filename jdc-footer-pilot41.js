@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var RELEASE = "pilot41-mobile71";
+  var RELEASE = "pilot41-loop74";
   var LEGACY_RELEASE = "pilot38";
   var CORE_URL = "https://cdn.jsdelivr.net/gh/jdc4444/jdc-video-pilot@d76657fe91db4aadcfb9a2d1f344f1fab2d32ce5/jdc-footer-pilot40.js";
   var SCRIPT_URL = document.currentScript && document.currentScript.src ? document.currentScript.src : window.location.href;
@@ -82,10 +82,10 @@
       "@media(max-width:1023px) and (min-width:768px){.jdc-clip-gallery-grid[data-jdc-hide-one-at-two-columns='true']>.jdc-clip-gallery-item[data-jdc-last-added='true']{display:none!important}}",
       ".jdc-clip-gallery-item{position:relative!important;inset:auto!important;display:block!important;box-sizing:border-box!important;width:100%!important;min-width:0!important;height:auto!important;min-height:0!important;aspect-ratio:var(--jdc-clip-aspect,16/9)!important;overflow:hidden!important;background:#080808!important;transform:none!important;translate:none!important}",
       ".jdc-clip-gallery-item img,.jdc-clip-gallery-item video{position:absolute!important;inset:0!important;display:block!important;width:100%!important;height:100%!important;max-width:none!important;object-fit:cover!important;object-position:center!important;margin:0!important;padding:0!important;border:0!important}",
-      ".jdc-clip-gallery-item img{z-index:1!important;opacity:1!important;transition:opacity .18s linear!important}",
+      ".jdc-clip-gallery-item img{z-index:1!important;opacity:1!important;transition:none!important}",
       ".jdc-clip-gallery-item video{z-index:2!important;opacity:0!important;background:transparent!important}",
       ".jdc-clip-gallery-item[data-jdc-clip-playing='true'] video{opacity:1!important}",
-      ".jdc-clip-gallery-item[data-jdc-clip-playing='true'] img{opacity:0!important}",
+      ".jdc-clip-gallery-item[data-jdc-clip-playing='true'] img{opacity:0!important;transition:opacity .18s linear!important}",
       ".jdc-clip-gallery-item[data-jdc-clip-error='true'] video{display:none!important}",
       ".jdc-clip-gallery-host{position:relative!important;inset:auto!important;align-self:start!important;height:auto!important;min-height:0!important;aspect-ratio:auto!important;transform:none!important;translate:none!important;overflow:visible!important}",
       ".jdc-clip-gallery-host>.jdc-clip-gallery-grid{position:relative!important;width:100%!important;height:auto!important;min-height:0!important}",
@@ -135,6 +135,7 @@
       source: asset("media/user-selected-clip-galleries/" + definition.slug + "/clip-" + String(sourceIndex + 1).padStart(2, "0") + "/gallery.mp4"),
       attached: false,
       active: false,
+      hasRendered: false,
       failed: false,
       attempts: 0,
       retryTimer: null
@@ -142,12 +143,23 @@
     states.push(state);
 
     video.addEventListener("playing", function () {
+      state.hasRendered = true;
+      item.setAttribute("data-jdc-clip-rendered", "true");
       item.setAttribute("data-jdc-clip-playing", "true");
+      item.removeAttribute("data-jdc-clip-buffering");
       item.removeAttribute("data-jdc-clip-error");
     });
     ["waiting", "stalled"].forEach(function (eventName) {
       video.addEventListener(eventName, function () {
-        item.removeAttribute("data-jdc-clip-playing");
+        item.setAttribute("data-jdc-clip-buffering", "true");
+        /*
+         * Safari briefly emits `waiting` while a native loop seeks back to
+         * frame zero. Once this video has painted a frame, keep that decoded
+         * surface visible through the seek. Hiding it here exposed the black
+         * tile background while the poster faded back in, producing both the
+         * reported black flash and the first-frame still flash on every loop.
+         */
+        if (!state.hasRendered) item.removeAttribute("data-jdc-clip-playing");
       });
     });
     video.addEventListener("pause", function () {
@@ -157,6 +169,9 @@
       if (state.active) video.play().catch(function () {});
     });
     video.addEventListener("error", function () {
+      state.hasRendered = false;
+      item.removeAttribute("data-jdc-clip-rendered");
+      item.removeAttribute("data-jdc-clip-buffering");
       item.removeAttribute("data-jdc-clip-playing");
       retryState(state);
     });
@@ -222,6 +237,7 @@
       return;
     }
     try { state.video.pause(); } catch (error) {}
+    state.item.removeAttribute("data-jdc-clip-buffering");
     state.item.removeAttribute("data-jdc-clip-playing");
   }
 
@@ -461,6 +477,7 @@
     states: states,
     update: updatePlayback,
     release: RELEASE,
-    priority: "viewport-center-with-gallery-end"
+    priority: "viewport-center-with-gallery-end",
+    loopPresentation: "hold-decoded-frame"
   };
 })();
