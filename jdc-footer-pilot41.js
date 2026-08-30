@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var RELEASE = "pilot41-loop74";
+  var RELEASE = "pilot41-loop75-visible";
   var LEGACY_RELEASE = "pilot38";
   var CORE_URL = "https://cdn.jsdelivr.net/gh/jdc4444/jdc-video-pilot@d76657fe91db4aadcfb9a2d1f344f1fab2d32ce5/jdc-footer-pilot40.js";
   var SCRIPT_URL = document.currentScript && document.currentScript.src ? document.currentScript.src : window.location.href;
@@ -268,7 +268,11 @@
     }).sort(function (a, b) { return viewportDistance(a.item) - viewportDistance(b.item); });
 
     nearby.slice(0, warmCount).forEach(attachState);
-    var visible = nearby.filter(function (state) {
+    var onScreen = nearby.filter(function (state) {
+      var rect = state.item.getBoundingClientRect();
+      return rect.bottom > 0 && rect.top < window.innerHeight;
+    });
+    var nearEdge = nearby.filter(function (state) {
       var rect = state.item.getBoundingClientRect();
       return rect.bottom > -80 && rect.top < window.innerHeight + 120;
     });
@@ -276,26 +280,30 @@
       return Math.max(bottom, state.item.getBoundingClientRect().bottom);
     }, -Infinity);
     var galleryEndVisible = galleryBottom > -80 && galleryBottom < window.innerHeight + 120;
-    visible.sort(function (a, b) {
+    onScreen.sort(function (a, b) {
       /*
-       * On a one-column phone gallery, four or five tiles can overlap the
-       * viewport while only three are allowed to play. Prioritizing document
-       * order permanently starved the final one or two tiles. When the end of
-       * the gallery is on screen, give the available slots to the final tiles
-       * first—even on slow connections that permit only one active clip.
-       * Everywhere else, the closest tiles are what the visitor is looking at.
+       * Every tile that is actually visible must play. The connection-specific
+       * number above is now a preload baseline, not a ceiling: it still limits
+       * how many off-screen clips compete for bandwidth, but a compact desktop
+       * gallery such as Belladonna can play all twelve tiles when all twelve
+       * genuinely fit in the viewport.
        */
       if (galleryEndVisible) {
         return b.item.getBoundingClientRect().bottom - a.item.getBoundingClientRect().bottom;
       }
       return viewportDistance(a.item) - viewportDistance(b.item);
     });
-    var playbackOrder = visible.concat(nearby.filter(function (state) { return visible.indexOf(state) === -1; }));
-    var desired = new Set(playbackOrder.slice(0, maxPlaying));
+    nearEdge.sort(function (a, b) { return viewportDistance(a.item) - viewportDistance(b.item); });
+    var playbackOrder = onScreen
+      .concat(nearEdge.filter(function (state) { return onScreen.indexOf(state) === -1; }))
+      .concat(nearby.filter(function (state) { return nearEdge.indexOf(state) === -1; }));
+    var desiredCount = Math.max(maxPlaying, onScreen.length);
+    var desired = new Set(playbackOrder.slice(0, desiredCount));
     states.forEach(function (state) { setActive(state, desired.has(state)); });
     document.documentElement.setAttribute("data-jdc-clip-gallery-attached", String(states.filter(function (state) { return state.attached; }).length));
     document.documentElement.setAttribute("data-jdc-clip-gallery-playing", String(states.filter(function (state) { return state.active; }).length));
-    document.documentElement.setAttribute("data-jdc-clip-gallery-priority", galleryEndVisible ? "gallery-end" : "viewport-center");
+    document.documentElement.setAttribute("data-jdc-clip-gallery-visible", String(onScreen.length));
+    document.documentElement.setAttribute("data-jdc-clip-gallery-priority", galleryEndVisible ? "all-visible-gallery-end" : "all-visible");
   }
 
   function schedulePlaybackUpdate() {
@@ -477,7 +485,7 @@
     states: states,
     update: updatePlayback,
     release: RELEASE,
-    priority: "viewport-center-with-gallery-end",
+    priority: "all-on-screen-with-progressive-prefetch",
     loopPresentation: "hold-decoded-frame"
   };
 })();
