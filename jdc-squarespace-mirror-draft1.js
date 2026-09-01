@@ -685,12 +685,18 @@
       ["combo", "Combo"],
       ["flip", "Flip"]
     ];
+    var showLookControls = false;
     var searchParams = new URLSearchParams(window.location.search);
     var requestedFilter = searchParams.get("role") || "all";
     if (requestedFilter !== "all" && !filters.some(function (record) { return record[0] === requestedFilter; })) requestedFilter = "all";
-    var requestedLook = searchParams.get("look") || "poster";
+    var requestedLook = showLookControls ? (searchParams.get("look") || "paper") : "paper";
     if (!looks.some(function (record) { return record[0] === requestedLook; })) requestedLook = "poster";
-    brandLink.href = requestedLook === "poster" ? "/onepage" : "/onepage?look=" + requestedLook;
+    if (!showLookControls && searchParams.has("look")) {
+      var publicLookUrl = new URL(window.location.href);
+      publicLookUrl.searchParams.delete("look");
+      window.history.replaceState(null, "", publicLookUrl.href);
+    }
+    brandLink.href = !showLookControls || requestedLook === "poster" ? "/onepage" : "/onepage?look=" + requestedLook;
     document.documentElement.setAttribute("data-jdc-onepage-look", requestedLook);
     document.body.setAttribute("data-jdc-onepage-look", requestedLook);
     var projectList = el("div", "jdc-mirror-onepage-projects");
@@ -719,7 +725,7 @@
     function applyLook(look) {
       document.documentElement.setAttribute("data-jdc-onepage-look", look);
       document.body.setAttribute("data-jdc-onepage-look", look);
-      brandLink.href = look === "poster" ? "/onepage" : "/onepage?look=" + look;
+      brandLink.href = !showLookControls || look === "poster" ? "/onepage" : "/onepage?look=" + look;
     }
     brandLink.setAttribute("aria-controls", projectList.id);
     brandLink.addEventListener("click", function (event) {
@@ -754,6 +760,7 @@
       append(filterSet, input, label);
     });
     looks.forEach(function (record) {
+      if (!showLookControls) return;
       var input = el("input", "jdc-mirror-onepage-filter-input");
       input.type = "radio";
       input.name = "jdc-mirror-look-filter";
@@ -773,7 +780,7 @@
       });
       append(lookSet, input, label);
     });
-    append(filterBar, filterSet, lookSet);
+    append(filterBar, filterSet, showLookControls ? lookSet : null);
     append(onepage, projectList);
     main.replaceChildren(onepage);
     var previousHeaderRow = document.getElementById(headerRow.id);
