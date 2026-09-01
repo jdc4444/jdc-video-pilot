@@ -29,6 +29,10 @@ JLMSY_TRAILER_URL = (
     "39c2fef69cac49a8-just-let-me-show-you-trailer.mp4"
     "?deliveryRevision=20260901-squarespace-pilot77"
 )
+POLYMARKET_HOMEPAGE_PREVIEW_BASE = (
+    "https://jdc4444.github.io/jdc-video-pilot/media/"
+    "3b76b000-8a29-4aee-915d-858c0b1d1a42/"
+)
 
 
 # These pages were added in the August 25 Squarespace batch. They remain
@@ -158,6 +162,12 @@ def build() -> dict[str, Any]:
             media["playbackAspect"] = 8 / 3
             for film in project.get("fullFilms") or []:
                 film["aspect"] = 8 / 3
+
+        if project["route"] == "/polymarket-make-your-own-market":
+            # Match the established Squarespace homepage preview exactly on
+            # Onepage. The project-page film remains owned by fullFilms.
+            media["src"] = POLYMARKET_HOMEPAGE_PREVIEW_BASE + "onepage-preview.mp4"
+            media["poster"] = POLYMARKET_HOMEPAGE_PREVIEW_BASE + "poster.jpg"
 
         for key in ("gallery", "onepageGallery"):
             for index, item in enumerate(project.get(key) or []):
