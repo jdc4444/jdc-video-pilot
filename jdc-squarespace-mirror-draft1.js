@@ -822,6 +822,7 @@
         input.checked = false;
       });
       applyRoleFilter("all");
+      window.scrollTo(0, 0);
     });
     filters.forEach(function (record) {
       var input = el("input", "jdc-mirror-onepage-filter-input");
