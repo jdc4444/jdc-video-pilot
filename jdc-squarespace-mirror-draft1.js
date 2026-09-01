@@ -445,7 +445,7 @@
       ".jdc-mirror-player .jdc-video-controls{position:absolute;z-index:4;left:16px;right:16px;bottom:14px;display:flex;align-items:center;gap:10px;opacity:0;transition:opacity 160ms ease}",
       ".jdc-mirror-player:hover .jdc-video-controls,.jdc-mirror-player:focus-within .jdc-video-controls{opacity:1}",
       ".jdc-mirror-player .jdc-video-controls button{appearance:none;border:0;border-radius:999px;padding:8px 11px;color:#fff;background:rgba(0,0,0,.58);font:600 11px/1 system-ui,sans-serif;cursor:pointer}",
-      ".jdc-mirror-player .jdc-video-controls button[data-jdc-control-icon]{display:grid;place-items:center;box-sizing:border-box;width:34px;height:34px;min-width:34px;padding:0}",
+      ".jdc-mirror-player .jdc-video-controls button[data-jdc-control-icon]{display:grid;place-items:center;box-sizing:border-box;width:34px;height:34px;min-width:34px;padding:0;border-radius:0;background:transparent}",
       ".jdc-mirror-player .jdc-video-control-icon{display:block;width:18px;height:18px;overflow:visible}",
       ".jdc-mirror-player .jdc-video-progress{flex:1;height:3px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.35);cursor:pointer}",
       ".jdc-mirror-player .jdc-video-progress>span{display:block;width:0;height:100%;background:#fff}",
