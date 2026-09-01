@@ -35,6 +35,22 @@
     "/maybelline-superstay",
     "/maybelline-loaded-bolds"
   ]);
+  var safariFullStreamRoutes = {
+    "/seletar-archive": "orang-seletar",
+    "/paracosm": "paracosm",
+    "/new-york-lottery-loteria": "loteria",
+    "/gabriel-garzon-montano-my-balloon": "my-balloon",
+    "/maybelline-gigi-glow-talk": "glow-talk",
+    "/maybelline-gigi-vs-gigi": "lipstick-day",
+    "/maybelline-superstay": "superstay",
+    "/the-happy-film": "happy-film",
+    "/bad-night": "bad-night",
+    "/tomorrow-i-love-you": "tomorrow",
+    "/sticky-fingers": "sticky-fingers",
+    "/staycation": "staycation",
+    "/ella": "ella",
+    "/just-let-me-show-you": "jlmsy"
+  };
 
   function el(name, className, text) {
     var node = document.createElement(name);
@@ -155,6 +171,14 @@
       .filter(function (video) { return video && video.systemDataId && Number(video.duration) >= 30; })
       .sort(function (left, right) { return Number(right.duration) - Number(left.duration); })[0];
     return squarespaceStreamUrl(candidate);
+  }
+
+  function safariFullStreamUrl(project) {
+    if (!supportsNativeHls() || !project) return "";
+    var streamSlug = safariFullStreamRoutes[project.route];
+    if (!streamSlug) return "";
+    return "https://jdc4444.github.io/jdc_resume/media/safari-full/" +
+      encodeURIComponent(streamSlug) + "/master.m3u8";
   }
 
   function setVolume(video, target, duration) {
@@ -346,7 +370,9 @@
 
   function installInlineProjectPlayback(frame, video, project) {
     var playbackRecord = project.fullFilms && project.fullFilms.length ? project.fullFilms[0] : project.media;
-    var playbackSource = squarespaceStreamUrl(playbackRecord) || inferredSquarespaceStreamUrl(project);
+    var playbackSource = squarespaceStreamUrl(playbackRecord) ||
+      inferredSquarespaceStreamUrl(project) ||
+      safariFullStreamUrl(project);
     if (!playbackSource) playbackSource = project.media && project.media.playbackSrc;
     if (!playbackSource && playbackRecord) playbackSource = playbackRecord.src;
     playbackSource = mediaUrl(playbackSource || (project.media && project.media.src));
