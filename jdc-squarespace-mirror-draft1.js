@@ -360,8 +360,9 @@
       ".jdc-mirror-onepage-brand{justify-self:start;font:500 31.36px/43.904px Poppins,Arial,Helvetica,sans-serif}",
       ".jdc-mirror-onepage-contact{justify-self:end;padding-bottom:1px;font:300 12px/19.2px Poppins,Arial,Helvetica,sans-serif}",
       ".jdc-mirror-onepage-brand:hover,.jdc-mirror-onepage-contact:hover{text-decoration:underline;text-underline-offset:4px}",
-      ".jdc-mirror-onepage-filters{position:static;z-index:2;box-sizing:border-box;display:flex;align-items:flex-end;justify-content:center;min-width:0;width:auto;margin:0;padding:0;background:transparent;pointer-events:none}",
+      ".jdc-mirror-onepage-filters{position:static;z-index:2;box-sizing:border-box;display:flex;align-items:flex-end;justify-content:center;gap:0 19px;min-width:0;width:auto;margin:0;padding:0;background:transparent;pointer-events:none}",
       ".jdc-mirror-onepage-filter-set{display:flex;flex-wrap:nowrap;justify-content:center;gap:0 19px;max-width:100%;min-width:0;margin:0;padding:0;pointer-events:auto;white-space:nowrap}",
+      ".jdc-mirror-onepage-look-set{display:flex;flex-wrap:nowrap;justify-content:center;gap:0 10px;min-width:0;margin:0;padding:0 0 0 19px;border-left:1px solid rgba(255,255,255,.45);pointer-events:auto;white-space:nowrap}",
       ".jdc-mirror-onepage-filter-input{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}",
       ".jdc-mirror-onepage-filter{appearance:none;margin:0;padding:0 0 1px;border:0;border-bottom:1px solid transparent;border-radius:0;background:transparent;color:inherit;font:300 10px/19.2px Poppins,Arial,Helvetica,sans-serif;letter-spacing:.055em;text-decoration:none;text-shadow:none;text-transform:uppercase;cursor:pointer;opacity:.68}",
       ".jdc-mirror-onepage-filter:hover{border-bottom-color:currentColor;opacity:1}",
@@ -369,9 +370,13 @@
       ".jdc-mirror-onepage-filter-input:checked+.jdc-mirror-onepage-filter{border-bottom-color:currentColor;opacity:1}",
       ".jdc-mirror-onepage-projects>.jdc-mirror-project+.jdc-mirror-project{border-top:1px solid rgba(0,0,0,.12)}",
       ".jdc-mirror-onepage-projects>.jdc-mirror-project[hidden]{display:none!important}",
+      "html[data-jdc-onepage-look='poster'] .jdc-mirror-onepage .jdc-mirror-heading{display:none}",
+      "html[data-jdc-onepage-look='poster'] .jdc-mirror-onepage .jdc-mirror-meta{padding-top:clamp(44px,5vw,72px)}",
+      "html[data-jdc-onepage-look='poster'] .jdc-mirror-onepage .jdc-mirror-credits{margin-top:0}",
+      "html[data-jdc-onepage-look='paper'] .jdc-mirror-onepage .jdc-mirror-preview-title{display:none}",
       "@media(max-width:1099px){.jdc-mirror-credits{grid-template-columns:repeat(3,minmax(0,1fr))}}",
       "@media(max-width:1023px) and (min-width:768px){.jdc-mirror-gallery[data-columns='4']{grid-template-columns:repeat(2,minmax(0,1fr))}}",
-      "@media(max-width:767px){.jdc-mirror-home-grid{grid-template-columns:1fr}.jdc-mirror-home-title{font-size:clamp(28px,8.6vw,48px)}.jdc-mirror-preview-title{width:88%;font-size:clamp(24px,9vw,46px)}.jdc-mirror-meta{padding:38px 6vw 56px}.jdc-mirror-credits{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 14px;width:87.7vw;max-width:none}.jdc-mirror-below-fold-films,.jdc-mirror-gallery,.jdc-mirror-gallery[data-count],.jdc-mirror-gallery[data-columns]{grid-template-columns:1fr;padding-left:6vw;padding-right:6vw}.jdc-mirror-fields,.jdc-mirror-quotes{grid-template-columns:1fr;padding-left:6vw;padding-right:6vw}.jdc-mirror-onepage-header-row{grid-template-columns:auto minmax(0,1fr) auto;column-gap:8px}.jdc-mirror-onepage-brand{font-size:23px;line-height:32px}.jdc-mirror-onepage-contact{padding-bottom:1px;font-size:10px;line-height:15px}.jdc-mirror-onepage-filter-set{gap:0 4px}.jdc-mirror-onepage-filter{padding-bottom:1px;font-size:7px;line-height:15px;letter-spacing:.025em}}",
+      "@media(max-width:767px){.jdc-mirror-home-grid{grid-template-columns:1fr}.jdc-mirror-home-title{font-size:clamp(28px,8.6vw,48px)}.jdc-mirror-preview-title{width:88%;font-size:clamp(24px,9vw,46px)}.jdc-mirror-meta{padding:38px 6vw 56px}.jdc-mirror-credits{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 14px;width:87.7vw;max-width:none}.jdc-mirror-below-fold-films,.jdc-mirror-gallery,.jdc-mirror-gallery[data-count],.jdc-mirror-gallery[data-columns]{grid-template-columns:1fr;padding-left:6vw;padding-right:6vw}.jdc-mirror-fields,.jdc-mirror-quotes{grid-template-columns:1fr;padding-left:6vw;padding-right:6vw}.jdc-mirror-onepage-header-row{grid-template-columns:auto minmax(0,1fr) auto;column-gap:8px}.jdc-mirror-onepage-brand{font-size:23px;line-height:32px}.jdc-mirror-onepage-contact{padding-bottom:1px;font-size:10px;line-height:15px}.jdc-mirror-onepage-filters{gap:0 6px}.jdc-mirror-onepage-filter-set{gap:0 4px}.jdc-mirror-onepage-look-set{gap:0 4px;padding-left:6px}.jdc-mirror-onepage-filter{padding-bottom:1px;font-size:7px;line-height:15px;letter-spacing:.025em}}",
       "@media(hover:none){.jdc-mirror-player .jdc-video-controls{opacity:1}}",
       "@media(prefers-reduced-motion:reduce){.jdc-mirror-home-media video,.jdc-mirror-gallery-item video{animation:none!important}.jdc-mirror-player .jdc-video-controls{transition:none}}"
     ].join("");
@@ -628,14 +633,27 @@
     var filterSet = el("div", "jdc-mirror-onepage-filter-set");
     filterSet.setAttribute("role", "group");
     filterSet.setAttribute("aria-label", "Project role");
+    var lookSet = el("div", "jdc-mirror-onepage-look-set");
+    lookSet.setAttribute("role", "group");
+    lookSet.setAttribute("aria-label", "Onepage look");
     var filters = [
       ["director", "Director"],
       ["producer", "Producer"],
       ["creative", "Creative Director"],
       ["editor", "Editor"]
     ];
-    var requestedFilter = new URLSearchParams(window.location.search).get("role") || "all";
+    var looks = [
+      ["poster", "Poster Look"],
+      ["paper", "Paper Look"]
+    ];
+    var searchParams = new URLSearchParams(window.location.search);
+    var requestedFilter = searchParams.get("role") || "all";
     if (requestedFilter !== "all" && !filters.some(function (record) { return record[0] === requestedFilter; })) requestedFilter = "all";
+    var requestedLook = searchParams.get("look") || "poster";
+    if (!looks.some(function (record) { return record[0] === requestedLook; })) requestedLook = "poster";
+    brandLink.href = requestedLook === "poster" ? "/onepage" : "/onepage?look=" + requestedLook;
+    document.documentElement.setAttribute("data-jdc-onepage-look", requestedLook);
+    document.body.setAttribute("data-jdc-onepage-look", requestedLook);
     var projectList = el("div", "jdc-mirror-onepage-projects");
     projectList.id = "jdc-mirror-onepage-projects";
     var projectEntries = onepageProjects.map(function (project) {
@@ -658,6 +676,11 @@
       });
       document.documentElement.setAttribute("data-jdc-onepage-role", filter);
       document.body.setAttribute("data-jdc-onepage-role", filter);
+    }
+    function applyLook(look) {
+      document.documentElement.setAttribute("data-jdc-onepage-look", look);
+      document.body.setAttribute("data-jdc-onepage-look", look);
+      brandLink.href = look === "poster" ? "/onepage" : "/onepage?look=" + look;
     }
     brandLink.setAttribute("aria-controls", projectList.id);
     brandLink.addEventListener("click", function (event) {
@@ -691,7 +714,27 @@
       });
       append(filterSet, input, label);
     });
-    filterBar.appendChild(filterSet);
+    looks.forEach(function (record) {
+      var input = el("input", "jdc-mirror-onepage-filter-input");
+      input.type = "radio";
+      input.name = "jdc-mirror-look-filter";
+      input.id = "jdc-mirror-look-" + record[0];
+      input.value = record[0];
+      input.checked = record[0] === requestedLook;
+      input.setAttribute("data-jdc-look-filter", record[0]);
+      input.setAttribute("aria-controls", projectList.id);
+      var label = el("label", "jdc-mirror-onepage-filter jdc-mirror-onepage-look", record[1]);
+      label.htmlFor = input.id;
+      input.addEventListener("change", function () {
+        if (!input.checked) return;
+        var lookUrl = new URL(window.location.href);
+        lookUrl.searchParams.set("look", record[0]);
+        window.history.replaceState(null, "", lookUrl.href);
+        applyLook(record[0]);
+      });
+      append(lookSet, input, label);
+    });
+    append(filterBar, filterSet, lookSet);
     append(onepage, projectList);
     main.replaceChildren(onepage);
     var previousHeaderRow = document.getElementById(headerRow.id);
@@ -714,6 +757,7 @@
       headerRow.setAttribute("data-jdc-header-fallback", "true");
       document.body.appendChild(headerRow);
     }
+    applyLook(requestedLook);
     applyRoleFilter(requestedFilter);
     observeAutoplay(onepage);
     document.title = "Onepage — JDC";
