@@ -65,14 +65,6 @@
     return fragment;
   }
 
-  function previewTitle(title) {
-    var value = String(title || "");
-    if (value === "Thom Yorke — Last I Heard (…He Was Circling the Drain)") {
-      value = "Thom Yorke — Last I Heard...";
-    }
-    return value.trim().toLocaleUpperCase();
-  }
-
   function isJos(name) {
     return /\bjos(?:e|é)?\s+diaz\s+contreras\b/i.test(String(name || ""));
   }
@@ -484,7 +476,9 @@
     }, { muted: true, loop: true, autoplay: true, preload: "metadata", deferSource: true });
     video.setAttribute("data-jdc-autoplay", "true");
     video.setAttribute("aria-label", project.title + " preview");
-    append(frame, video, el("span", "jdc-mirror-preview-title", previewTitle(project.title)));
+    var title = el("span", "jdc-mirror-preview-title");
+    title.appendChild(splitTitle(project.title));
+    append(frame, video, title);
     link.appendChild(frame);
     return link;
   }
