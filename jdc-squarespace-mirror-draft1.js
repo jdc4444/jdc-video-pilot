@@ -259,7 +259,7 @@
       ".jdc-mirror-quotes{box-sizing:border-box;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px 24px;width:100%;margin:0;padding:0 4.2vw clamp(48px,7vw,100px)}",
       ".jdc-mirror-quote{margin:0}.jdc-mirror-quote blockquote{margin:0;color:#050505;font-size:13px;letter-spacing:-.01em;line-height:1.38}.jdc-mirror-quote cite{display:block;margin-top:9px;color:rgba(0,0,0,.48);font-size:8px;font-style:normal;letter-spacing:.065em;text-transform:uppercase}",
       ".jdc-mirror-onepage{display:block;width:100%;margin:0;padding:0;background:#fff}",
-      "html[data-jdc-squarespace-mirror-page='onepage'] #header{position:fixed!important;top:0!important;right:0!important;left:0!important;width:100%!important;z-index:9999!important;background:linear-gradient(to bottom,rgba(0,0,0,.62) 0%,rgba(0,0,0,.48) 72%,rgba(0,0,0,0) 100%)!important;transform:none!important}",
+      "html[data-jdc-squarespace-mirror-page='onepage'] #header{position:fixed!important;top:0!important;right:0!important;left:0!important;width:100%!important;z-index:9999!important;background:transparent!important;transform:none!important}",
       "html[data-jdc-squarespace-mirror-page='onepage'] #header .header-inner{align-items:stretch!important}",
       "html[data-jdc-squarespace-mirror-page='onepage'] #header .header-display-desktop,html[data-jdc-squarespace-mirror-page='onepage'] #header .header-display-mobile{display:none!important}",
       ".jdc-mirror-onepage-header-row{box-sizing:border-box;display:grid;grid-template-columns:minmax(72px,1fr) auto minmax(72px,1fr);align-items:end;column-gap:24px;width:100%;height:100%;min-width:0;margin:0;padding:0;color:#fff}",
