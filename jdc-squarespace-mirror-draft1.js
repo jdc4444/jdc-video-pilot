@@ -209,7 +209,7 @@
     var controls = el("div", "jdc-video-controls");
     controls.setAttribute("role", "group");
     controls.setAttribute("aria-label", (label || "Video") + " controls");
-    var playButton = el("button", "", "Play");
+    var playButton = el("button", "", settings.iconButtons ? "" : "Play");
     playButton.type = "button";
     playButton.setAttribute("data-jdc-play", "");
     playButton.setAttribute("aria-label", "Play " + (label || "video"));
@@ -221,20 +221,35 @@
     progress.setAttribute("aria-valuemax", "100");
     progress.setAttribute("aria-valuenow", "0");
     progress.appendChild(el("span"));
-    var muteButton = el("button", "", "Sound");
+    var muteButton = el("button", "", settings.iconButtons ? "" : "Sound");
     muteButton.type = "button";
     muteButton.setAttribute("data-jdc-mute", "");
     muteButton.setAttribute("aria-label", "Turn on sound for " + (label || "video"));
     append(controls, playButton, progress, muteButton);
     frame.appendChild(controls);
 
+    function setControlIcon(button, icon) {
+      if (!button) return;
+      if (button.getAttribute("data-jdc-control-icon") === icon && button.firstElementChild) return;
+      var artwork = {
+        play: '<path fill="currentColor" d="M8 5v14l11-7z"/>',
+        pause: '<path fill="currentColor" d="M7 5h4v14H7zm6 0h4v14h-4z"/>',
+        sound: '<path fill="currentColor" d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 9.5a3.8 3.8 0 0 1 0 5M18.5 7a7.1 7.1 0 0 1 0 10" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>',
+        mute: '<path fill="currentColor" d="M4 9v6h4l5 4V5L8 9H4z"/><path d="m17 9 5 6m0-6-5 6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>'
+      };
+      button.setAttribute("data-jdc-control-icon", icon);
+      button.innerHTML = '<svg class="jdc-video-control-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + artwork[icon] + "</svg>";
+    }
+
     function updatePlayer() {
       var previewMode = settings.isPreview && settings.isPreview();
       var playing = !previewMode && !video.paused && !video.ended;
       frame.classList.toggle("jdc-video-playing", playing);
-      playButton.textContent = playing ? "Pause" : "Play";
+      if (settings.iconButtons) setControlIcon(playButton, playing ? "pause" : "play");
+      else playButton.textContent = playing ? "Pause" : "Play";
       playButton.setAttribute("aria-label", (playing ? "Pause " : "Play ") + (label || "video"));
-      muteButton.textContent = video.muted ? "Sound" : "Mute";
+      if (settings.iconButtons) setControlIcon(muteButton, video.muted ? "mute" : "sound");
+      else muteButton.textContent = video.muted ? "Sound" : "Mute";
       muteButton.setAttribute("aria-label", (video.muted ? "Turn on sound for " : "Mute ") + (label || "video"));
       var ratio = !previewMode && Number.isFinite(video.duration) && video.duration > 0
         ? Math.min(1, Math.max(0, video.currentTime / video.duration))
@@ -357,7 +372,8 @@
     var player = installPlayerControls(frame, video, project.title + " full video", {
       beforePlay: playFullVideo,
       isPreview: isPreview,
-      hoverSound: false
+      hoverSound: false,
+      iconButtons: true
     });
     frame.addEventListener("click", function (event) {
       if (event.target.closest && event.target.closest(".jdc-video-controls")) return;
@@ -429,6 +445,8 @@
       ".jdc-mirror-player .jdc-video-controls{position:absolute;z-index:4;left:16px;right:16px;bottom:14px;display:flex;align-items:center;gap:10px;opacity:0;transition:opacity 160ms ease}",
       ".jdc-mirror-player:hover .jdc-video-controls,.jdc-mirror-player:focus-within .jdc-video-controls{opacity:1}",
       ".jdc-mirror-player .jdc-video-controls button{appearance:none;border:0;border-radius:999px;padding:8px 11px;color:#fff;background:rgba(0,0,0,.58);font:600 11px/1 system-ui,sans-serif;cursor:pointer}",
+      ".jdc-mirror-player .jdc-video-controls button[data-jdc-control-icon]{display:grid;place-items:center;box-sizing:border-box;width:34px;height:34px;min-width:34px;padding:0}",
+      ".jdc-mirror-player .jdc-video-control-icon{display:block;width:18px;height:18px;overflow:visible}",
       ".jdc-mirror-player .jdc-video-progress{flex:1;height:3px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.35);cursor:pointer}",
       ".jdc-mirror-player .jdc-video-progress>span{display:block;width:0;height:100%;background:#fff}",
       ".jdc-mirror-preview-link{position:relative;display:block;width:100%;color:inherit;text-decoration:none;background:#080808;overflow:hidden}",
@@ -628,7 +646,9 @@
       });
       video.setAttribute("aria-label", project.title + " additional film " + String(index + 1));
       frame.appendChild(video);
-      installPlayerControls(frame, video, project.title + " additional film " + String(index + 1));
+      installPlayerControls(frame, video, project.title + " additional film " + String(index + 1), {
+        iconButtons: Boolean(onepage)
+      });
       films.appendChild(frame);
     });
     return films;
