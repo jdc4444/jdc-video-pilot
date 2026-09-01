@@ -150,6 +150,15 @@ def build() -> dict[str, Any]:
                     }
                 apply_media(film, match)
 
+        if project["route"] == "/ggm-aguita":
+            # Agüita's 1440×1080 master carries a 2:1 sample aspect ratio,
+            # so its intended display aspect is 8:3 rather than the coded 4:3.
+            # Match the approved combined-site presentation on the project page.
+            media["aspect"] = 8 / 3
+            media["playbackAspect"] = 8 / 3
+            for film in project.get("fullFilms") or []:
+                film["aspect"] = 8 / 3
+
         for key in ("gallery", "onepageGallery"):
             for index, item in enumerate(project.get(key) or []):
                 apply_media(item, find_gallery_match(item, index, source_gallery))
