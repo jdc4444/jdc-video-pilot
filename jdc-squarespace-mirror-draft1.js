@@ -131,9 +131,10 @@
 
   function setVolume(video, target, duration) {
     if (activeSoundFrame) window.cancelAnimationFrame(activeSoundFrame);
-    var started = performance.now();
+    var started = null;
     var initial = Number(video.volume || 0);
     function frame(now) {
+      if (started === null) started = now;
       var progress = Math.max(0, Math.min(1, (now - started) / duration));
       video.volume = Math.max(0, Math.min(1, initial + (target - initial) * progress));
       if (progress < 1) activeSoundFrame = window.requestAnimationFrame(frame);
