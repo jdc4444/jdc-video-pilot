@@ -524,8 +524,10 @@
     var brandLink = el("a", "jdc-mirror-onepage-brand", "JDC");
     brandLink.href = "/";
     brandLink.setAttribute("aria-label", "JDC home");
+    brandLink.style.setProperty("color", "#fff", "important");
     var contactLink = el("a", "jdc-mirror-onepage-contact", "Contact");
     contactLink.href = "/contact";
+    contactLink.style.setProperty("color", "#fff", "important");
     var filterSet = el("div", "jdc-mirror-onepage-filter-set");
     filterSet.setAttribute("role", "group");
     filterSet.setAttribute("aria-label", "Project role");
