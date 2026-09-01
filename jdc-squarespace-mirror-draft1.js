@@ -129,6 +129,34 @@
     return new URL(value, window.location.origin).href;
   }
 
+  function supportsNativeHls() {
+    var probe = document.createElement("video");
+    return Boolean(
+      probe.canPlayType("application/vnd.apple.mpegurl") ||
+      probe.canPlayType("application/x-mpegURL")
+    );
+  }
+
+  function squarespaceStreamUrl(record) {
+    if (!supportsNativeHls() || !record || !record.systemDataId) return "";
+    if (record.alexandriaUrl) {
+      return String(record.alexandriaUrl).replace("{variant}", "playlist.m3u8");
+    }
+    return "https://video.squarespace-cdn.com/content/v1/559d52abe4b0cebfa4f0b439/" +
+      encodeURIComponent(String(record.systemDataId)) + "/playlist.m3u8";
+  }
+
+  function inferredSquarespaceStreamUrl(project) {
+    if (!supportsNativeHls() || !project || !project.currentSquarespace) return "";
+    var videos = Array.isArray(project.currentSquarespace.videos)
+      ? project.currentSquarespace.videos.slice()
+      : [];
+    var candidate = videos
+      .filter(function (video) { return video && video.systemDataId && Number(video.duration) >= 30; })
+      .sort(function (left, right) { return Number(right.duration) - Number(left.duration); })[0];
+    return squarespaceStreamUrl(candidate);
+  }
+
   function setVolume(video, target, duration) {
     if (activeSoundFrame) window.cancelAnimationFrame(activeSoundFrame);
     var started = null;
@@ -176,7 +204,7 @@
   function makeVideo(record, options) {
     var settings = options || {};
     var video = document.createElement("video");
-    var source = mediaUrl(record.src);
+    var source = mediaUrl(squarespaceStreamUrl(record) || record.src);
     var poster = mediaUrl(record.poster);
     if (source && settings.deferSource) video.setAttribute("data-jdc-deferred-src", source);
     else if (source) video.src = source;
@@ -318,7 +346,8 @@
 
   function installInlineProjectPlayback(frame, video, project) {
     var playbackRecord = project.fullFilms && project.fullFilms.length ? project.fullFilms[0] : project.media;
-    var playbackSource = project.media && project.media.playbackSrc;
+    var playbackSource = squarespaceStreamUrl(playbackRecord) || inferredSquarespaceStreamUrl(project);
+    if (!playbackSource) playbackSource = project.media && project.media.playbackSrc;
     if (!playbackSource && playbackRecord) playbackSource = playbackRecord.src;
     playbackSource = mediaUrl(playbackSource || (project.media && project.media.src));
     var playbackHasAudio = !playbackRecord || playbackRecord.hasAudio !== false;
