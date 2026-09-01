@@ -589,7 +589,18 @@
     if (previousHeaderRow && previousHeaderRow !== headerRow) previousHeaderRow.remove();
     append(headerRow, brandLink, filterBar, contactLink);
     var headerMount = document.querySelector("#header .header-inner");
-    if (headerMount) headerMount.appendChild(headerRow);
+    if (headerMount) {
+      var siteHeader = headerMount.closest("#header");
+      if (siteHeader) {
+        siteHeader.style.setProperty("position", "fixed", "important");
+        siteHeader.style.setProperty("top", "0", "important");
+        siteHeader.style.setProperty("right", "0", "important");
+        siteHeader.style.setProperty("left", "0", "important");
+        siteHeader.style.setProperty("width", "100%", "important");
+        siteHeader.style.setProperty("transform", "none", "important");
+      }
+      headerMount.appendChild(headerRow);
+    }
     else {
       headerRow.setAttribute("data-jdc-header-fallback", "true");
       document.body.appendChild(headerRow);
