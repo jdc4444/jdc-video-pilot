@@ -70,9 +70,6 @@
     if (value === "Thom Yorke — Last I Heard (…He Was Circling the Drain)") {
       value = "Thom Yorke — Last I Heard...";
     }
-    var marker = " — ";
-    var markerIndex = value.indexOf(marker);
-    if (markerIndex >= 0) value = value.slice(markerIndex + marker.length);
     return value.trim().toLocaleUpperCase();
   }
 
