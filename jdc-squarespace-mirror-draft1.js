@@ -316,9 +316,11 @@
   }
 
   function installInlineProjectPlayback(frame, video, project) {
+    var playbackRecord = project.fullFilms && project.fullFilms.length ? project.fullFilms[0] : project.media;
     var playbackSource = project.media && project.media.playbackSrc;
-    if (!playbackSource && project.fullFilms && project.fullFilms.length) playbackSource = project.fullFilms[0].src;
+    if (!playbackSource && playbackRecord) playbackSource = playbackRecord.src;
     playbackSource = mediaUrl(playbackSource || (project.media && project.media.src));
+    var playbackHasAudio = !playbackRecord || playbackRecord.hasAudio !== false;
     var playbackStart = Number(project.media && project.media.playbackStart) || 0;
     var playbackAspect = Number(project.media && project.media.playbackAspect) ||
       Number(project.fullFilms && project.fullFilms[0] && project.fullFilms[0].aspect) ||
@@ -343,6 +345,7 @@
       video.removeAttribute("data-jdc-autoplay");
       video.removeAttribute("data-jdc-deferred-src");
       video.preload = "auto";
+      video.setAttribute("data-jdc-has-audio", playbackHasAudio ? "true" : "false");
       video.muted = false;
       video.defaultMuted = false;
       video.removeAttribute("muted");
@@ -372,7 +375,7 @@
     var player = installPlayerControls(frame, video, project.title + " full video", {
       beforePlay: playFullVideo,
       isPreview: isPreview,
-      hoverSound: false,
+      hoverSound: true,
       iconButtons: true
     });
     frame.addEventListener("click", function (event) {
