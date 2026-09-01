@@ -199,8 +199,9 @@
     return video;
   }
 
-  function installPlayerControls(frame, video, label) {
+  function installPlayerControls(frame, video, label, options) {
     if (!frame || !video || frame.querySelector(".jdc-video-controls")) return;
+    var settings = options || {};
     frame.classList.add("jdc-mirror-player", "jdc-video-ready");
     video.controls = false;
     video.removeAttribute("controls");
@@ -228,13 +229,14 @@
     frame.appendChild(controls);
 
     function updatePlayer() {
-      var playing = !video.paused && !video.ended;
+      var previewMode = settings.isPreview && settings.isPreview();
+      var playing = !previewMode && !video.paused && !video.ended;
       frame.classList.toggle("jdc-video-playing", playing);
       playButton.textContent = playing ? "Pause" : "Play";
       playButton.setAttribute("aria-label", (playing ? "Pause " : "Play ") + (label || "video"));
       muteButton.textContent = video.muted ? "Sound" : "Mute";
       muteButton.setAttribute("aria-label", (video.muted ? "Turn on sound for " : "Mute ") + (label || "video"));
-      var ratio = Number.isFinite(video.duration) && video.duration > 0
+      var ratio = !previewMode && Number.isFinite(video.duration) && video.duration > 0
         ? Math.min(1, Math.max(0, video.currentTime / video.duration))
         : 0;
       progress.firstElementChild.style.width = (ratio * 100) + "%";
@@ -247,15 +249,25 @@
       updatePlayer();
     }
 
-    playButton.addEventListener("click", function (event) {
-      event.preventDefault();
-      event.stopPropagation();
+    function requestPlay() {
+      var previewMode = settings.isPreview && settings.isPreview();
+      if (previewMode && settings.beforePlay) {
+        var upgradeAttempt = settings.beforePlay();
+        if (upgradeAttempt && upgradeAttempt.catch) upgradeAttempt.catch(function () {});
+        return;
+      }
       if (video.paused || video.ended) {
         var attempt = video.play();
         if (attempt && attempt.catch) attempt.catch(function () {});
       } else {
         video.pause();
       }
+    }
+
+    playButton.addEventListener("click", function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      requestPlay();
     });
     muteButton.addEventListener("click", function (event) {
       event.preventDefault();
@@ -277,12 +289,82 @@
       var ratio = Number.isFinite(video.duration) && video.duration > 0 ? video.currentTime / video.duration : 0;
       seekToRatio(ratio + (event.key === "ArrowRight" ? 0.05 : -0.05));
     });
-    frame.addEventListener("pointerenter", function () { activateSound(video); });
-    frame.addEventListener("pointerleave", function () { releaseSound(video); });
+    if (settings.hoverSound !== false) {
+      frame.addEventListener("pointerenter", function () { activateSound(video); });
+      frame.addEventListener("pointerleave", function () { releaseSound(video); });
+    }
     ["play", "pause", "ended", "volumechange", "timeupdate", "loadedmetadata", "durationchange"].forEach(function (eventName) {
       video.addEventListener(eventName, updatePlayer);
     });
     updatePlayer();
+    return { requestPlay: requestPlay, updatePlayer: updatePlayer };
+  }
+
+  function installInlineProjectPlayback(frame, video, project) {
+    var playbackSource = project.media && project.media.playbackSrc;
+    if (!playbackSource && project.fullFilms && project.fullFilms.length) playbackSource = project.fullFilms[0].src;
+    playbackSource = mediaUrl(playbackSource || (project.media && project.media.src));
+    var playbackStart = Number(project.media && project.media.playbackStart) || 0;
+    var playbackAspect = Number(project.media && project.media.playbackAspect) ||
+      Number(project.fullFilms && project.fullFilms[0] && project.fullFilms[0].aspect) ||
+      Number(project.media && project.media.aspect) || 16 / 9;
+    frame.setAttribute("data-jdc-inline-mode", "preview");
+
+    function isPreview() {
+      return frame.getAttribute("data-jdc-inline-mode") !== "full";
+    }
+
+    function playFullVideo() {
+      var mode = frame.getAttribute("data-jdc-inline-mode");
+      if (mode === "full") return video.play();
+      if (mode === "loading") return Promise.resolve();
+      frame.setAttribute("data-jdc-inline-mode", "loading");
+      if (activeSoundVideo && activeSoundVideo !== video) quietVideo(activeSoundVideo, false);
+      activeSoundVideo = video;
+      video.pause();
+      video.loop = false;
+      video.autoplay = false;
+      video.removeAttribute("autoplay");
+      video.removeAttribute("data-jdc-autoplay");
+      video.removeAttribute("data-jdc-deferred-src");
+      video.preload = "auto";
+      video.muted = false;
+      video.defaultMuted = false;
+      video.removeAttribute("muted");
+      video.volume = 0.82;
+      frame.style.aspectRatio = String(playbackAspect);
+
+      return new Promise(function (resolve, reject) {
+        var settled = false;
+        function start() {
+          if (settled) return;
+          settled = true;
+          if (playbackStart > 0 && Number.isFinite(video.duration)) {
+            video.currentTime = Math.min(playbackStart, Math.max(0, video.duration - 0.05));
+          }
+          frame.setAttribute("data-jdc-inline-mode", "full");
+          var attempt = video.play();
+          if (attempt && attempt.then) attempt.then(resolve).catch(reject);
+          else resolve();
+        }
+        video.addEventListener("loadedmetadata", start, { once: true });
+        video.src = playbackSource;
+        video.load();
+        if (video.readyState >= 1) start();
+      });
+    }
+
+    var player = installPlayerControls(frame, video, project.title + " full video", {
+      beforePlay: playFullVideo,
+      isPreview: isPreview,
+      hoverSound: false
+    });
+    frame.addEventListener("click", function (event) {
+      if (event.target.closest && event.target.closest(".jdc-video-controls")) return;
+      event.preventDefault();
+      event.stopPropagation();
+      if (player) player.requestPlay();
+    });
   }
 
   function observeAutoplay(root) {
@@ -350,7 +432,8 @@
       ".jdc-mirror-player .jdc-video-progress{flex:1;height:3px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.35);cursor:pointer}",
       ".jdc-mirror-player .jdc-video-progress>span{display:block;width:0;height:100%;background:#fff}",
       ".jdc-mirror-preview-link{position:relative;display:block;width:100%;color:inherit;text-decoration:none;background:#080808;overflow:hidden}",
-      ".jdc-mirror-preview-link .jdc-mirror-film{pointer-events:none}",
+      ".jdc-mirror-preview-link .jdc-mirror-film{pointer-events:auto;cursor:pointer}",
+      ".jdc-mirror-film[data-jdc-inline-mode='preview'] .jdc-video-progress,.jdc-mirror-film[data-jdc-inline-mode='preview'] [data-jdc-mute],.jdc-mirror-film[data-jdc-inline-mode='loading'] .jdc-video-progress,.jdc-mirror-film[data-jdc-inline-mode='loading'] [data-jdc-mute]{visibility:hidden}",
       ".jdc-mirror-preview-title{position:absolute;z-index:3;top:50%;left:50%;box-sizing:border-box;width:min(90%,1200px);margin:0;padding:0;transform:translate(-50%,-50%);color:#fff;font:500 clamp(30px,6vw,96px)/.92 Poppins,Arial,Helvetica,sans-serif;letter-spacing:-.045em;text-align:center;text-shadow:0 2px 24px rgba(0,0,0,.38);text-transform:uppercase;text-wrap:balance;pointer-events:none}",
       ".jdc-mirror-title-client,.jdc-mirror-title-project{display:inline}",
       ".jdc-mirror-below-fold-films{box-sizing:border-box;display:block;width:100%;margin:0;padding:0 4.2vw clamp(48px,6vw,88px)}",
@@ -502,9 +585,9 @@
 
   function renderPreview(project) {
     if (!project.media || !project.media.src) return null;
-    var link = el("a", "jdc-mirror-preview-link");
-    link.href = new URL(project.route, window.location.origin).href;
-    link.setAttribute("aria-label", "Open " + project.title);
+    var link = el("div", "jdc-mirror-preview-link");
+    link.setAttribute("role", "group");
+    link.setAttribute("aria-label", "Play " + project.title + " full video here");
     var frame = el("figure", "jdc-mirror-film");
     frame.setAttribute("data-jdc-preview", "true");
     frame.style.aspectRatio = String(
@@ -520,6 +603,7 @@
     var title = el("span", "jdc-mirror-preview-title");
     appendTitleParts(title, project.title);
     append(frame, video, title);
+    installInlineProjectPlayback(frame, video, project);
     link.appendChild(frame);
     return link;
   }
