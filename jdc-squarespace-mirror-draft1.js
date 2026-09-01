@@ -173,7 +173,7 @@
 
   function installPlayerControls(frame, video, label) {
     if (!frame || !video || frame.querySelector(".jdc-video-controls")) return;
-    frame.classList.add("jdc-mirror-player", "jdc-video-shell", "jdc-video-block", "jdc-video-ready");
+    frame.classList.add("jdc-mirror-player", "jdc-video-ready");
     video.controls = false;
     video.removeAttribute("controls");
 
