@@ -50,19 +50,47 @@
     return parent;
   }
 
-  function splitTitle(title) {
+  function normalizedTitle(title) {
     var value = String(title || "");
     if (value === "Thom Yorke — Last I Heard (…He Was Circling the Drain)") {
       value = "Thom Yorke — Last I Heard...";
     }
+    return value;
+  }
+
+  function titleParts(title) {
+    var value = normalizedTitle(title);
     var marker = " — ";
     var markerIndex = value.indexOf(marker);
-    if (markerIndex < 0) return document.createTextNode(value);
+    if (markerIndex < 0) {
+      return { client: "", project: value, single: true };
+    }
+    return {
+      client: value.slice(0, markerIndex),
+      project: value.slice(markerIndex + marker.length),
+      single: false
+    };
+  }
+
+  function splitTitle(title) {
+    var parts = titleParts(title);
+    if (parts.single) return document.createTextNode(parts.project);
     var fragment = document.createDocumentFragment();
-    fragment.appendChild(document.createTextNode(value.slice(0, markerIndex)));
+    fragment.appendChild(document.createTextNode(parts.client));
     fragment.appendChild(document.createElement("br"));
-    fragment.appendChild(document.createTextNode(value.slice(markerIndex + marker.length)));
+    fragment.appendChild(document.createTextNode(parts.project));
     return fragment;
+  }
+
+  function appendTitleParts(node, title) {
+    var parts = titleParts(title);
+    node.setAttribute("data-jdc-title-single", parts.single ? "true" : "false");
+    if (!parts.single) {
+      node.appendChild(el("span", "jdc-mirror-title-client", parts.client));
+      node.appendChild(el("br", "jdc-mirror-title-break"));
+    }
+    node.appendChild(el("span", "jdc-mirror-title-project", parts.project));
+    return parts;
   }
 
   function isJos(name) {
@@ -324,6 +352,7 @@
       ".jdc-mirror-preview-link{position:relative;display:block;width:100%;color:inherit;text-decoration:none;background:#080808;overflow:hidden}",
       ".jdc-mirror-preview-link .jdc-mirror-film{pointer-events:none}",
       ".jdc-mirror-preview-title{position:absolute;z-index:3;top:50%;left:50%;box-sizing:border-box;width:min(90%,1200px);margin:0;padding:0;transform:translate(-50%,-50%);color:#fff;font:500 clamp(30px,6vw,96px)/.92 Poppins,Arial,Helvetica,sans-serif;letter-spacing:-.045em;text-align:center;text-shadow:0 2px 24px rgba(0,0,0,.38);text-transform:uppercase;text-wrap:balance;pointer-events:none}",
+      ".jdc-mirror-title-client,.jdc-mirror-title-project{display:inline}",
       ".jdc-mirror-below-fold-films{box-sizing:border-box;display:block;width:100%;margin:0;padding:0 4.2vw clamp(48px,6vw,88px)}",
       ".jdc-mirror-below-fold-film{position:relative;display:block;width:100%;aspect-ratio:16/9;margin:0;background:#080808;overflow:hidden}",
       ".jdc-mirror-below-fold-film+.jdc-mirror-below-fold-film{margin-top:clamp(8px,1.1vw,18px)}",
@@ -374,6 +403,13 @@
       "html[data-jdc-onepage-look='poster'] .jdc-mirror-onepage .jdc-mirror-meta{padding-top:clamp(44px,5vw,72px)}",
       "html[data-jdc-onepage-look='poster'] .jdc-mirror-onepage .jdc-mirror-credits{margin-top:0}",
       "html[data-jdc-onepage-look='paper'] .jdc-mirror-onepage .jdc-mirror-preview-title{display:none}",
+      "html[data-jdc-onepage-look='combo'] .jdc-mirror-onepage .jdc-mirror-preview-title .jdc-mirror-title-client,html[data-jdc-onepage-look='combo'] .jdc-mirror-onepage .jdc-mirror-preview-title .jdc-mirror-title-break{display:none}",
+      "html[data-jdc-onepage-look='combo'] .jdc-mirror-onepage .jdc-mirror-heading .jdc-mirror-title-project,html[data-jdc-onepage-look='combo'] .jdc-mirror-onepage .jdc-mirror-heading .jdc-mirror-title-break{display:none}",
+      "html[data-jdc-onepage-look='combo'] .jdc-mirror-onepage .jdc-mirror-heading[data-jdc-title-single='true']{display:none}",
+      "html[data-jdc-onepage-look='combo'] .jdc-mirror-onepage .jdc-mirror-heading[data-jdc-title-single='true']+.jdc-mirror-credits{margin-top:0}",
+      "html[data-jdc-onepage-look='flip'] .jdc-mirror-onepage .jdc-mirror-preview-title .jdc-mirror-title-project,html[data-jdc-onepage-look='flip'] .jdc-mirror-onepage .jdc-mirror-preview-title .jdc-mirror-title-break{display:none}",
+      "html[data-jdc-onepage-look='flip'] .jdc-mirror-onepage .jdc-mirror-preview-title[data-jdc-title-single='true']{display:none}",
+      "html[data-jdc-onepage-look='flip'] .jdc-mirror-onepage .jdc-mirror-heading .jdc-mirror-title-client,html[data-jdc-onepage-look='flip'] .jdc-mirror-onepage .jdc-mirror-heading .jdc-mirror-title-break{display:none}",
       "@media(max-width:1099px){.jdc-mirror-credits{grid-template-columns:repeat(3,minmax(0,1fr))}}",
       "@media(max-width:1023px) and (min-width:768px){.jdc-mirror-gallery[data-columns='4']{grid-template-columns:repeat(2,minmax(0,1fr))}}",
       "@media(max-width:767px){.jdc-mirror-home-grid{grid-template-columns:1fr}.jdc-mirror-home-title{font-size:clamp(28px,8.6vw,48px)}.jdc-mirror-preview-title{width:88%;font-size:clamp(24px,9vw,46px)}.jdc-mirror-meta{padding:38px 6vw 56px}.jdc-mirror-credits{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 14px;width:87.7vw;max-width:none}.jdc-mirror-below-fold-films,.jdc-mirror-gallery,.jdc-mirror-gallery[data-count],.jdc-mirror-gallery[data-columns]{grid-template-columns:1fr;padding-left:6vw;padding-right:6vw}.jdc-mirror-fields,.jdc-mirror-quotes{grid-template-columns:1fr;padding-left:6vw;padding-right:6vw}.jdc-mirror-onepage-header-row{grid-template-columns:auto minmax(0,1fr) auto;column-gap:8px}.jdc-mirror-onepage-brand{font-size:23px;line-height:32px}.jdc-mirror-onepage-contact{padding-bottom:1px;font-size:10px;line-height:15px}.jdc-mirror-onepage-filters{gap:0 6px}.jdc-mirror-onepage-filter-set{gap:0 4px}.jdc-mirror-onepage-look-set{gap:0 4px;padding-left:6px}.jdc-mirror-onepage-filter{padding-bottom:1px;font-size:7px;line-height:15px;letter-spacing:.025em}}",
@@ -482,7 +518,7 @@
     video.setAttribute("data-jdc-autoplay", "true");
     video.setAttribute("aria-label", project.title + " preview");
     var title = el("span", "jdc-mirror-preview-title");
-    title.appendChild(splitTitle(project.title));
+    appendTitleParts(title, project.title);
     append(frame, video, title);
     link.appendChild(frame);
     return link;
@@ -519,7 +555,8 @@
     meta.setAttribute("aria-label", "Project title and credits");
     var heading = el("div", "jdc-mirror-heading");
     var title = el("h1", "jdc-mirror-title");
-    title.appendChild(splitTitle(project.title));
+    var parts = appendTitleParts(title, project.title);
+    heading.setAttribute("data-jdc-title-single", parts.single ? "true" : "false");
     append(heading, title);
     if (project.description) heading.appendChild(el("p", "jdc-mirror-description", project.description));
     return append(meta, heading, renderCredits(project));
@@ -644,7 +681,9 @@
     ];
     var looks = [
       ["poster", "Poster Look"],
-      ["paper", "Paper Look"]
+      ["paper", "Paper Look"],
+      ["combo", "Combo"],
+      ["flip", "Flip"]
     ];
     var searchParams = new URLSearchParams(window.location.search);
     var requestedFilter = searchParams.get("role") || "all";
