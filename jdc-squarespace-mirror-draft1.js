@@ -612,12 +612,15 @@
 
   function install() {
     if (!document.body) return;
+    // Keep the regular Squarespace homepage intact. Its native page owns the
+    // approved one-column project selection and text treatment; the mirror is
+    // reserved for Onepage and individual project routes.
+    if (path === "/") return;
     installStyles();
     document.documentElement.setAttribute("data-jdc-squarespace-mirror", RELEASE);
     document.body.setAttribute("data-jdc-squarespace-mirror", RELEASE);
     var main = ensureMain();
-    if (path === "/") renderHome(main);
-    else if (path === "/onepage") renderOnepage(main);
+    if (path === "/onepage") renderOnepage(main);
     else if (projectsByRoute[path]) renderProject(main, projectsByRoute[path]);
     else return;
     document.documentElement.setAttribute("data-jdc-squarespace-mirror-ready", "true");
