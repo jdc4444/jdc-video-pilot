@@ -334,7 +334,7 @@
     function playFullVideo() {
       var mode = frame.getAttribute("data-jdc-inline-mode");
       if (mode === "full") return video.play();
-      if (mode === "loading") return Promise.resolve();
+      if (mode === "loading") return video.play();
       frame.setAttribute("data-jdc-inline-mode", "loading");
       if (activeSoundVideo && activeSoundVideo !== video) quietVideo(activeSoundVideo, false);
       activeSoundVideo = video;
@@ -352,24 +352,24 @@
       video.volume = 0.82;
       frame.style.aspectRatio = String(playbackAspect);
 
-      return new Promise(function (resolve, reject) {
-        var settled = false;
-        function start() {
-          if (settled) return;
-          settled = true;
-          if (playbackStart > 0 && Number.isFinite(video.duration)) {
-            video.currentTime = Math.min(playbackStart, Math.max(0, video.duration - 0.05));
-          }
-          frame.setAttribute("data-jdc-inline-mode", "full");
-          var attempt = video.play();
-          if (attempt && attempt.then) attempt.then(resolve).catch(reject);
-          else resolve();
+      var prepared = false;
+      function preparePlayback() {
+        if (prepared) return;
+        prepared = true;
+        if (playbackStart > 0 && Number.isFinite(video.duration)) {
+          video.currentTime = Math.min(playbackStart, Math.max(0, video.duration - 0.05));
         }
-        video.addEventListener("loadedmetadata", start, { once: true });
-        video.src = playbackSource;
-        video.load();
-        if (video.readyState >= 1) start();
-      });
+        frame.setAttribute("data-jdc-inline-mode", "full");
+        if (player) player.updatePlayer();
+      }
+
+      video.addEventListener("loadedmetadata", preparePlayback, { once: true });
+      video.src = playbackSource;
+      video.load();
+      frame.setAttribute("data-jdc-inline-mode", "full");
+      var attempt = video.play();
+      if (video.readyState >= 1) preparePlayback();
+      return attempt || Promise.resolve();
     }
 
     var player = installPlayerControls(frame, video, project.title + " full video", {
