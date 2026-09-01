@@ -5,7 +5,7 @@ Captured immediately before the Pilot 77 onepage/project release on 2026-09-01.
 ## Header
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/jdc4444/jdc-video-pilot@0777b807be2e5d4f056e46d81ef28b615f764910/jdc-footer-pilot74.js" crossorigin="anonymous" data-jdc-footer="pilot74"></script>
+<script src="https://cdn.jsdelivr.net/gh/jdc4444/jdc-video-pilot@0777b807692d8ab515dcd2417cd8844d2d613e4a/jdc-footer-pilot74.js" crossorigin="anonymous" data-jdc-footer="pilot74"></script>
 ```
 
 ## Footer
