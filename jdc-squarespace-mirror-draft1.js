@@ -171,6 +171,92 @@
     return video;
   }
 
+  function installPlayerControls(frame, video, label) {
+    if (!frame || !video || frame.querySelector(".jdc-video-controls")) return;
+    frame.classList.add("jdc-mirror-player", "jdc-video-shell", "jdc-video-block", "jdc-video-ready");
+    video.controls = false;
+    video.removeAttribute("controls");
+
+    var controls = el("div", "jdc-video-controls");
+    controls.setAttribute("role", "group");
+    controls.setAttribute("aria-label", (label || "Video") + " controls");
+    var playButton = el("button", "", "Play");
+    playButton.type = "button";
+    playButton.setAttribute("data-jdc-play", "");
+    playButton.setAttribute("aria-label", "Play " + (label || "video"));
+    var progress = el("div", "jdc-video-progress");
+    progress.setAttribute("role", "slider");
+    progress.setAttribute("tabindex", "0");
+    progress.setAttribute("aria-label", (label || "Video") + " playback position");
+    progress.setAttribute("aria-valuemin", "0");
+    progress.setAttribute("aria-valuemax", "100");
+    progress.setAttribute("aria-valuenow", "0");
+    progress.appendChild(el("span"));
+    var muteButton = el("button", "", "Sound");
+    muteButton.type = "button";
+    muteButton.setAttribute("data-jdc-mute", "");
+    muteButton.setAttribute("aria-label", "Turn on sound for " + (label || "video"));
+    append(controls, playButton, progress, muteButton);
+    frame.appendChild(controls);
+
+    function updatePlayer() {
+      var playing = !video.paused && !video.ended;
+      frame.classList.toggle("jdc-video-playing", playing);
+      playButton.textContent = playing ? "Pause" : "Play";
+      playButton.setAttribute("aria-label", (playing ? "Pause " : "Play ") + (label || "video"));
+      muteButton.textContent = video.muted ? "Sound" : "Mute";
+      muteButton.setAttribute("aria-label", (video.muted ? "Turn on sound for " : "Mute ") + (label || "video"));
+      var ratio = Number.isFinite(video.duration) && video.duration > 0
+        ? Math.min(1, Math.max(0, video.currentTime / video.duration))
+        : 0;
+      progress.firstElementChild.style.width = (ratio * 100) + "%";
+      progress.setAttribute("aria-valuenow", String(Math.round(ratio * 100)));
+    }
+
+    function seekToRatio(ratio) {
+      if (!Number.isFinite(video.duration) || video.duration <= 0) return;
+      video.currentTime = Math.min(1, Math.max(0, ratio)) * video.duration;
+      updatePlayer();
+    }
+
+    playButton.addEventListener("click", function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      if (video.paused || video.ended) {
+        var attempt = video.play();
+        if (attempt && attempt.catch) attempt.catch(function () {});
+      } else {
+        video.pause();
+      }
+    });
+    muteButton.addEventListener("click", function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      if (video.muted) activateSound(video);
+      else releaseSound(video);
+    });
+    progress.addEventListener("click", function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      var rect = progress.getBoundingClientRect();
+      if (!rect.width) return;
+      seekToRatio((event.clientX - rect.left) / rect.width);
+    });
+    progress.addEventListener("keydown", function (event) {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      event.preventDefault();
+      event.stopPropagation();
+      var ratio = Number.isFinite(video.duration) && video.duration > 0 ? video.currentTime / video.duration : 0;
+      seekToRatio(ratio + (event.key === "ArrowRight" ? 0.05 : -0.05));
+    });
+    frame.addEventListener("pointerenter", function () { activateSound(video); });
+    frame.addEventListener("pointerleave", function () { releaseSound(video); });
+    ["play", "pause", "ended", "volumechange", "timeupdate", "loadedmetadata", "durationchange"].forEach(function (eventName) {
+      video.addEventListener(eventName, updatePlayer);
+    });
+    updatePlayer();
+  }
+
   function observeAutoplay(root) {
     var videos = Array.prototype.slice.call(root.querySelectorAll("video[data-jdc-autoplay='true'],video[data-jdc-deferred-src]"));
     function loadDeferred(video) {
@@ -230,6 +316,11 @@
       ".jdc-mirror-film{position:relative;display:block;width:100%;aspect-ratio:16/9;margin:0;background:#080808;overflow:hidden}",
       ".jdc-mirror-film+.jdc-mirror-film{margin-top:2px}",
       ".jdc-mirror-film video{display:block;width:100%;height:100%;object-fit:cover;object-position:center;background:#080808;border:0}",
+      ".jdc-mirror-player .jdc-video-controls{position:absolute;z-index:4;left:16px;right:16px;bottom:14px;display:flex;align-items:center;gap:10px;opacity:0;transition:opacity 160ms ease}",
+      ".jdc-mirror-player:hover .jdc-video-controls,.jdc-mirror-player:focus-within .jdc-video-controls{opacity:1}",
+      ".jdc-mirror-player .jdc-video-controls button{appearance:none;border:0;border-radius:999px;padding:8px 11px;color:#fff;background:rgba(0,0,0,.58);font:600 11px/1 system-ui,sans-serif;cursor:pointer}",
+      ".jdc-mirror-player .jdc-video-progress{flex:1;height:3px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.35);cursor:pointer}",
+      ".jdc-mirror-player .jdc-video-progress>span{display:block;width:0;height:100%;background:#fff}",
       ".jdc-mirror-preview-link{position:relative;display:block;width:100%;color:inherit;text-decoration:none;background:#080808;overflow:hidden}",
       ".jdc-mirror-preview-link .jdc-mirror-film{pointer-events:none}",
       ".jdc-mirror-below-fold-films{box-sizing:border-box;display:block;width:100%;margin:0;padding:0 4.2vw clamp(48px,6vw,88px)}",
@@ -280,7 +371,8 @@
       "@media(max-width:1099px){.jdc-mirror-credits{grid-template-columns:repeat(3,minmax(0,1fr))}}",
       "@media(max-width:1023px) and (min-width:768px){.jdc-mirror-gallery[data-columns='4']{grid-template-columns:repeat(2,minmax(0,1fr))}}",
       "@media(max-width:767px){.jdc-mirror-home-grid{grid-template-columns:1fr}.jdc-mirror-home-title{font-size:clamp(28px,8.6vw,48px)}.jdc-mirror-meta{padding:38px 6vw 56px}.jdc-mirror-credits{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 14px;width:87.7vw;max-width:none}.jdc-mirror-below-fold-films,.jdc-mirror-gallery,.jdc-mirror-gallery[data-count],.jdc-mirror-gallery[data-columns]{grid-template-columns:1fr;padding-left:6vw;padding-right:6vw}.jdc-mirror-fields,.jdc-mirror-quotes{grid-template-columns:1fr;padding-left:6vw;padding-right:6vw}.jdc-mirror-onepage-header-row{grid-template-columns:auto minmax(0,1fr) auto;column-gap:8px}.jdc-mirror-onepage-brand{font-size:23px;line-height:32px}.jdc-mirror-onepage-contact{padding-bottom:1px;font-size:10px;line-height:15px}.jdc-mirror-onepage-filter-set{gap:0 4px}.jdc-mirror-onepage-filter{padding-bottom:1px;font-size:7px;line-height:15px;letter-spacing:.025em}}",
-      "@media(prefers-reduced-motion:reduce){.jdc-mirror-home-media video,.jdc-mirror-gallery-item video{animation:none!important}}"
+      "@media(hover:none){.jdc-mirror-player .jdc-video-controls{opacity:1}}",
+      "@media(prefers-reduced-motion:reduce){.jdc-mirror-home-media video,.jdc-mirror-gallery-item video{animation:none!important}.jdc-mirror-player .jdc-video-controls{transition:none}}"
     ].join("");
     (document.head || document.documentElement).appendChild(style);
   }
@@ -351,15 +443,16 @@
       frame.style.aspectRatio = String(Number(film.aspect) > 0 ? Number(film.aspect) : 16 / 9);
       var video = makeVideo(film, {
         muted: true,
-        controls: true,
+        controls: false,
         autoplay: true,
         loop: true,
         preload: "metadata",
-        hoverSound: true
+        hoverSound: false
       });
       video.setAttribute("data-jdc-autoplay", "true");
       video.setAttribute("aria-label", project.title + (project.fullFilms.length > 1 ? " film " + String(index + 1) : " film"));
       frame.appendChild(video);
+      installPlayerControls(frame, video, project.title + (project.fullFilms.length > 1 ? " film " + String(index + 1) : " film"));
       films.appendChild(frame);
     });
     return films;
@@ -398,15 +491,16 @@
       frame.style.aspectRatio = String(Number(film.aspect) > 0 ? Number(film.aspect) : 16 / 9);
       var video = makeVideo(film, {
         muted: true,
-        controls: true,
+        controls: false,
         autoplay: false,
         loop: false,
         preload: "metadata",
-        hoverSound: true,
+        hoverSound: false,
         deferSource: onepage
       });
       video.setAttribute("aria-label", project.title + " additional film " + String(index + 1));
       frame.appendChild(video);
+      installPlayerControls(frame, video, project.title + " additional film " + String(index + 1));
       films.appendChild(frame);
     });
     return films;
