@@ -616,8 +616,8 @@
     headerRow.id = "jdc-mirror-onepage-header-row";
     headerRow.setAttribute("data-jdc-onepage-header", "pinned-row-78");
     var brandLink = el("a", "jdc-mirror-onepage-brand", "JDC");
-    brandLink.href = "/";
-    brandLink.setAttribute("aria-label", "JDC home");
+    brandLink.href = "/onepage";
+    brandLink.setAttribute("aria-label", "Show all JDC projects");
     brandLink.style.setProperty("color", "#fff", "important");
     var contactLink = el("a", "jdc-mirror-onepage-contact", "Contact");
     contactLink.href = "/contact";
@@ -626,14 +626,13 @@
     filterSet.setAttribute("role", "group");
     filterSet.setAttribute("aria-label", "Project role");
     var filters = [
-      ["all", "JDC"],
       ["director", "Director"],
       ["producer", "Producer"],
       ["creative", "Creative Director"],
       ["editor", "Editor"]
     ];
     var requestedFilter = new URLSearchParams(window.location.search).get("role") || "all";
-    if (!filters.some(function (record) { return record[0] === requestedFilter; })) requestedFilter = "all";
+    if (requestedFilter !== "all" && !filters.some(function (record) { return record[0] === requestedFilter; })) requestedFilter = "all";
     var projectList = el("div", "jdc-mirror-onepage-projects");
     projectList.id = "jdc-mirror-onepage-projects";
     var projectEntries = onepageProjects.map(function (project) {
@@ -657,6 +656,18 @@
       document.documentElement.setAttribute("data-jdc-onepage-role", filter);
       document.body.setAttribute("data-jdc-onepage-role", filter);
     }
+    brandLink.setAttribute("aria-controls", projectList.id);
+    brandLink.addEventListener("click", function (event) {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      var filterUrl = new URL(window.location.href);
+      filterUrl.searchParams.delete("role");
+      window.history.replaceState(null, "", filterUrl.href);
+      Array.prototype.forEach.call(filterSet.querySelectorAll("input[data-jdc-role-filter]"), function (input) {
+        input.checked = false;
+      });
+      applyRoleFilter("all");
+    });
     filters.forEach(function (record) {
       var input = el("input", "jdc-mirror-onepage-filter-input");
       input.type = "radio";
@@ -671,8 +682,7 @@
       input.addEventListener("change", function () {
         if (!input.checked) return;
         var filterUrl = new URL(window.location.href);
-        if (record[0] === "all") filterUrl.searchParams.delete("role");
-        else filterUrl.searchParams.set("role", record[0]);
+        filterUrl.searchParams.set("role", record[0]);
         window.history.replaceState(null, "", filterUrl.href);
         applyRoleFilter(record[0]);
       });
