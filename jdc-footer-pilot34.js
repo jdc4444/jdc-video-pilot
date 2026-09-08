@@ -2,6 +2,7 @@
   "use strict";
 
   var CORE_URL = "https://jdc4444.github.io/jdc-video-pilot/jdc-footer-pilot33.js?v=e73e0e3";
+  var ABOUT_URL = "https://jdc4444.github.io/jdc-video-pilot/jdc-about-pilot107.js?v=pilot107";
   var TARGET_PATH = /^\/(?:tobias-rees-limn|basis|laufey-tour-visuals|dig-brand-identity)\/?$/;
   var observer = null;
 
@@ -40,6 +41,17 @@
     (document.head || document.documentElement).appendChild(core);
   }
 
+  function loadAbout() {
+    if (window.__JDC_ABOUT_PILOT107__ || document.querySelector('script[data-jdc-about-release="pilot107"]')) return;
+    var about = document.createElement("script");
+    about.src = ABOUT_URL;
+    about.async = false;
+    about.crossOrigin = "anonymous";
+    about.setAttribute("data-jdc-about-release", "pilot107");
+    (document.head || document.documentElement).appendChild(about);
+  }
+
   schedulePromotion();
   loadCore();
+  loadAbout();
 })();
