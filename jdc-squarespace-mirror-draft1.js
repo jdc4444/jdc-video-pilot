@@ -608,6 +608,7 @@
       ".jdc-mirror-home-title{position:absolute;z-index:2;left:clamp(18px,2.4vw,38px);right:clamp(18px,2.4vw,38px);bottom:clamp(18px,2.2vw,34px);margin:0;color:#fff;font-size:clamp(22px,2.9vw,50px);font-weight:500;letter-spacing:-.045em;line-height:.95;text-wrap:balance}",
       ".jdc-mirror-home-type{position:absolute;z-index:2;top:clamp(15px,1.8vw,28px);left:clamp(18px,2.4vw,38px);margin:0;color:rgba(255,255,255,.78);font-size:8px;font-weight:400;letter-spacing:.08em;line-height:1.1;text-transform:uppercase}",
       "html[data-jdc-squarespace-mirror-page='project'] #header a,html[data-jdc-squarespace-mirror-page='project'] #header .header-title-text,html[data-jdc-squarespace-mirror-page='project'] #header .header-nav-item a{color:#fff!important}",
+      "html[data-jdc-squarespace-mirror-page='project'] #header a::after{background:#fff!important;border-color:#fff!important}",
       "html[data-jdc-squarespace-mirror-page='project'] #header svg *,html[data-jdc-squarespace-mirror-page='project'] #header .icon--fill{fill:#fff!important;stroke:#fff!important}",
       "html[data-jdc-squarespace-mirror-page='project'] #header .burger-inner>div{background-color:#fff!important}",
       ".jdc-mirror-project{display:block;width:100%;margin:0;padding:0 0 clamp(70px,9vw,140px);background:#fff;color:#050505}",
