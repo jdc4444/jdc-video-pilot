@@ -138,7 +138,12 @@ def build() -> dict[str, Any]:
         for key in ("fullFilms", "belowFoldFilms", "onepageBelowFoldFilms"):
             for index, film in enumerate(project.get(key) or []):
                 match = None
-                if film.get("systemDataId"):
+                if film.get("provenance") == "project_preview_key":
+                    match = {
+                        "src": source_media.get("src"),
+                        "poster": source_media.get("poster"),
+                    }
+                elif film.get("systemDataId"):
                     match = next(
                         (
                             item

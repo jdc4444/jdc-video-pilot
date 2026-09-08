@@ -22,6 +22,11 @@
   var homepageProjects = onepageProjects.filter(function (project) {
     return project.homepageVisible !== false;
   });
+  var gallerySoundRoutes = new Set([
+    "/nike-aja-sabrina",
+    "/bombas-spring",
+    "/siberia-hills"
+  ]);
   var activeSoundVideo = null;
   var activeSoundFrame = null;
   var creativeRoleOverrides = new Set([
@@ -146,6 +151,13 @@
   }
 
   function supportsNativeHls() {
+    // Chromium-based preview browsers can report an HLS MIME type even when
+    // their media pipeline cannot actually start the Squarespace playlist.
+    // Keep HLS for real Safari and use the verified MP4 rendition elsewhere.
+    var userAgent = String(window.navigator && window.navigator.userAgent || "");
+    var isSafari = /Safari/i.test(userAgent) &&
+      !/(?:Chrome|Chromium|CriOS|Edg|OPR|FxiOS|Android)/i.test(userAgent);
+    if (!isSafari) return false;
     var probe = document.createElement("video");
     return Boolean(
       probe.canPlayType("application/vnd.apple.mpegurl") ||
@@ -154,7 +166,7 @@
   }
 
   function squarespaceStreamUrl(record) {
-    if (!supportsNativeHls() || !record || !record.systemDataId) return "";
+    if (!supportsNativeHls() || !record || !record.systemDataId || record.preferSource === true) return "";
     if (record.alexandriaUrl) {
       return String(record.alexandriaUrl).replace("{variant}", "playlist.m3u8");
     }
@@ -208,8 +220,25 @@
     }, 240);
   }
 
+  function prepareDeferredVideo(video) {
+    if (!video) return false;
+    var deferredSource = video.getAttribute("data-jdc-deferred-src");
+    if (!deferredSource) return false;
+    video.src = deferredSource;
+    video.removeAttribute("data-jdc-deferred-src");
+    video.preload = "auto";
+    video.load();
+    return true;
+  }
+
   function activateSound(video) {
     if (!video || video.getAttribute("data-jdc-has-audio") === "false") return;
+    // Pointer hover is not a browser media activation. Before the visitor has
+    // clicked/tapped the page, unmuting a muted autoplay can make the browser
+    // pause it under its autoplay policy.
+    var activation = window.navigator && window.navigator.userActivation;
+    if (activation && !activation.isActive && !activation.hasBeenActive) return;
+    prepareDeferredVideo(video);
     if (activeSoundVideo && activeSoundVideo !== video) quietVideo(activeSoundVideo, false);
     activeSoundVideo = video;
     video.muted = false;
@@ -250,6 +279,46 @@
       video.addEventListener("blur", function () { releaseSound(video); });
     }
     return video;
+  }
+
+  function installVideoPoster(frame, video, poster, label) {
+    var source = mediaUrl(poster);
+    if (!frame || !video || !source) return null;
+    var image = document.createElement("img");
+    image.className = "jdc-video-poster";
+    image.src = source;
+    image.alt = "";
+    image.decoding = "async";
+    image.setAttribute("aria-hidden", "true");
+    frame.insertBefore(image, video);
+    function reveal() { frame.removeAttribute("data-jdc-video-has-played"); }
+    function conceal() { frame.setAttribute("data-jdc-video-has-played", "true"); }
+    video.addEventListener("playing", conceal);
+    video.addEventListener("error", reveal);
+    if (label) frame.setAttribute("data-jdc-poster-for", label);
+    return image;
+  }
+
+  function installCleanLoop(video, record) {
+    if (!video) return;
+    video.loop = false;
+    var restarting = false;
+    function restart() {
+      if (restarting || video.paused) return;
+      restarting = true;
+      try { video.currentTime = Math.min(0.035, Math.max(0, video.duration - 0.05)); }
+      catch (error) { restarting = false; return; }
+      var attempt = video.play();
+      if (attempt && attempt.catch) attempt.catch(function () {});
+      window.requestAnimationFrame(function () { restarting = false; });
+    }
+    video.addEventListener("timeupdate", function () {
+      var endpoint = Number.isFinite(video.duration) && video.duration > 0
+        ? video.duration
+        : Number(record && record.duration);
+      if (Number.isFinite(endpoint) && endpoint > 0 && video.currentTime >= endpoint - 0.09) restart();
+    });
+    video.addEventListener("ended", restart);
   }
 
   function installPlayerControls(frame, video, label, options) {
@@ -325,6 +394,7 @@
         return;
       }
       if (video.paused || video.ended) {
+        prepareDeferredVideo(video);
         var attempt = video.play();
         if (attempt && attempt.catch) attempt.catch(function () {});
       } else {
@@ -445,11 +515,7 @@
   function observeAutoplay(root) {
     var videos = Array.prototype.slice.call(root.querySelectorAll("video[data-jdc-autoplay='true'],video[data-jdc-deferred-src]"));
     function loadDeferred(video) {
-      var deferredSource = video.getAttribute("data-jdc-deferred-src");
-      if (!deferredSource) return;
-      video.src = deferredSource;
-      video.removeAttribute("data-jdc-deferred-src");
-      video.load();
+      prepareDeferredVideo(video);
     }
     if (!window.IntersectionObserver) {
       videos.slice(0, 2).forEach(function (video) {
@@ -460,23 +526,68 @@
       });
       return;
     }
+    // Prepare sources well before they arrive, especially on mobile, without
+    // starting every nearby film at once.
+    var preloadObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        var video = entry.target;
+        if (entry.isIntersecting) loadDeferred(video);
+      });
+    }, { rootMargin: "120% 0px", threshold: 0.01 });
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         var video = entry.target;
-        if (entry.isIntersecting) {
-          loadDeferred(video);
-          if (video.getAttribute("data-jdc-autoplay") !== "true") return;
-          video.muted = true;
-          var attempt = video.play();
-          if (attempt && attempt.catch) attempt.catch(function () {});
-        } else {
+        if (video.getAttribute("data-jdc-autoplay") !== "true") return;
+        if (!entry.isIntersecting) {
           releaseSound(video);
           if (!video.paused) video.pause();
+          return;
         }
+        loadDeferred(video);
+        video.muted = true;
+        var attempt = video.play();
+        if (attempt && attempt.catch) attempt.catch(function () {});
       });
-    }, { rootMargin: "40% 0px", threshold: 0.01 });
-    videos.forEach(function (video) { observer.observe(video); });
+    }, { rootMargin: "0px", threshold: 0.01 });
+    videos.forEach(function (video) {
+      preloadObserver.observe(video);
+      observer.observe(video);
+    });
+    window.__JDC_SQUARESPACE_MIRROR_PRELOAD_OBSERVER__ = preloadObserver;
     window.__JDC_SQUARESPACE_MIRROR_OBSERVER__ = observer;
+  }
+
+  function installTypography() {
+    if (!document.getElementById("jdc-raleway-font")) {
+      var link = document.createElement("link");
+      link.id = "jdc-raleway-font";
+      link.rel = "stylesheet";
+      link.href = "https://fonts.googleapis.com/css2?family=Raleway:wght@100..900&display=swap";
+      (document.head || document.documentElement).appendChild(link);
+    }
+    if (document.getElementById("jdc-raleway-sitewide-styles")) return;
+    var style = el("style");
+    style.id = "jdc-raleway-sitewide-styles";
+    style.textContent = [
+      ":root{--heading-font-font-family:'Raleway',sans-serif!important;--body-font-font-family:'Raleway',sans-serif!important;--meta-font-font-family:'Raleway',sans-serif!important;--button-font-font-family:'Raleway',sans-serif!important}",
+      "html body,html body *:not(svg):not(path):not(use):not(symbol){font-family:'Raleway',sans-serif!important}"
+    ].join("");
+    (document.head || document.documentElement).appendChild(style);
+  }
+
+  function applyProjectHeaderColor() {
+    var header = document.getElementById("header");
+    if (!header) return;
+    header.querySelectorAll(".header-title-text a,.header-nav-item a,.header-menu-nav-item a").forEach(function (link) {
+      link.style.setProperty("color", "#fff", "important");
+    });
+    header.querySelectorAll("svg *,.icon--fill").forEach(function (shape) {
+      shape.style.setProperty("fill", "#fff", "important");
+      shape.style.setProperty("stroke", "#fff", "important");
+    });
+    header.querySelectorAll(".burger-inner>div").forEach(function (bar) {
+      bar.style.setProperty("background-color", "#fff", "important");
+    });
   }
 
   function installStyles() {
@@ -496,11 +607,17 @@
       ".jdc-mirror-home-shade{position:absolute;z-index:1;inset:45% 0 0;background:linear-gradient(transparent,rgba(0,0,0,.62));pointer-events:none}",
       ".jdc-mirror-home-title{position:absolute;z-index:2;left:clamp(18px,2.4vw,38px);right:clamp(18px,2.4vw,38px);bottom:clamp(18px,2.2vw,34px);margin:0;color:#fff;font-size:clamp(22px,2.9vw,50px);font-weight:500;letter-spacing:-.045em;line-height:.95;text-wrap:balance}",
       ".jdc-mirror-home-type{position:absolute;z-index:2;top:clamp(15px,1.8vw,28px);left:clamp(18px,2.4vw,38px);margin:0;color:rgba(255,255,255,.78);font-size:8px;font-weight:400;letter-spacing:.08em;line-height:1.1;text-transform:uppercase}",
+      "html[data-jdc-squarespace-mirror-page='project'] #header a,html[data-jdc-squarespace-mirror-page='project'] #header .header-title-text,html[data-jdc-squarespace-mirror-page='project'] #header .header-nav-item a{color:#fff!important}",
+      "html[data-jdc-squarespace-mirror-page='project'] #header svg *,html[data-jdc-squarespace-mirror-page='project'] #header .icon--fill{fill:#fff!important;stroke:#fff!important}",
+      "html[data-jdc-squarespace-mirror-page='project'] #header .burger-inner>div{background-color:#fff!important}",
       ".jdc-mirror-project{display:block;width:100%;margin:0;padding:0 0 clamp(70px,9vw,140px);background:#fff;color:#050505}",
       ".jdc-mirror-films{display:block;width:100%;margin:0;padding:0;background:#080808}",
       ".jdc-mirror-film{position:relative;display:block;width:100%;aspect-ratio:16/9;margin:0;background:#080808;overflow:hidden}",
       ".jdc-mirror-film+.jdc-mirror-film{margin-top:2px}",
       ".jdc-mirror-film video{display:block;width:100%;height:100%;object-fit:cover;object-position:center;background:#080808;border:0}",
+      ".jdc-video-poster{position:absolute!important;z-index:1!important;inset:0!important;display:block!important;width:100%!important;height:100%!important;max-width:none!important;margin:0!important;padding:0!important;border:0!important;object-fit:cover!important;object-position:center!important;background:#080808!important;opacity:1!important;transition:opacity 140ms linear!important;pointer-events:none!important}",
+      "[data-jdc-video-has-played='true']>.jdc-video-poster{opacity:0!important}",
+      ".jdc-mirror-film>video,.jdc-mirror-below-fold-film>video,.jdc-mirror-gallery-item>video{position:relative;z-index:2}",
       ".jdc-mirror-player .jdc-video-controls{position:absolute;z-index:4;left:16px;right:16px;bottom:14px;display:flex;align-items:center;gap:10px;opacity:0;transition:opacity 160ms ease}",
       ".jdc-mirror-player:hover .jdc-video-controls,.jdc-mirror-player:focus-within .jdc-video-controls{opacity:1}",
       ".jdc-mirror-player .jdc-video-controls button{appearance:none;border:0;border-radius:999px;padding:8px 11px;color:#fff;background:rgba(0,0,0,.58);font:600 11px/1 system-ui,sans-serif;cursor:pointer}",
@@ -574,7 +691,7 @@
       "@media(max-width:1023px) and (min-width:768px){.jdc-mirror-gallery[data-columns='4']{grid-template-columns:repeat(2,minmax(0,1fr))}}",
       "@media(max-width:767px){.jdc-mirror-home-grid{grid-template-columns:1fr}.jdc-mirror-home-title{font-size:clamp(28px,8.6vw,48px)}.jdc-mirror-preview-title{width:88%;font-size:clamp(24px,9vw,46px)}.jdc-mirror-meta{padding:38px 6vw 56px}.jdc-mirror-credits{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 14px;width:87.7vw;max-width:none}.jdc-mirror-below-fold-films,.jdc-mirror-gallery,.jdc-mirror-gallery[data-count],.jdc-mirror-gallery[data-columns]{grid-template-columns:1fr;padding-left:6vw;padding-right:6vw}.jdc-mirror-fields,.jdc-mirror-quotes{grid-template-columns:1fr;padding-left:6vw;padding-right:6vw}.jdc-mirror-onepage-header-row{grid-template-columns:auto minmax(0,1fr) auto;column-gap:8px}.jdc-mirror-onepage-brand{font-size:23px;line-height:32px}.jdc-mirror-onepage-contact{padding-bottom:1px;font-size:10px;line-height:15px}.jdc-mirror-onepage-filters{gap:0 6px}.jdc-mirror-onepage-filter-set{gap:0 4px}.jdc-mirror-onepage-look-set{gap:0 4px;padding-left:6px}.jdc-mirror-onepage-filter{padding-bottom:1px;font-size:10px;line-height:15px}}",
       "@media(hover:none){.jdc-mirror-player .jdc-video-controls{opacity:1}}",
-      "@media(prefers-reduced-motion:reduce){.jdc-mirror-home-media video,.jdc-mirror-gallery-item video{animation:none!important}.jdc-mirror-player .jdc-video-controls{transition:none}}"
+      "@media(prefers-reduced-motion:reduce){.jdc-mirror-home-media video,.jdc-mirror-gallery-item video{animation:none!important}.jdc-mirror-player .jdc-video-controls,.jdc-video-poster{transition:none}}"
     ].join("");
     (document.head || document.documentElement).appendChild(style);
   }
@@ -648,13 +765,18 @@
         controls: false,
         autoplay: true,
         loop: true,
-        preload: "metadata",
+        preload: "auto",
         hoverSound: false
       });
+      video.setAttribute("data-jdc-media-role", index === 0 ? "key" : "main");
+      if (index === 0) video.setAttribute("fetchpriority", "high");
       video.setAttribute("data-jdc-autoplay", "true");
       video.setAttribute("aria-label", project.title + (project.fullFilms.length > 1 ? " film " + String(index + 1) : " film"));
       frame.appendChild(video);
-      installPlayerControls(frame, video, project.title + (project.fullFilms.length > 1 ? " film " + String(index + 1) : " film"));
+      installVideoPoster(frame, video, film.poster, project.title + " key film");
+      installPlayerControls(frame, video, project.title + (project.fullFilms.length > 1 ? " film " + String(index + 1) : " film"), {
+        hoverSound: false
+      });
       films.appendChild(frame);
     });
     return films;
@@ -675,11 +797,13 @@
       poster: project.media.poster,
       hasAudio: false
     }, { muted: true, loop: true, autoplay: true, preload: "metadata", deferSource: true });
+    video.setAttribute("data-jdc-media-role", "preview");
     video.setAttribute("data-jdc-autoplay", "true");
     video.setAttribute("aria-label", project.title + " preview");
     var title = el("span", "jdc-mirror-preview-title");
     appendTitleParts(title, project.title);
     append(frame, video, title);
+    installVideoPoster(frame, video, project.media.poster, project.title + " preview");
     installInlineProjectPlayback(frame, video, project);
     link.appendChild(frame);
     return link;
@@ -697,16 +821,20 @@
       var video = makeVideo(film, {
         muted: true,
         controls: false,
-        autoplay: false,
+        autoplay: true,
         loop: false,
         preload: "metadata",
         hoverSound: false,
-        deferSource: onepage
+        deferSource: true
       });
+      video.setAttribute("data-jdc-media-role", "main");
+      video.setAttribute("data-jdc-autoplay", "true");
       video.setAttribute("aria-label", project.title + " additional film " + String(index + 1));
       frame.appendChild(video);
+      installVideoPoster(frame, video, film.poster, project.title + " main film " + String(index + 1));
       installPlayerControls(frame, video, project.title + " additional film " + String(index + 1), {
-        iconButtons: Boolean(onepage)
+        iconButtons: Boolean(onepage),
+        hoverSound: false
       });
       films.appendChild(frame);
     });
@@ -746,10 +874,15 @@
         image.loading = "lazy";
         frame.appendChild(image);
       } else {
-        var video = makeVideo(item, { muted: true, loop: true, autoplay: true, preload: "metadata", hoverSound: true, deferSource: onepage });
+        var allowGallerySound = gallerySoundRoutes.has(project.route);
+        var video = makeVideo(item, { muted: true, loop: false, autoplay: true, preload: "metadata", hoverSound: allowGallerySound, deferSource: true });
+        video.setAttribute("data-jdc-media-role", "gallery");
+        video.setAttribute("data-jdc-gallery-sound", allowGallerySound ? "hover" : "muted");
         video.setAttribute("data-jdc-autoplay", "true");
         video.setAttribute("aria-label", project.title + " clip " + String(index + 1));
         frame.appendChild(video);
+        installVideoPoster(frame, video, item.poster, project.title + " gallery clip " + String(index + 1));
+        installCleanLoop(video, item);
       }
       gallery.appendChild(frame);
     });
@@ -807,6 +940,7 @@
   function renderProject(main, project) {
     document.documentElement.setAttribute("data-jdc-squarespace-mirror-page", "project");
     document.body.setAttribute("data-jdc-squarespace-mirror-page", "project");
+    applyProjectHeaderColor();
     var root = projectNode(project, false);
     main.replaceChildren(root);
     observeAutoplay(root);
@@ -975,6 +1109,7 @@
 
   function install() {
     if (!document.body) return;
+    installTypography();
     // Keep the regular Squarespace homepage intact. Its native page owns the
     // approved one-column project selection and text treatment; the mirror is
     // reserved for Onepage and individual project routes.
